@@ -1,13 +1,13 @@
-package com.stackroute.ssiservice;
+package com.stackroute.emailservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SSIServiceApplication {
+public class EmailServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SSIServiceApplication.class, args);
+		SpringApplication.run(EmailServiceApplication.class, args);
 	}
 
 }
