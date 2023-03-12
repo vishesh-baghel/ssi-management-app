@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { ColorModeContext, useMode } from './themes';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import Topbar from './pages/global/Topbar';
+import Sidebar from './pages/global/Sidebar';
+import Manageusers from './pages/manageusers/Manageusers';
+import Managessi from './pages/managessi/Managessi';
+import Addssi from './pages/addssi/Addssi';
+import Adduser from './pages/adduser/Adduser';
+import Dashboard from './pages/dashboard/Dashboard';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
+  const { colorMode, theme } = useMode();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="app">
+          <Sidebar />
+          <main className="content">
+            <Topbar />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/manageusers" element={<Manageusers />} />
+              
+              <Route path="/managessi" element={<Managessi />} />
+              <Route path="/addssi" element={<Addssi />} />
+              <Route path="/adduser" element={<Adduser />} />
+            </Routes>
+          </main>
+        </div>
+        </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
