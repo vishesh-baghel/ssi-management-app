@@ -15,7 +15,6 @@ const Manageusers = () => {
         { field: "age", headerName: "Age", type: "number", headerAlign: "left", align: "left" },
         { field: "phone", headerName: "Phone Number", flex: 1 },
         { field: "email", headerName: "Email", flex: 1 },
-
     ]
     return (
         <Box m='20px'>
@@ -47,7 +46,6 @@ const Manageusers = () => {
                 }
             }}>
                 <DataGrid
-
                     rows={mockDataTeam}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
