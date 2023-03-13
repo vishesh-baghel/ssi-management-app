@@ -1,38 +1,162 @@
 {
-    "users":[
-
-    ],
-    "SSI":[
-        {
-            "id":1
-
-        },
-        {
-            "id":2
-        },
-        {
-            "id":3
-        },
-        {
-            "id":4
-        },
-        {
-            "id":5
-        },
-        {
-            "id":6
-        },
-        {
-            "id":7
-        },
-        {
-            "id":8
-        },
-        {
-            "id":9
-        },
-        {
-            "id":10
-        }
-    ]
+  "users": [
+    {
+      "id": 3,
+      "userName": "User3",
+      "userEmail": "user3@domain.com",
+      "userCompany": "Company1",
+      "userRole": true
+    },
+    {
+      "id": 4,
+      "userName": "User4",
+      "userEmail": "user4@domain.comm",
+      "userCompany": "Company1",
+      "userRole": false
+    },
+    {
+      "id": 5,
+      "userName": "User5",
+      "userEmail": "user5@domain.com",
+      "userCompany": "Company1",
+      "userRole": false
+    },
+    {
+      "id": 6,
+      "userName": "User6",
+      "userEmail": "user6@domain.comm",
+      "userCompany": "Company1",
+      "userRole": false
+    },
+    {
+      "id": 7,
+      "userName": "User7",
+      "userEmail": "use7@domain.com",
+      "userCompany": "Company1",
+      "userRole": true
+    },
+    {
+      "id": 8,
+      "userName": "User8",
+      "userEmail": "user8@domain.comm",
+      "userCompany": "Company1",
+      "userRole": false
+    },
+    {
+      "id": 9,
+      "userName": "User9",
+      "userEmail": "use9@domain.com",
+      "userCompany": "Company1",
+      "userRole": true
+    },
+    {
+      "id": 10,
+      "userName": "User10",
+      "userEmail": "user10@domain.comm",
+      "userCompany": "Company1",
+      "userRole": false
+    },
+    {
+      "id": 11,
+      "userName": "User11",
+      "userEmail": "user11@domain.com",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 12,
+      "userName": "User12",
+      "userEmail": "user12@domain.comm",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 13,
+      "userName": "User13",
+      "userEmail": "user13@domain.com",
+      "userCompany": "Company2",
+      "userRole": true
+    },
+    {
+      "id": 14,
+      "userName": "User14",
+      "userEmail": "user14@domain.comm",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 15,
+      "userName": "User15",
+      "userEmail": "user15@domain.com",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 16,
+      "userName": "User16",
+      "userEmail": "user16@domain.comm",
+      "userCompany": "Company2",
+      "userRole": true
+    },
+    {
+      "id": 17,
+      "userName": "User17",
+      "userEmail": "use17@domain.com",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 18,
+      "userName": "User18",
+      "userEmail": "user18@domain.comm",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 19,
+      "userName": "User19",
+      "userEmail": "use9@domain.com",
+      "userCompany": "Company2",
+      "userRole": false
+    },
+    {
+      "id": 20,
+      "userName": "User20",
+      "userEmail": "user20@domain.comm",
+      "userCompany": "Company2",
+      "userRole": false
+    }
+  ],
+  "SSI": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    },
+    {
+      "id": 7
+    },
+    {
+      "id": 8
+    },
+    {
+      "id": 9
+    },
+    {
+      "id": 10
+    }
+  ]
 }

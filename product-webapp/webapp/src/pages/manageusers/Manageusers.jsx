@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-globals */
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, IconButton, useTheme } from '@mui/material';
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Box, useTheme } from '@mui/material';
+import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
 
-import { mockDataUser } from '../../data/mockData';
+import {getUsers, updateUserAdminStatus,removeUser} from "../../services/userservices";
+
 import DeleteIcon from '@mui/icons-material/Delete';
-import CreateIcon from '@mui/icons-material/Create';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import SecurityIcon from '@mui/icons-material/Security';
 
 
 import Header from '../../components/Header';
@@ -22,9 +22,35 @@ const Manageusers = () => {
     const viewUser = (url) => {
         navigate(url)
     }
+    
+    const [rows, setRows] = useState([]);
+    
+    const updateRows = ()=>{
+        getUsers().then(res=>{
+            if(res.status===200){
+                setRows(res.data)
+            }
+        })
+    }
 
-    const handleClick = (params)=>{
-        confirm("Are you sure to delete")?alert("Deleted"):alert("Not Deleted");
+    const deleteUser = (id) => {
+        let flag = confirm("Are you sure to delete")?true:false;
+        if(flag){
+            removeUser(id).then(res=>{
+                if(res.status===200){
+                    updateRows()
+                    alert("User Deleted.!")
+                }
+            })
+        }
+    }
+
+    const toggleAdmin = (id,isAdmin) => {
+        updateUserAdminStatus(id,isAdmin).then(res=>{
+            if(res.status===200){
+                updateRows()
+            }
+        })
     }
 
     const columns = [
@@ -32,18 +58,31 @@ const Manageusers = () => {
         { field: "userName", headerName: "Name", flex: 1, cellClassName: "name-column--cell" },
         { field: "userEmail", headerName: "Email", flex: 1 },
         { field: "userCompany", headerName: "Company", flex: 1 },
-        { field: "userRole", headerName: "Role", type: "number", headerAlign: "left", align: "left" },
+        { field: "userRole", headerName: "Is Admin", type: "boolean", headerAlign: "left", align: "left" },
         {
-            field: "", headerName: "",align:"center", sortable: false, filterable: false, disableColumnMenu: true,
-    renderCell:(params)=>{
-        return <Box>
-            {/* <IconButton onClick={console.log("view")}><VisibilityIcon/></IconButton> */}
-            {/* <IconButton onClick={console.log("create")}><CreateIcon/></IconButton> */}
-            <IconButton onClick={(e)=>{e.stopPropagation();handleClick(params)}}><DeleteIcon/></IconButton>
-        </Box>
-    }    },
+            field: "actions", type: "actions", align: "center", sortable: false, filterable: false, disableColumnMenu: true,
+            getActions: (params) => [
+                <GridActionsCellItem
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={()=>{deleteUser(params.id)}}
+                    showInMenu
+                />,
+                <GridActionsCellItem
+                    icon={<SecurityIcon />}
+                    label="Toggle Admin"
+                    onClick={()=>{toggleAdmin(params.id,params.row.userRole)}}
+                    showInMenu
+                />,
+            ]
+        },
 
     ]
+
+    useEffect(() => {
+        updateRows();
+    }, []);
+
     return (
         <Box m='20px'>
             <Header title='Manage Users' subtitle='Manage Users Efficiently' />
@@ -73,7 +112,7 @@ const Manageusers = () => {
                 }
             }}>
                 <DataGrid
-                    rows={mockDataUser}
+                    rows={rows}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     onRowClick={(params) => {
