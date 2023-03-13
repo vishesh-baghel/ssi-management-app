@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../../components/Header';
 import { Box, Switch, Typography} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -6,6 +6,7 @@ import {Button} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
+import { getSsi } from '../../services/userservices';
 
 
 
@@ -14,8 +15,20 @@ import { tokens } from '../../themes';
 const Managessi = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [ssi, setssidata] = React.useState([]);
+
+  useEffect(()=>{
+    getSsi().then(data => {
+      if (data.status===200){
+        setssidata(data.data);
+      }
+      else{
+        alert("Some err....")
+      }
+    })
+  },[])
   const columns = [
-    { field: 'id', headerName: 'SSI ID', headerAlign: 'center', align: 'center',width:120},
+    { field: 'ssiRefId', headerName: 'SSI ID', headerAlign: 'center', align: 'center',width:120},
     {
         field: "remove",
         width:180,
@@ -84,17 +97,17 @@ const Managessi = () => {
       },
   ];
 
-  const rows = [
-    { id: 1},
-    { id: 2},
-    { id: 3},
-    { id: 4},
-    { id: 5},
-    { id: 6},
-    { id: 7},
-    { id: 8},
-    { id: 9},
-  ];
+  // const rows = [
+  //   { id: 1},
+  //   { id: 2},
+  //   { id: 3},
+  //   { id: 4},
+  //   { id: 5},
+  //   { id: 6},
+  //   { id: 7},
+  //   { id: 8},
+  //   { id: 9},
+  // ];
     return (
         <Box m='20px' width="60vw">
             <Box display='flex' justifyContent='space-between' alignItems='center'>
@@ -125,7 +138,7 @@ const Managessi = () => {
             color: `${colors.grey[100]} !important`
         },}}>
                 <DataGrid
-                    rows={rows}
+                    rows={ssi}
                     columns={columns}
                     initialState={{
                     pagination: {
