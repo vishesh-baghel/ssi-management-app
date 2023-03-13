@@ -2,60 +2,71 @@ import React from 'react';
 import Header from '../../components/Header';
 import { Box, Typography, useTheme } from '@mui/material';
 import { tokens } from "../../themes";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarColumnsButton } from '@mui/x-data-grid';
 import { mockSSIData } from '../../data/mockData';
 import { Link } from 'react-router-dom';
+// import { SearchBar } from '@material-ui/data-grid';
 
+const CustomToolbar = (props) => (
+    <div>
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+      </GridToolbarContainer>
+      {/* <SearchBar {...props} /> */}
+    </div>
+  );
+  
 const Dashboard = () => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+      const theme = useTheme();
+      const colors = tokens(theme.palette.mode);
 
-    const columns = [
-        { field: "ssiRefId", headerName: "ID" },
-        {   field: 'view',
-            headerName: 'View SSI', 
-            flex: 1, 
-            renderCell: (params) => {
-                return (
-                    <Typography>
-                    <Link 
-                        to={`/ssi/${params.row.ssiRefId}`}
-                        style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
-                    >View
-                    </Link>
-                    </Typography>
-                );
-            }},
-        { field: 'product', headerName: 'Product', flex: 1, cellClassName: 'name-column--cell' },
-        { field: 'currency', headerName: 'Currency', flex: 1 },
-        { field: 'assetClass', headerName: 'Asset Class', flex: 1 },
-        { field: 'correspondentBankBic', headerName: 'Correspondent', flex: 1 },
-        { field: 'beneficiaryBankBic', headerName: 'Beneficiary', flex: 1 },
-        { 
-            field: 'effectiveDate', 
-            headerName: 'Effective Date', 
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <Typography fontSize='14px'>
-                        {params.row.effectiveDate.slice(0, 10)}
-                    </Typography>
-                );
-            }
-        },
-        { 
-            field: 'expiryDate', 
-            headerName: 'Expiry Date', 
-            flex: 1,
-            renderCell: (params) => {
-                return (
-                    <Typography fontSize='14px'>
-                        {params.row.expiryDate.slice(0, 10)}
-                    </Typography>
-                );
-             },
-        },
-    ]
+      const columns = [
+      { field: "ssiRefId", headerName: "ID" },
+      {   field: 'view',
+          headerName: 'View SSI', 
+          flex: 1, 
+          renderCell: (params) => {
+              return (
+                  <Typography>
+                  <Link 
+                      to={`/ssi/${params.row.ssiRefId}`}
+                      style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
+                  >View
+                  </Link>
+                  </Typography>
+              );
+          }},
+      { field: 'product', headerName: 'Product', flex: 1, cellClassName: 'name-column--cell' },
+      { field: 'currency', headerName: 'Currency', flex: 1 },
+      { field: 'assetClass', headerName: 'Asset Class', flex: 1 },
+      { field: 'correspondentBankBic', headerName: 'Correspondent', flex: 1 },
+      { field: 'beneficiaryBankBic', headerName: 'Beneficiary', flex: 1 },
+      { 
+          field: 'effectiveDate', 
+          headerName: 'Effective Date', 
+          flex: 1,
+          renderCell: (params) => {
+              return (
+                  <Typography fontSize='14px'>
+                      {params.row.effectiveDate.slice(0, 10)}
+                  </Typography>
+              );
+          }
+      },
+      { 
+          field: 'expiryDate', 
+          headerName: 'Expiry Date', 
+          flex: 1,
+          renderCell: (params) => {
+              return (
+                  <Typography fontSize='14px'>
+                      {params.row.expiryDate.slice(0, 10)}
+                  </Typography>
+              );
+           },
+      },
+  ]
+
 
     return (
         <Box m='20px'>
@@ -64,6 +75,7 @@ const Dashboard = () => {
             </Box>
             <Box 
                 height='70vh'
+                width='80vw'
                 sx={{
                     '& .MuiDataGrid-root': {
                         border: 'none',

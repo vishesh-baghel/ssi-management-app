@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { Box, Switch, Typography} from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Box, Switch, ToggleButton, Typography} from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import {Button} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
 import { getSsi } from '../../services/userservices';
-
-
-
-
 
 const Managessi = () => {
   const theme = useTheme();
@@ -28,20 +24,17 @@ const Managessi = () => {
     })
   },[])
   const columns = [
-    { field: 'ssiRefId', headerName: 'SSI ID', headerAlign: 'center', align: 'center',width:120},
+    { field: 'ssiRefId', headerName: 'SSI ID', flex: 1},
     {
-        field: "remove",
-        width:180,
-        align: "center",
-        headerName: "REMOVE SSI",
-        headerAlign: "center",
+        field: "Remove SSI",
+        flex: 1,
         renderCell: (params) => {
           return (
             <Typography>
             <Link 
                 to={`/ssi/${params.row.id}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
-            >REMOVE
+            >Remove
             </Link>
             </Typography>
           );
@@ -49,17 +42,15 @@ const Managessi = () => {
       },
       {
         field: "edit",
-        width:180,
-        align: "center",
-        headerName: "EDIT SSI",
-        headerAlign: "center",
+        headerName: "Edit SSI",
+        flex: 1,
         renderCell: (params) => {
           return (
             <Typography>
             <Link 
                 to={`/ssi/${params.row.id}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
-            >EDIT
+            >Edit SSI
             </Link>
             </Typography>
           );
@@ -67,17 +58,15 @@ const Managessi = () => {
       },
       {
         field: "view",
-        width:180,
-        align: "center",
-        headerName: "VIEW SSI",
-        headerAlign: "center",
+        flex: 1,
+        headerName: "View SSI",
         renderCell: (params) => {
           return (
             <Typography>
             <Link 
                 to={`/ssi/${params.row.id}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
-            >VIEW
+            >View
             </Link>
             </Typography>
           );
@@ -85,35 +74,26 @@ const Managessi = () => {
       },
       {
         field: "makeprimary",
-        width:160,
-        align: "center",
-        headerAlign: "center",
+        flex: 1,
         headerName: "Make Primary",
-        renderCell: (cellValues) => {
+        renderCell: (params) => {
           return (
-            <Switch></Switch>
+            <Box color={colors.greenAccent[500]}>
+              <Switch />
+            </Box>
           );
         },
       },
   ];
-
-  // const rows = [
-  //   { id: 1},
-  //   { id: 2},
-  //   { id: 3},
-  //   { id: 4},
-  //   { id: 5},
-  //   { id: 6},
-  //   { id: 7},
-  //   { id: 8},
-  //   { id: 9},
-  // ];
     return (
-        <Box m='20px' width="60vw">
+        <Box m='20px'>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
             </Box>
-            <Box sx={{ height: 400, width: '100%' ,
+            <Box 
+                height='70vh'
+                width='80vw'
+            sx={{
           '& .MuiDataGrid-root': {
             border: 'none',
         },
@@ -140,14 +120,7 @@ const Managessi = () => {
                 <DataGrid
                     rows={ssi}
                     columns={columns}
-                    initialState={{
-                    pagination: {
-                        paginationModel: {
-                        pageSize: 5,
-                        },
-                    },
-                    }}
-                    pageSizeOptions={[5]}
+                    components={{ Toolbar: GridToolbar }}
                 />
             </Box>
         </Box>
