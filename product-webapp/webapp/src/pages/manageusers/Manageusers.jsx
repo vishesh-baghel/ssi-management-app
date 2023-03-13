@@ -5,6 +5,8 @@ import { Box, useTheme } from '@mui/material';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
 
+import { mockDataUser } from '../../data/mockData';
+
 import Header from '../../components/Header';
 
 const Manageusers = () => {
@@ -31,7 +33,7 @@ const Manageusers = () => {
                     border: "none",
                 },
                 "& .MuiDataGrid-cell": {
-                    border: "none",
+                    borderBottom: "none",
                 },
                 "& .name-column--cell": {
                     color: colors.greenAccent[300]
@@ -52,7 +54,7 @@ const Manageusers = () => {
                 }
             }}>
                 <DataGrid
-                    rows={{}}
+                    rows={mockDataUser}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     onRowClick={(params)=>{
