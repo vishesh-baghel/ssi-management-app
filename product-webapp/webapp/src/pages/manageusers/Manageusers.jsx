@@ -1,31 +1,37 @@
 import React from 'react';
-import Header from '../../components/Header';
+import {useNavigate} from 'react-router-dom';
+
 import { Box, useTheme } from '@mui/material';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
-import { mockDataTeam } from "../../data/mockData";
+
+import Header from '../../components/Header';
 
 const Manageusers = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
+    const navigate = useNavigate();
+    const viewUser = (url)=>{
+        navigate(url)
+    }
+
     const columns = [
         { field: "id", headerName: "ID" },
-        { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell" },
-        { field: "age", headerName: "Age", type: "number", headerAlign: "left", align: "left" },
-        { field: "phone", headerName: "Phone Number", flex: 1 },
-        { field: "email", headerName: "Email", flex: 1 },
+        { field: "userName", headerName: "Name", flex: 1, cellClassName: "name-column--cell" },
+        { field: "userEmail", headerName: "Email", flex:1},
+        { field: "userCompany", headerName: "Company", flex: 1 },
+        { field: "userRole", headerName: "Role", type: "number", headerAlign: "left", align: "left" },
     ]
     return (
         <Box m='20px'>
-            {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-            <Header title='Manage users' subtitle='Manage your team efficiently' />
+            <Header title='Manage Users' subtitle='Manage Users Efficiently' />
             <Box m="40px 0 0 0" height="65vh" sx={{
                 "& .MuiDataGrid-root": {
                     border: "none",
                 },
                 "& .MuiDataGrid-cell": {
-                    borderBottom: "none",
+                    border: "none",
                 },
                 "& .name-column--cell": {
                     color: colors.greenAccent[300]
@@ -46,12 +52,14 @@ const Manageusers = () => {
                 }
             }}>
                 <DataGrid
-                    rows={mockDataTeam}
+                    rows={{}}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
+                    onRowClick={(params)=>{
+                        viewUser(`/user/${params.row.id}`)
+                    }}
                 />
             </Box>
-            {/* </Box> */}
         </Box>
     );
 }
