@@ -1,11 +1,16 @@
+/* eslint-disable no-restricted-globals */
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { Box, useTheme } from '@mui/material';
+import { Box, IconButton, useTheme } from '@mui/material';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
 
 import { mockDataUser } from '../../data/mockData';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CreateIcon from '@mui/icons-material/Create';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 import Header from '../../components/Header';
 
@@ -14,16 +19,30 @@ const Manageusers = () => {
     const colors = tokens(theme.palette.mode);
 
     const navigate = useNavigate();
-    const viewUser = (url)=>{
+    const viewUser = (url) => {
         navigate(url)
+    }
+
+    const handleClick = (params)=>{
+        confirm("Are you sure to delete")?alert("Deleted"):alert("Not Deleted");
     }
 
     const columns = [
         { field: "id", headerName: "ID" },
         { field: "userName", headerName: "Name", flex: 1, cellClassName: "name-column--cell" },
-        { field: "userEmail", headerName: "Email", flex:1},
+        { field: "userEmail", headerName: "Email", flex: 1 },
         { field: "userCompany", headerName: "Company", flex: 1 },
         { field: "userRole", headerName: "Role", type: "number", headerAlign: "left", align: "left" },
+        {
+            field: "", headerName: "",align:"center", sortable: false, filterable: false, disableColumnMenu: true,
+    renderCell:(params)=>{
+        return <Box>
+            {/* <IconButton onClick={console.log("view")}><VisibilityIcon/></IconButton> */}
+            {/* <IconButton onClick={console.log("create")}><CreateIcon/></IconButton> */}
+            <IconButton onClick={(e)=>{e.stopPropagation();handleClick(params)}}><DeleteIcon/></IconButton>
+        </Box>
+    }    },
+
     ]
     return (
         <Box m='20px'>
@@ -57,8 +76,8 @@ const Manageusers = () => {
                     rows={mockDataUser}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
-                    onRowClick={(params)=>{
-                        viewUser(`/user/${params.row.id}`)
+                    onRowClick={(params) => {
+                        viewUser(`/manageusers/${params.row.id}`)
                     }}
                 />
             </Box>
