@@ -10,6 +10,8 @@ import {getUsers, updateUserAdminStatus,removeUser} from "../../services/userser
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
+// import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
 
 
 import Header from '../../components/Header';
@@ -63,6 +65,14 @@ const Manageusers = () => {
             field: "actions", type: "actions", align: "center", sortable: false, filterable: false, disableColumnMenu: true,
             getActions: (params) => [
                 <GridActionsCellItem
+                    icon={<PersonIcon/>}
+                    label="View"
+                    onClick={() => {
+                        viewUser(`/manageusers/${params.row.id}`)
+                    }}
+                    showInMenu
+                />,
+                <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete"
                     onClick={()=>{deleteUser(params.id)}}
@@ -115,9 +125,6 @@ const Manageusers = () => {
                     rows={rows}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
-                    onRowClick={(params) => {
-                        viewUser(`/manageusers/${params.row.id}`)
-                    }}
                 />
             </Box>
         </Box>
