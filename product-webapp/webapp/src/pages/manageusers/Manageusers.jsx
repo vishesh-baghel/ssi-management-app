@@ -64,13 +64,13 @@ const Manageusers = () => {
             getActions: (params) => [
                 <GridActionsCellItem
                     icon={<DeleteIcon />}
-                    label="Delete"
+                    label="Delete user"
                     onClick={()=>{deleteUser(params.id)}}
                     showInMenu
                 />,
                 <GridActionsCellItem
                     icon={<SecurityIcon />}
-                    label="Toggle Admin"
+                    label="Make user admin"
                     onClick={()=>{toggleAdmin(params.id,params.row.userRole)}}
                     showInMenu
                 />,
@@ -86,7 +86,7 @@ const Manageusers = () => {
     return (
         <Box m='20px'>
             <Header title='Manage Users' subtitle='Manage Users Efficiently' />
-            <Box m="40px 0 0 0" height="70vh" sx={{
+            <Box m="40px 0 0 0" height="70vh" width='80vw' sx={{
                 "& .MuiDataGrid-root": {
                     border: "none",
                 },
@@ -118,6 +118,12 @@ const Manageusers = () => {
                     onRowClick={(params) => {
                         viewUser(`/manageusers/${params.row.id}`)
                     }}
+                    componentsProps={{
+                        toolbar: {
+                            showQuickFilter: true,
+                               quickFilterProps: { debounceMs: 500 },
+                         },
+                      }}
                 />
             </Box>
         </Box>

@@ -2,23 +2,26 @@ import React from 'react';
 import Header from '../../components/Header';
 import { Box, Typography, useTheme } from '@mui/material';
 import { tokens } from "../../themes";
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarColumnsButton } from '@mui/x-data-grid';
-import { mockSSIData } from '../../data/mockData';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
-// import { SearchBar } from '@material-ui/data-grid';
+import { getSsi } from '../../services/userservices';
+import { useEffect, useState } from 'react';
 
-const CustomToolbar = (props) => (
-    <div>
-      <GridToolbarContainer>
-        <GridToolbarColumnsButton />
-      </GridToolbarContainer>
-      {/* <SearchBar {...props} /> */}
-    </div>
-  );
-  
 const Dashboard = () => {
-      const theme = useTheme();
-      const colors = tokens(theme.palette.mode);
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    const [ssi, setssidata] = useState([]);
+
+    useEffect(()=>{
+        getSsi().then(data => {
+            if (data.status===200){
+                setssidata(data.data);
+            }
+            else{
+                alert("Some err....")
+            }
+        })
+    },[]);
 
       const columns = [
       { field: "ssiRefId", headerName: "ID" },
@@ -65,8 +68,7 @@ const Dashboard = () => {
               );
            },
       },
-  ]
-
+  ];
 
     return (
         <Box m='20px'>
@@ -103,13 +105,19 @@ const Dashboard = () => {
                 }}
             >
                 <DataGrid 
-                    rows={mockSSIData}
+                    rows={ssi}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
+                    componentsProps={{
+                        toolbar: {
+                            showQuickFilter: true,
+                               quickFilterProps: { debounceMs: 500 },
+                         },
+                      }}
                 />
             </Box>
         </Box>
     );
-}
+};
 
 export default Dashboard;
