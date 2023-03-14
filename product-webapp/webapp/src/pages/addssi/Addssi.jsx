@@ -156,10 +156,20 @@ const Addssi = () => {
     });
 
     return (
-        <>
+        <Box mt='0' sx = {{
+            '& .MuiInputBase-root': {
+                height: '40px',
+                fontSize: '14px',
+            },
+            '& .MuiInputLabel-root': {
+                fontSize: '14px',
+                alignSelf: 'center',
+            },
+        }}>
             <Box m="20px">
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="General Details" />
+                {/* <Header title="General Details" /> */}
+                <h3>General Details</h3>
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -176,7 +186,7 @@ const Addssi = () => {
 
 
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Box display="grid" gap="10px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -280,6 +290,9 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="date"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
                                     label="Expiry Date"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
@@ -320,7 +333,9 @@ const Addssi = () => {
                                     name="routingCode"
                                     error={!!touched.routingCode && !!errors.routingCode}
                                     helperText={touched.routingCode && errors.routingCode}
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2"
+                                    }}
                                 />
 
                             </Box>
@@ -330,7 +345,8 @@ const Addssi = () => {
             </Box>
             <Box m="20px">
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="Correspondent and Beneficiary" />
+                {/* <Header title="Correspondent and Beneficiary" /> */}
+                <h3>Correspondent and Beneficiary</h3>
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -345,7 +361,7 @@ const Addssi = () => {
                         handleSubmit,
                     }) => (
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Box display="grid" gap="10px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -432,7 +448,8 @@ const Addssi = () => {
             </Box>
             <Box m="20px">
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="Intermediary" />
+                {/* <Header title="Intermediary" /> */}
+                <h3>Intermediary</h3>
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -447,7 +464,7 @@ const Addssi = () => {
                         handleSubmit,
                     }) => (
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Box display="grid" gap="10px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -528,7 +545,7 @@ const Addssi = () => {
                                     sx={{ gridColumn: "span 2" }}
                                 />
                             </Box>
-                            <Box display="flex" justifyContent="center" mt="30px">
+                            <Box display="flex" justifyContent="left" mt="20px">
                                 <Button type="submit" color="secondary" variant="contained">
                                     Add SSI
                                 </Button>
@@ -537,7 +554,7 @@ const Addssi = () => {
                     )}
                 </Formik>
             </Box>
-        </>
+        </Box>
 
         // </Box>
     );

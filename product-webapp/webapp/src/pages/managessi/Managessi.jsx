@@ -121,7 +121,7 @@ const Managessi = () => {
             </Box>
             <Box 
                 height='70vh'
-                width='80vw'
+                width='79vw'
             sx={{
           '& .MuiDataGrid-root': {
             border: 'none',

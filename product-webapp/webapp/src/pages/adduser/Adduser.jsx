@@ -47,8 +47,8 @@ const Adduser = () => {
     return (
         <Box m='20px'>
             {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-            <Header title='Add Users' subtitle='Add More Users' />
-            <Box m="0 10rem" >
+            <Header title='Add Users' subtitle='Add your team members' />
+            <Box height='40vh' width='30vw' >
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
 
                 <Formik
@@ -128,7 +128,7 @@ const Adduser = () => {
                                     ))}
                                 </TextField>
                             </Box>
-                            <Box display="flex" justifyContent="center" mt="30px">
+                            <Box display="flex" justifyContent="left" mt="30px">
                                 <Button type="submit" color="secondary" variant="contained">
                                     Add User
                                 </Button>
