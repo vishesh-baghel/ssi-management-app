@@ -219,13 +219,6 @@
   ],
   "users": [
     {
-      "id": 2,
-      "userName": "User2",
-      "userEmail": "user2@domain.comm",
-      "userCompany": "Company1",
-      "userRole": true
-    },
-    {
       "id": 3,
       "userName": "User3",
       "userEmail": "user3@domain.com",
