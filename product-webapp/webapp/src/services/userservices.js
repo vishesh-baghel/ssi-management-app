@@ -7,6 +7,10 @@ export const getSsi = () => {
     return axios.get(url);
 }
 
+export const addUser = (data) =>{
+    return axios.post(userUrl,data) 
+}
+
 export const getUsers = () => {
     return axios(userUrl)
 }
