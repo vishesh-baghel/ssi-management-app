@@ -7,6 +7,7 @@ import Managessi from './pages/managessi/Managessi';
 import Addssi from './pages/addssi/Addssi';
 import Adduser from './pages/adduser/Adduser';
 import Dashboard from './pages/dashboard/Dashboard';
+import Viewssi from './pages/viewssi/Viewssi';
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -22,10 +23,10 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/manageusers" element={<Manageusers />} />
-              
               <Route path="/managessi" element={<Managessi />} />
               <Route path="/addssi" element={<Addssi />} />
               <Route path="/adduser" element={<Adduser />} />
+              <Route path="/ssi" element={<Viewssi />} />
             </Routes>
           </main>
         </div>
