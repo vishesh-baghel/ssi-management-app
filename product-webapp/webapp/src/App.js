@@ -23,7 +23,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/manageusers" element={<Manageusers />} />
-              
               <Route path="/managessi" element={<Managessi />} />
               <Route path="/addssi" element={<Addssi />} />
               <Route path="/adduser" element={<Adduser />} />

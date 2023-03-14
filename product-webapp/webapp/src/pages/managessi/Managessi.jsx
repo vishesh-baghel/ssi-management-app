@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { Box, Switch, ToggleButton, Typography} from '@mui/material';
+import { Box, Switch, Typography} from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import {Button} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
 import { getSsi } from '../../services/userservices';
+import { useState } from 'react';
 
 const Managessi = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [ssi, setssidata] = React.useState([]);
+  const [ssi, setssidata] = useState([]);
 
   useEffect(()=>{
     getSsi().then(data => {
@@ -22,7 +22,8 @@ const Managessi = () => {
         alert("Some err....")
       }
     })
-  },[])
+  },[]);
+
   const columns = [
     { field: 'ssiRefId', headerName: 'SSI ID', flex: 1},
     {
