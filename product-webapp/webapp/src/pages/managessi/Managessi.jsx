@@ -43,7 +43,8 @@ const Managessi = () => {
     .then(response=>{
       if (response.status===200){
         tempObj = response.data;
-        tempObj.isPrimary = true;
+  
+        (tempObj.isPrimary)?(tempObj.isPrimary=false):(tempObj.isPrimary=true)
         putSSIbyID(ssiId, tempObj)
         .then(response=>{
           if (response.status===200 || response.status===201){
