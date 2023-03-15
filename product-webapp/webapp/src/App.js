@@ -26,7 +26,7 @@ function App() {
               <Route path="/managessi" element={<Managessi />} />
               <Route path="/addssi" element={<Addssi />} />
               <Route path="/adduser" element={<Adduser />} />
-              <Route path="/ssi" element={<Viewssi />} />
+              <Route path="/ssi/:id" element={<Viewssi/>}/>
             </Routes>
           </main>
         </div>

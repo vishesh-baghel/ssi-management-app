@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { Box, Switch, Typography} from '@mui/material';
+import { Box, Typography} from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
 import { deleteSSI, getSsi, getSSIbyID, putSSIbyID } from '../../services/userservices';
 import { useState } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 const Managessi = () => {
   const theme = useTheme();
@@ -122,7 +121,7 @@ const Managessi = () => {
             </Box>
             <Box 
                 height='70vh'
-                width='80vw'
+                width='79vw'
             sx={{
           '& .MuiDataGrid-root': {
             border: 'none',

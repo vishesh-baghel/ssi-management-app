@@ -43,46 +43,72 @@ const Addssi = () => {
     const countries = [
         {
             value: 'India',
-            label: 'IN',
+            label: 'India',
         },
         {
             value: 'Austrailia',
-            label: 'AU',
+            label: 'Austrailia',
         },
         {
             value: 'United States of America',
-            label: 'USA',
+            label: 'United States of America',
         },
         {
             value: 'Germany',
-            label: 'GR',
+            label: 'Germany',
         },
         {
             value: 'France',
-            label: 'FR',
+            label: 'France',
         },
         {
             value: 'Japan',
-            label: 'JP',
+            label: 'Japan',
         },
     ];
 
     const currencies = [
         {
             value: 'USD',
-            label: '$',
+            label: 'USD',
         },
         {
             value: 'EUR',
-            label: '€',
+            label: 'EUR',
         },
         {
-            value: 'BTC',
-            label: '฿',
+            value: 'INR',
+            label: 'INR',
         },
         {
-            value: 'JPY',
-            label: '¥',
+            value: 'GBP',
+            label: 'GBP',
+        },
+    ];
+
+    const products = [
+        {
+            value: 'Collateral',
+            label: 'Collateral',
+        },
+        {
+            value: 'FX',
+            label: 'FX',
+        },
+    ];
+
+    const assetClasses = [
+        {
+            value: 'CASH',
+            label: 'CASH',
+        },
+        {
+            value: 'STOCKS',
+            label: 'STOCKS',
+        },
+        {
+            value: 'BONDS',
+            label: 'BONDS',
         },
     ];
 
@@ -91,24 +117,22 @@ const Addssi = () => {
             .string()
             .matches(accRegExp, "Account number is not valid")
             .required("required"),
-        accountName: yup.string().required("required"),
-        accountType: yup.string().required("required"),
+        accountName: yup.string(),
+        accountType: yup.string(),
         currency: yup.string().required("required"),
         product: yup.string().required("required"),
         assetClass: yup.string().required("required"),
         expiryDate: yup.string().required("required"),
         country: yup.string().required("required"),
-        routingCode: yup.string().required("required"),
+        routingCode: yup.string(),
         correspondanceAccountNumber: yup
             .string()
-            .matches(accRegExp, "Account number is not valid")
-            .required("required"),
+            .matches(accRegExp, "Account number is not valid"),
         correspondanceAccountName: yup.string().required("required"),
         correspondanceBankName: yup.string().required("required"),
         correspondanceBankBic: yup
             .string()
-            .matches(bicRegExp, "BIC is not valid")
-            .required("required"),
+            .matches(bicRegExp, "BIC is not valid"),
         beneficiaryBankName: yup.string().required("required"),
         beneficiaryBankBic: yup
             .string()
@@ -116,13 +140,11 @@ const Addssi = () => {
             .required("required"),
         intermediary1AccountNumber: yup
             .string()
-            .matches(accRegExp, "Account number is not valid")
-            .required("required"),
-        intermediary1AccountName: yup.string().required("required"),
+            .matches(accRegExp, "Account number is not valid"),
+        intermediary1AccountName: yup.string(),
         intermediary1BankBic: yup
             .string()
-            .matches(bicRegExp, "BIC is not valid")
-            .required("required"),
+            .matches(bicRegExp, "BIC is not valid"),
         intermediary2AccountNumber: yup
             .string()
             .matches(accRegExp, "Account number is not valid")
@@ -130,15 +152,24 @@ const Addssi = () => {
         intermediary2AccountName: yup.string().required("required"),
         intermediary2BankBic: yup
             .string()
-            .matches(bicRegExp, "BIC is not valid")
-            .required("required"),
+            .matches(bicRegExp, "BIC is not valid"),
     });
 
     return (
-        <>
+        <Box mt='0' sx = {{
+            '& .MuiInputBase-root': {
+                height: '40px',
+                fontSize: '14px',
+            },
+            '& .MuiInputLabel-root': {
+                fontSize: '14px',
+                alignSelf: 'center',
+            },
+        }}>
             <Box m="20px">
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="General Details" />
+                {/* <Header title="General Details" /> */}
+                <h3>General Details</h3>
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -155,7 +186,7 @@ const Addssi = () => {
 
 
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Box display="grid" gap="10px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -186,10 +217,10 @@ const Addssi = () => {
                                 <TextField
                                     fullWidth
                                     variant="filled"
-                                    // type="text"
-                                    // label="Account Type"
-                                    select
+                                    type="text"
                                     label="Account Type"
+                                    // select
+                                    // label="Account Type"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.accountType}
@@ -210,18 +241,16 @@ const Addssi = () => {
                                     error={!!touched.currency && !!errors.currency}
                                     helperText={touched.currency && errors.currency}
                                     sx={{ gridColumn: "span 2" }}
-
-                                    {...currencies.map((option) => (
+                                >
+                                    {currencies.map((option) => (
                                         <MenuItem key={option.value} value={option.value}>
                                             {option.label}
                                         </MenuItem>
                                     ))}
-                                />
+                                </TextField>
                                 <TextField
                                     fullWidth
                                     variant="filled"
-                                    // type="text"
-                                    // label="Product"
                                     select
                                     label="Product"
                                     onBlur={handleBlur}
@@ -231,12 +260,16 @@ const Addssi = () => {
                                     error={!!touched.product && !!errors.product}
                                     helperText={touched.product && errors.product}
                                     sx={{ gridColumn: "span 2" }}
-                                />
+                                >
+                                    {products.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                                 <TextField
                                     fullWidth
                                     variant="filled"
-                                    // type="text"
-                                    // label="Asset Class"
                                     select
                                     label="Asset Class"
                                     onBlur={handleBlur}
@@ -246,11 +279,20 @@ const Addssi = () => {
                                     error={!!touched.assetClass && !!errors.assetClass}
                                     helperText={touched.assetClass && errors.assetClass}
                                     sx={{ gridColumn: "span 2" }}
-                                />
+                                >
+                                    {assetClasses.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                                 <TextField
                                     fullWidth
                                     variant="filled"
                                     type="date"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
                                     label="Expiry Date"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
@@ -272,13 +314,14 @@ const Addssi = () => {
                                     error={!!touched.country && !!errors.country}
                                     helperText={touched.country && errors.country}
                                     sx={{ gridColumn: "span 2" }}
+                                >
 
-                                    {...countries.map((option) => (
+                                    {countries.map((option) => (
                                         <MenuItem key={option.value} value={option.value}>
                                             {option.label}
                                         </MenuItem>
                                     ))}
-                                />
+                                </TextField>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -290,7 +333,9 @@ const Addssi = () => {
                                     name="routingCode"
                                     error={!!touched.routingCode && !!errors.routingCode}
                                     helperText={touched.routingCode && errors.routingCode}
-                                    sx={{ gridColumn: "span 2" }}
+                                    sx={{ 
+                                        gridColumn: "span 2"
+                                    }}
                                 />
 
                             </Box>
@@ -300,7 +345,8 @@ const Addssi = () => {
             </Box>
             <Box m="20px">
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="Correspondent and Beneficiary" />
+                {/* <Header title="Correspondent and Beneficiary" /> */}
+                <h3>Correspondent and Beneficiary</h3>
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -315,7 +361,7 @@ const Addssi = () => {
                         handleSubmit,
                     }) => (
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Box display="grid" gap="10px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -402,7 +448,8 @@ const Addssi = () => {
             </Box>
             <Box m="20px">
                 {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="Intermediary" />
+                {/* <Header title="Intermediary" /> */}
+                <h3>Intermediary</h3>
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -417,7 +464,7 @@ const Addssi = () => {
                         handleSubmit,
                     }) => (
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Box display="grid" gap="10px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -498,7 +545,7 @@ const Addssi = () => {
                                     sx={{ gridColumn: "span 2" }}
                                 />
                             </Box>
-                            <Box display="flex" justifyContent="center" mt="30px">
+                            <Box display="flex" justifyContent="left" mt="20px">
                                 <Button type="submit" color="secondary" variant="contained">
                                     Add SSI
                                 </Button>
@@ -507,7 +554,7 @@ const Addssi = () => {
                     )}
                 </Formik>
             </Box>
-        </>
+        </Box>
 
         // </Box>
     );
