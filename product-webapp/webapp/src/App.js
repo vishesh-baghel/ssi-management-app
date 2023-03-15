@@ -9,10 +9,16 @@ import Adduser from './pages/adduser/Adduser';
 import Dashboard from './pages/dashboard/Dashboard';
 import Viewssi from './pages/viewssi/Viewssi';
 import { Routes, Route } from 'react-router-dom';
+import Landing from './pages/landingpage/screens/Landing';
+import { Helmet } from "react-helmet";
+
+import 'bootstrap/dist/css/bootstrap.css'
+
 
 function App() {
   const { colorMode, theme } = useMode();
   return (
+  // <Landing></Landing>
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />

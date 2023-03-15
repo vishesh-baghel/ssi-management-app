@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import './pages/landingpage/style/flexboxgrid.min.css'
+import './pages/landingpage/style/index.css';
 import './index.css';
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
+import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,3 +18,4 @@ root.render(
   </React.StrictMode>
 );
 
+reportWebVitals();
