@@ -158,8 +158,6 @@ const Addssi = () => {
     return (
         <>
             <Box m="20px">
-                {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="General Details" />
                 <Formik
                     onSubmit={handleFormSubmit}
                     initialValues={initialValues}
@@ -176,7 +174,8 @@ const Addssi = () => {
 
 
                         <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+                            <Header title="General Details" />
+                            <Box display="grid" mb="30px" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -296,7 +295,7 @@ const Addssi = () => {
                                     label="Country"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    // value={values.country}
+                                    value={values.country}
                                     name="country"
                                     error={!!touched.country && !!errors.country}
                                     helperText={touched.country && errors.country}
@@ -322,30 +321,10 @@ const Addssi = () => {
                                     helperText={touched.routingCode && errors.routingCode}
                                     sx={{ gridColumn: "span 2" }}
                                 />
-
                             </Box>
-                        </form>
-                    )}
-                </Formik>
-            </Box>
-            <Box m="20px">
-                {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="Correspondent and Beneficiary" />
-                <Formik
-                    onSubmit={handleFormSubmit}
-                    initialValues={initialValues}
-                    validationSchema={userSchema}
-                >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleBlur,
-                        handleChange,
-                        handleSubmit,
-                    }) => (
-                        <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+
+                            <Header title="Correspondant and Beneficiary"/>
+                            <Box display="grid" mb="30px" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -426,28 +405,9 @@ const Addssi = () => {
                                     sx={{ gridColumn: "span 2" }}
                                 />
                             </Box>
-                        </form>
-                    )}
-                </Formik>
-            </Box>
-            <Box m="20px">
-                {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-                <Header title="Intermediary" />
-                <Formik
-                    onSubmit={handleFormSubmit}
-                    initialValues={initialValues}
-                    validationSchema={userSchema}
-                >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleBlur,
-                        handleChange,
-                        handleSubmit,
-                    }) => (
-                        <form onSubmit={handleSubmit}>
-                            <Box display="grid" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
+
+                            <Header title="Intermediary"/>
+                            <Box display="grid" mb="30px" gap="30px" gridTemplateColumns="repeat(6,minmax(0,1fr))" sx={{ "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }, }}>
                                 <TextField
                                     fullWidth
                                     variant="filled"
@@ -527,8 +487,10 @@ const Addssi = () => {
                                     helperText={touched.intermediary2BankBic && errors.intermediary2BankBic}
                                     sx={{ gridColumn: "span 2" }}
                                 />
+
                             </Box>
-                            <Box display="flex" justifyContent="center" mt="30px">
+
+                            <Box display="flex" justifyContent="center">
                                 <Button type="submit" color="secondary" variant="contained">
                                     Add SSI
                                 </Button>
@@ -538,8 +500,6 @@ const Addssi = () => {
                 </Formik>
             </Box>
         </>
-
-        // </Box>
     );
 };
 
