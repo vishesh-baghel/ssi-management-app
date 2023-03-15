@@ -96,7 +96,7 @@ const Manageusers = () => {
     return (
         <Box m='20px'>
             <Header title='Manage Users' subtitle='Manage Users Efficiently' />
-            <Box m="40px 0 0 0" height="70vh" width='80vw' sx={{
+            <Box m="40px 0 0 0" height="75vh" width='83vw' sx={{
                 "& .MuiDataGrid-root": {
                     border: "none",
                 },

@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { Box, Switch, Typography} from '@mui/material';
+import { Box, Typography} from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
 import { deleteSSI, getSsi, getSSIbyID, putSSIbyID } from '../../services/userservices';
 import { useState } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 const Managessi = () => {
   const theme = useTheme();
@@ -43,7 +42,8 @@ const Managessi = () => {
     .then(response=>{
       if (response.status===200){
         tempObj = response.data;
-        tempObj.isPrimary = true;
+  
+        (tempObj.isPrimary)?(tempObj.isPrimary=false):(tempObj.isPrimary=true)
         putSSIbyID(ssiId, tempObj)
         .then(response=>{
           if (response.status===200 || response.status===201){
@@ -120,8 +120,8 @@ const Managessi = () => {
             <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
             </Box>
             <Box 
-                height='70vh'
-                width='80vw'
+                height='75vh'
+                width='83vw'
             sx={{
           '& .MuiDataGrid-root': {
             border: 'none',

@@ -10,6 +10,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import TuneIcon from '@mui/icons-material/Tune';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import { Avatar} from "@mui/material";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -73,37 +74,37 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  ADMIN PANEL
-                </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
+                <Typography variant="h3" color={colors.grey[100]}>
+                  Baton Systems
+                </Typography>
               </Box>
             )}
           </MenuItem>
 
           {!isCollapsed && (
-            <Box mb="25px">
+            <Box ml="50px" display='flex' flexDirection='row'>
               <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={`../../assets/icons8-circled-user-male-skin-type-1-and-2-48.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                />
+              <Avatar sx={{ 
+                bgcolor: colors.blueAccent[400],
+                width: 50,
+                height: 50,
+              }}>
+                V
+              </Avatar>
               </Box>
-              <Box textAlign="center">
+              <Box textAlign="center" pb={1} m='20px' display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
                 <Typography
-                  variant="h2"
+                  variant="h3"
                   color={colors.grey[100]}
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
                   vishesh
                 </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
+                <Typography variant="h6" color={colors.greenAccent[500]}>
                   Baton admin
                 </Typography>
               </Box>

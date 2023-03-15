@@ -76,11 +76,12 @@ const Dashboard = () => {
             <Header title='Dashboard' subtitle='Welcome to your dashboard' />
             </Box>
             <Box 
-                height='70vh'
-                width='80vw'
+                height='75vh'
+                width='83vw'
                 sx={{
                     '& .MuiDataGrid-root': {
                         border: 'none',
+                        animation: 'none',
                     },
                     '& .MuiDataGrid-cell': {
                         borderBottom: 'none',
@@ -102,6 +103,7 @@ const Dashboard = () => {
                     '& .MuiDataGrid-toolbarContainer .MuiButton-text': {
                         color: `${colors.grey[100]} !important`
                     },
+
                 }}
             >
                 <DataGrid 
