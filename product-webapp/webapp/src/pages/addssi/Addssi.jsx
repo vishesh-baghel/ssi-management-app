@@ -158,7 +158,7 @@ const Addssi = () => {
     return (
         <Box mt='0' sx = {{
             '& .MuiInputBase-root': {
-                height: '40px',
+                height: '55px',
                 fontSize: '14px',
             },
             '& .MuiInputLabel-root': {

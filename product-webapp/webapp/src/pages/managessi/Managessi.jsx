@@ -120,8 +120,8 @@ const Managessi = () => {
             <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
             </Box>
             <Box 
-                height='70vh'
-                width='79vw'
+                height='75vh'
+                width='83vw'
             sx={{
           '& .MuiDataGrid-root': {
             border: 'none',
