@@ -15,6 +15,10 @@ export const getSSIbyID = (ssiId) =>{
     return axios.get(url+"/"+ssiId);
 }
 
+export const getSSIbySsiID = (ssiId) =>{
+    return axios.get(url,{params:{ssiRefId:ssiId}});
+}
+
 export const putSSIbyID = (ssiId, obj) =>{
     return axios.put(url+"/"+ssiId, obj)
 }

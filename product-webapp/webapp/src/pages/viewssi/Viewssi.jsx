@@ -1,14 +1,33 @@
 import * as React from 'react';
+import {useState,useEffect} from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import ssidata from './ssiviewdata.json';
 import { Box} from '@mui/material';
-
+import { useParams } from 'react-router-dom';
+import {getSSIbySsiID} from '../../services/userservices';
 export default function Viewssi() {
+
+  const [ssidata,setSsiData] = useState([])
+  
+  const params = useParams()
+
+  const updateData = ()=>{
+    // console.log(params.id);
+    getSSIbySsiID(params.id).then(res=>{
+      setSsiData(res.data[0])
+      console.log(res.data[0]);
+    })
+  }
+  
+  useEffect(()=>{
+    updateData()
+  },[])
+
+
   return (
 <Box mr='1vh' ml='1vh'>
     <TableContainer sx={{
