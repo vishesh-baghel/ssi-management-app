@@ -9,7 +9,13 @@ import TableRow from '@mui/material/TableRow';
 import { Box} from '@mui/material';
 import { useParams } from 'react-router-dom';
 import {getSSIbySsiID} from '../../services/userservices';
+import {useTheme} from '@mui/material/styles';
+import { tokens } from '../../themes';
+import Header from '../../components/Header';
+
 export default function Viewssi() {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const [ssidata,setSsiData] = useState([])
   
@@ -29,20 +35,16 @@ export default function Viewssi() {
 
 
   return (
-<Box mr='1vh' ml='1vh'>
+<Box m='20px'>
+      <Header title='SSI details' subtitle='Settlement instruction details'/>
     <TableContainer sx={{
         width: "auto",
-        height: '91vh',
-        backgroundColor: 'primary.dark',
+        height: '70vh',
+        backgroundColor: colors.background,
         borderRadius: '7px',
       }}>
       <Table>
         <TableHead> 
-          <TableRow>
-            <TableCell colSpan={5}>
-            <h1><b>SSI Details</b></h1>
-            </TableCell>
-          </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
