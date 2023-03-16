@@ -6,6 +6,9 @@ import { Box, useTheme, TextField, IconButton } from '@mui/material';
 import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
 
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+
 import { getUsers, updateUserAdminStatus, removeUser } from "../../services/userservices";
 
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -91,6 +94,34 @@ const Manageusers = () => {
         document.body.appendChild(temp_link);
         temp_link.click();
         document.body.removeChild(temp_link);
+    }
+
+    const exportPdf = ()=>{
+        const csvString = [
+            [
+                "id",
+                "userName",
+                "userEmail",
+                "userCompany",
+                "userRole"
+            ],
+            ...modifiedRows.map(item => [
+                item.id,
+                item.userName,
+                item.userEmail,
+                item.userCompany,
+                item.userRole
+            ])
+        ].map(e => e.join(",")).join("\n");
+        const csv_data = `${csvString}`.split("\n");
+        const head = csv_data.shift().split(",")
+        const body = csv_data.map(n=>n.split(','))
+        const doc = new jsPDF()
+        autoTable(doc, {
+            head: [head],
+            body: body,
+          });
+          doc.save(document.title);
     }
 
     const columns = [
@@ -221,7 +252,7 @@ const Manageusers = () => {
                             />
                         </Box>
                         <Box>
-                            <IconButton onClick={exportCsv}><DownloadIcon /></IconButton>
+                            <IconButton onClick={exportPdf}><DownloadIcon /></IconButton>
                         </Box>
                     </Box>
                     <DataGrid
