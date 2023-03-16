@@ -13,6 +13,7 @@ import Appwrapper from './Appwrapper';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Landing from './pages/landingpage/screens/Landing';
+import Editssi from './pages/editssi/Editssi'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/addssi" element={<Addssi />} />
               <Route path="/adduser" element={<Adduser />} />
               <Route path="/ssi/:id" element={<Viewssi/>}/>
+              <Route path="/editssi/:id" element={<Editssi/>}/>
       </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />

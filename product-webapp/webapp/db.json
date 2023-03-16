@@ -7,12 +7,12 @@
       "product": "Collateral",
       "entityRefId": "402154",
       "currency": "USD",
-      "country": null,
+      "country": "India",
       "assetClass": "CASH",
       "accountNumber": "BBHK_Firm_GBP_001",
-      "accountName": null,
+      "accountName": "Sai Mohit Ambekar",
       "accountType": "NA",
-      "routingCode": null,
+      "routingCode": 432423,
       "correspondentBankName": null,
       "correspondentBankBic": "GBPCORRXXXX",
       "beneficiaryBankName": "Hong Kong Bank",
@@ -29,12 +29,14 @@
       "isPrimary": false,
       "isApproved": true,
       "effectiveDate": "2022-11-15 00:00:00.000000000",
-      "expiryDate": "2023-11-16 00:00:00.000000000",
+      "expiryDate": "2023-03-17",
       "approvedTs": null,
       "approvedBy": null,
       "customField": "",
       "createdBy": "System",
-      "updatedBy": null
+      "updatedBy": null,
+      "correspondanceBankBic": "GBPBBHKXXXX",
+      "beneficiaryBankBic": "GBPRBHKXXXX"
     },
     {
       "id": 3,
@@ -691,12 +693,12 @@
       "product": "FX",
       "entityRefId": "402154",
       "currency": "GBP",
-      "country": null,
+      "country": "India",
       "assetClass": "CASH",
       "accountNumber": "BBHK_Firm_GBP_001",
-      "accountName": null,
+      "accountName": "Ajay",
       "accountType": "NA",
-      "routingCode": null,
+      "routingCode": 7869,
       "correspondentBankName": null,
       "correspondentBankBic": "GBPCORRXXXX",
       "beneficiaryBankName": "Hong Kong Bank",
@@ -713,12 +715,14 @@
       "isPrimary": true,
       "isApproved": true,
       "effectiveDate": "2022-11-15 00:00:00.000000000",
-      "expiryDate": "2023-11-16 00:00:00.000000000",
+      "expiryDate": "2023-03-31",
       "approvedTs": null,
       "approvedBy": null,
       "customField": "",
       "createdBy": "System",
-      "updatedBy": null
+      "updatedBy": null,
+      "correspondanceBankBic": "GBPBBHKXXXX",
+      "beneficiaryBankBic": "GBPRBHKXXXX"
     },
     {
       "id": 10,
@@ -1098,6 +1102,13 @@
       "userCompany": "baton",
       "userRole": true,
       "id": 24
+    },
+    {
+      "userName": "Prakhar Singh",
+      "userEmail": "prakharbhai@gmail.com",
+      "userCompany": "Baton",
+      "userRole": false,
+      "id": 25
     }
   ]
 }

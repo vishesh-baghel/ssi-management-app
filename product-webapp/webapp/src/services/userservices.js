@@ -11,6 +11,10 @@ export const addSsi=(data)=>{
     return axios.post(url,data)
 }
 
+export const editSsi=(id,data)=>{
+    return axios.put(url+"/"+id,data)
+}
+
 export const deleteSSI = (ssiId) => {
     return axios.delete(url + "/" + ssiId);
 }
