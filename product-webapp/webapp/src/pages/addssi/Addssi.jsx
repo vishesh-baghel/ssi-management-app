@@ -4,12 +4,19 @@ import { Box, Button, TextField, MenuItem } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { addSsi } from "../../services/userservices";
 
 const Addssi = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
-    const handleFormSubmit = (values) => {
+    const handleFormSubmit = (values, actions) => {
         console.log(values);
+        addSsi(values).then(res => {
+            if (res.status === 201) {
+                alert("User is Added Successfully")
+                actions.resetForm();
+            }
+        })
     };
 
     const initialValues = {
@@ -36,7 +43,7 @@ const Addssi = () => {
         intermediary2BankBic: "",
     };
 
-    const accRegExp = /^[a-zA-Z0-9]+$/;
+    // const accRegExp = /^[a-zA-Z0-9]+$/;
 
     const bicRegExp = /^([A-Z]{6}[A-Z2-9][A-NP-Z1-9])(X{3}|[A-WY-Z0-9][A-Z0-9]{2})?$/;
 
@@ -113,10 +120,7 @@ const Addssi = () => {
     ];
 
     const userSchema = yup.object().shape({
-        accountNumber: yup
-            .string()
-            .matches(accRegExp, "Account number is not valid")
-            .required("required"),
+        accountNumber: yup.string().required("required"),
         accountName: yup.string(),
         accountType: yup.string(),
         currency: yup.string().required("required"),
@@ -125,34 +129,18 @@ const Addssi = () => {
         expiryDate: yup.string().required("required"),
         country: yup.string().required("required"),
         routingCode: yup.string(),
-        correspondanceAccountNumber: yup
-            .string()
-            .matches(accRegExp, "Account number is not valid"),
-        correspondanceAccountName: yup.string().required("required"),
-        correspondanceBankName: yup.string().required("required"),
-        correspondanceBankBic: yup
-            .string()
-            .matches(bicRegExp, "BIC is not valid"),
+        correspondanceAccountNumber: yup.string(),
+        correspondanceAccountName: yup.string(),
+        correspondanceBankName: yup.string(),
+        correspondanceBankBic: yup.string().matches(bicRegExp, "BIC is not valid").required("required"),
         beneficiaryBankName: yup.string().required("required"),
-        beneficiaryBankBic: yup
-            .string()
-            .matches(bicRegExp, "BIC is not valid")
-            .required("required"),
-        intermediary1AccountNumber: yup
-            .string()
-            .matches(accRegExp, "Account number is not valid"),
+        beneficiaryBankBic: yup.string().matches(bicRegExp, "BIC is not valid").required("required"),
+        intermediary1AccountNumber: yup.string(),
         intermediary1AccountName: yup.string(),
-        intermediary1BankBic: yup
-            .string()
-            .matches(bicRegExp, "BIC is not valid"),
-        intermediary2AccountNumber: yup
-            .string()
-            .matches(accRegExp, "Account number is not valid")
-            .required("required"),
-        intermediary2AccountName: yup.string().required("required"),
-        intermediary2BankBic: yup
-            .string()
-            .matches(bicRegExp, "BIC is not valid"),
+        intermediary1BankBic: yup.string().matches(bicRegExp, "BIC is not valid"),
+        intermediary2AccountNumber: yup.string(),
+        intermediary2AccountName: yup.string(),
+        intermediary2BankBic: yup.string().matches(bicRegExp, "BIC is not valid"),
     });
 
     return (
