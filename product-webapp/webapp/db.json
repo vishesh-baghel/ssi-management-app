@@ -867,78 +867,6 @@
       "customField": "",
       "createdBy": "System",
       "updatedBy": null
-    },
-    {
-      "accountNumber": "2132872182418193",
-      "accountName": "Sai Mohit Ambekar",
-      "accountType": "",
-      "currency": "INR",
-      "product": "Collateral",
-      "assetClass": "STOCKS",
-      "expiryDate": "2023-03-15",
-      "country": "Austrailia",
-      "routingCode": "",
-      "correspondanceAccountNumber": "",
-      "correspondanceAccountName": "",
-      "correspondanceBankName": "",
-      "correspondanceBankBic": "GBPBBHKXXXX",
-      "beneficiaryBankName": "dfasdf",
-      "beneficiaryBankBic": "345673243",
-      "intermediary1AccountNumber": "",
-      "intermediary1AccountName": "",
-      "intermediary1BankBic": "",
-      "intermediary2AccountNumber": "",
-      "intermediary2AccountName": "",
-      "intermediary2BankBic": "",
-      "id": 29
-    },
-    {
-      "accountNumber": "213287218241819",
-      "accountName": "Sai Mohit Ambekar",
-      "accountType": "",
-      "currency": "USD",
-      "product": "Collateral",
-      "assetClass": "BONDS",
-      "expiryDate": "2023-03-01",
-      "country": "Japan",
-      "routingCode": "",
-      "correspondanceAccountNumber": "",
-      "correspondanceAccountName": "",
-      "correspondanceBankName": "",
-      "correspondanceBankBic": "GBPBBHKXXXX",
-      "beneficiaryBankName": "dfasdf",
-      "beneficiaryBankBic": "34567",
-      "intermediary1AccountNumber": "",
-      "intermediary1AccountName": "",
-      "intermediary1BankBic": "",
-      "intermediary2AccountNumber": "",
-      "intermediary2AccountName": "",
-      "intermediary2BankBic": "",
-      "id": 30
-    },
-    {
-      "accountNumber": "213287218241819",
-      "accountName": "Sai Mohit Ambekar",
-      "accountType": "",
-      "currency": "GBP",
-      "product": "Collateral",
-      "assetClass": "BONDS",
-      "expiryDate": "2023-03-13",
-      "country": "Austrailia",
-      "routingCode": "",
-      "correspondanceAccountNumber": "",
-      "correspondanceAccountName": "",
-      "correspondanceBankName": "",
-      "correspondanceBankBic": "GBPBBHKXXXX",
-      "beneficiaryBankName": "dfasdf",
-      "beneficiaryBankBic": "GBPRBHKXXXX",
-      "intermediary1AccountNumber": "",
-      "intermediary1AccountName": "",
-      "intermediary1BankBic": "",
-      "intermediary2AccountNumber": "",
-      "intermediary2AccountName": "",
-      "intermediary2BankBic": "",
-      "id": 31
     }
   ],
   "users": [
@@ -961,7 +889,7 @@
       "userName": "User4",
       "userEmail": "user4@domain.comm",
       "userCompany": "Company1",
-      "userRole": true
+      "userRole": false
     },
     {
       "id": 5,
@@ -1102,6 +1030,41 @@
       "userCompany": "baton",
       "userRole": true,
       "id": 24
+    },
+    {
+      "userName": "Ann Mary",
+      "userEmail": "Annmary@gmail.com",
+      "userCompany": "Baton1",
+      "userRole": false,
+      "id": 25
+    },
+    {
+      "userName": "Ajay Mathew",
+      "userEmail": "Ajay@gmail.com",
+      "userCompany": "CNN2",
+      "userRole": true,
+      "id": 26
+    },
+    {
+      "userName": "Ajil Ibrahim",
+      "userEmail": "Ajil@gmail.com",
+      "userCompany": "Java1",
+      "userRole": false,
+      "id": 27
+    },
+    {
+      "userName": "Adith P Anandhan ",
+      "userEmail": "Adith.Panandhan@gmail.com",
+      "userCompany": "CSI",
+      "userRole": false,
+      "id": 28
+    },
+    {
+      "userName": "Navneeth Sankar",
+      "userEmail": "sankar@gmail.com",
+      "userCompany": "Sankar co.",
+      "userRole": true,
+      "id": 29
     },
     {
       "userName": "Prakhar Singh",
