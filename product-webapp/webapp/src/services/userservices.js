@@ -7,6 +7,10 @@ export const getSsi = () => {
     return axios.get(url);
 }
 
+export const addSsi=(data)=>{
+    return axios.post(url,data)
+}
+
 export const deleteSSI = (ssiId) => {
     return axios.delete(url + "/" + ssiId);
 }
