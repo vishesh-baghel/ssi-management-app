@@ -9,35 +9,28 @@ import Adduser from './pages/adduser/Adduser';
 import Dashboard from './pages/dashboard/Dashboard';
 import Viewssi from './pages/viewssi/Viewssi';
 import { Routes, Route } from 'react-router-dom';
+import Appwrapper from './Appwrapper';
+import Login from './pages/login/Login';
+import Register from './pages/register/Register';
 import Landing from './pages/landingpage/screens/Landing';
-import { Helmet } from "react-helmet";
-
-import 'bootstrap/dist/css/bootstrap.css'
-
 
 function App() {
-  const { colorMode, theme } = useMode();
   return (
-  // <Landing></Landing>
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <div className="app">
-          <Sidebar />
-          <main className="content">
-            <Topbar />
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
+    <>
+    <Routes>
+      <Route path='/' element={<Appwrapper />}>
+              <Route index element={<Dashboard />} />
               <Route path="/manageusers" element={<Manageusers />} />
               <Route path="/managessi" element={<Managessi />} />
               <Route path="/addssi" element={<Addssi />} />
               <Route path="/adduser" element={<Adduser />} />
               <Route path="/ssi/:id" element={<Viewssi/>}/>
-            </Routes>
-          </main>
-        </div>
-        </ThemeProvider>
-    </ColorModeContext.Provider>
+      </Route>
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='/home' element={<Landing />} />
+    </Routes>
+    </>
   );
 }
 

@@ -9,14 +9,15 @@ import Footer from "../components/Sections/Footer"
 export default function Landing() {
   return (
     <>
-      <TopNavbar />
-      <Header />
-      <Services />
+      {/* <TopNavbar /> */}
+      {/* <Header /> */}
+      {/* <Services /> */}
       {/* <Projects /> */}
       {/* <Blog /> */}
       {/* <Pricing /> */}
-      <Contact />
-      <Footer />
+      {/* <Contact /> */}
+      {/* <Footer /> */}
+      <h1>home</h1>
     </>
   );
 }
