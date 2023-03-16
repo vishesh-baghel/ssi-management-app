@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
+
 export default function Register() {
   const handleSubmit = (event) => {
     event.preventDefault();
