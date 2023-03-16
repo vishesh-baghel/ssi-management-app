@@ -14,20 +14,19 @@ const Hero = () => {
             Let's scale your business
           </Typography>
           <Typography variant="h6" className={classes.subtitle}>
-            Hire professionals who will help your business make 10X your
-            previous income. With over 5years experience in Marketing & Business
-            strategy, we are your best client.
+            Increase your team's productivity with Baton and get more done in less time.
           </Typography>
           <Button
             variant="contained"
             color="primary"
-            sx={{ width: '200px', fontSize: '16px' }}
+            sx={{ width: '200px', height:'50px', fontSize: '16px' }}
+            href="/register"
           >
-            HIRE US
+            Get Started
           </Button>
         </Grid>
         <Grid item xs={12} md={5}>
-          <img src="" alt="My Team" className={classes.largeImage} />
+          <img src="../../assets/3d-plastic-people-boy-with-books.png" alt="My Team" className={classes.largeImage} />
         </Grid>
       </Grid>
     </Box>

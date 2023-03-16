@@ -1,7 +1,3 @@
-import { ColorModeContext, useMode } from './themes';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import Topbar from './pages/global/Topbar';
-import Sidebar from './pages/global/Sidebar';
 import Manageusers from './pages/manageusers/Manageusers';
 import Managessi from './pages/managessi/Managessi';
 import Addssi from './pages/addssi/Addssi';

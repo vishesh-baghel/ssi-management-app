@@ -7,6 +7,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    Button,
     IconButton,
     Drawer,
   } from '@mui/material';
@@ -17,12 +18,10 @@ import {
   import useStyles from '../styles/styles';
   import { useTheme } from '@mui/material/styles';
   import useMediaQuery from '@mui/material/useMediaQuery';
-  
+  import { updateUserAdminStatus } from '../services/userservices';
+
   function ElevationScroll(props) {
     const { children, window } = props;
-    // Note that you normally won't need to set the window ref as useScrollTrigger
-    // will default to window.
-    // This is only being set here because the demo is in an iframe.
     const trigger = useScrollTrigger({
       disableHysteresis: true,
       threshold: 0,
@@ -36,52 +35,11 @@ import {
   
   ElevationScroll.propTypes = {
     children: PropTypes.element.isRequired,
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
     window: PropTypes.func,
   };
   
   const Homepageheader = (props) => {
     const classes = useStyles();
-    const links = [
-      { id: 1, route: 'About', url: 'https://blog.appseed.us/mui-react-coding-landing-page/' },
-      { id: 2, route: 'More Apps', url: 'https://appseed.us/apps/react' },
-    ];
-  
-    const [state, setState] = React.useState({
-      right: false,
-    });
-  
-    const toggleDrawer = (anchor, open) => (event) => {
-      if (
-        event.type === 'keydown' &&
-        (event.key === 'Tab' || event.key === 'Shift')
-      ) {
-        return;
-      }
-  
-      setState({ ...state, [anchor]: open });
-    };
-  
-    const list = (anchor) => (
-      <Box
-        sx={{ width: 250 }}
-        role="presentation"
-        onClick={toggleDrawer(anchor, false)}
-        onKeyDown={toggleDrawer(anchor, false)}
-      >
-        <List>
-          {links.map((link) => (
-            <ListItem button key={link.id}>
-              <ListItemText primary={link.route} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    );
-  
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
   
@@ -90,46 +48,44 @@ import {
         <ElevationScroll {...props}>
           <AppBar>
             <Toolbar className={classes.toolBar}>
-              <Link href="#" underline="none">
-                <Typography variant="h5" className={classes.logo}>
-                  MUI Sample
-                </Typography>
-              </Link>
-  
-              {matches ? (
+                  <Box 
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            mt: 0,
+                            flexDirection: 'row',
+                        }}
+                    >
+                    <img 
+                    height='50px'
+                    width='50px'
+                    src='../../assets/baton-logo-new.png' alt='logo' className={classes.logoImage} />
+                    <Typography 
+                        variant='h6' 
+                        className={classes.logo}
+                        sx={{
+                            ml: 2,
+                            fontWeight: 'bold',
+                            fontSize: '1.5rem',
+                        }}
+                    >
+                      Baton Systems
+                    </Typography>
+                  </Box>
                 <Box>
-                <IconButton
-                  size="large"
-                  edge="end"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={toggleDrawer('right', true)}
+                <Button 
+                    variant='outlined' 
+                    color="primary" 
+                    className={classes.button}
+                    sx={{ marginRight: '10px' }}
+                    href='/login'
                 >
-                  <MenuIcon className={classes.menuIcon} fontSize="" />
-                </IconButton>
-  
-                <Drawer
-                  anchor="right"
-                  open={state['right']}
-                  onClose={toggleDrawer('right', false)}
-                >
-                  {list('right')}
-                </Drawer>
-              </Box>
-              ): <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexGrow: '0.1',
-                }}
-              >
-                {links.map((link) => (
-                  <Link href={link.url} target="_blank" underline="none" key={link.id}>
-                    <Typography className={classes.link}>{link.route}</Typography>
-                  </Link>
-                ))}
-              </Box>}
-             
+                    Login
+                </Button>
+                <Button href='/register' variant="outlined" color="primary" className={classes.button}>
+                    Sign up
+                </Button>        
+                </Box>
             </Toolbar>
           </AppBar>
         </ElevationScroll>
