@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, useTheme, TextField, IconButton } from '@mui/material';
+import { Box, useTheme, TextField, IconButton,Menu,MenuItem } from '@mui/material';
 import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
+import "./styles.css";
 
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -96,7 +97,7 @@ const Manageusers = () => {
         document.body.removeChild(temp_link);
     }
 
-    const exportPdf = ()=>{
+    const exportPdf = () => {
         const csvString = [
             [
                 "id",
@@ -115,13 +116,13 @@ const Manageusers = () => {
         ].map(e => e.join(",")).join("\n");
         const csv_data = `${csvString}`.split("\n");
         const head = csv_data.shift().split(",")
-        const body = csv_data.map(n=>n.split(','))
+        const body = csv_data.map(n => n.split(','))
         const doc = new jsPDF()
         autoTable(doc, {
             head: [head],
             body: body,
-          });
-          doc.save(document.title);
+        });
+        doc.save(document.title);
     }
 
     const columns = [
@@ -161,6 +162,42 @@ const Manageusers = () => {
     useEffect(() => {
         updateRows();
     }, []);
+
+    const dummyMenuItems = [
+        {
+            title: "Export as PDF",
+            id:"pdf"
+        },
+        {
+            title: "Export as CSV",
+            id:"csv"
+        }
+    ];
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handleClick = e => {
+        setAnchorEl(e.currentTarget);
+    };
+    const handleClose = (e) => {
+        setAnchorEl(null);
+        if(e.target.id==='pdf'){
+            exportPdf()
+        }else if(e.target.id==='csv'){
+            exportCsv();
+        }
+    };
+    const nativeOnChange = e => {
+        const detail = {
+            selectedIndex: e.target.selectedIndex
+        };
+        e.target.selectedIndex = 0;
+
+        e.target.dispatchEvent(new CustomEvent("itemClick", { detail }));
+    };
+
+    const itemClick = e => {
+        console.log("Item Clicked " + e.detail);
+    };
 
     return (
         <Box m='0 20px'>
@@ -206,7 +243,7 @@ const Manageusers = () => {
                         <Box>
                             <TextField
                                 // style={{ width: 110 }}
-                                InputLabelProps={{shrink:true}}
+                                InputLabelProps={{ shrink: true }}
                                 id="search-id" type="number"
                                 onBlur={clearTextField}
                                 onChange={(e) => {
@@ -217,7 +254,7 @@ const Manageusers = () => {
                             />
                             <TextField
                                 // style={{ width: 245 }}
-                                InputLabelProps={{shrink:true}}
+                                InputLabelProps={{ shrink: true }}
                                 id="search-name" type="text"
                                 onBlur={clearTextField}
                                 onChange={(e) => {
@@ -228,7 +265,7 @@ const Manageusers = () => {
                             />
                             <TextField
                                 // style={{ width: 245 }}
-                                InputLabelProps={{shrink:true}}
+                                InputLabelProps={{ shrink: true }}
 
                                 id="search-email" type="text"
                                 onBlur={clearTextField}
@@ -240,7 +277,7 @@ const Manageusers = () => {
                             />
                             <TextField
                                 // style={{ width: 245 }}
-                                InputLabelProps={{shrink:true}}
+                                InputLabelProps={{ shrink: true }}
 
                                 id="search-company" type="text"
                                 onBlur={clearTextField}
@@ -252,7 +289,24 @@ const Manageusers = () => {
                             />
                         </Box>
                         <Box>
-                            <IconButton onClick={exportPdf}><DownloadIcon /></IconButton>
+                            <IconButton aria-controls="simple-menu"
+                                aria-haspopup="true"
+                                onClick={handleClick}
+                                aria-label="Open to show more"
+                                title="Open to show more"><DownloadIcon /></IconButton>
+                            <Menu
+                                id="simple-menu"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                {dummyMenuItems.map(item => (
+                                    <MenuItem onClick={handleClose} key={item.title} id={item.id} value={item.title}>
+                                        {item.title}
+                                    </MenuItem>
+                                ))}
+                            </Menu>
                         </Box>
                     </Box>
                     <DataGrid
