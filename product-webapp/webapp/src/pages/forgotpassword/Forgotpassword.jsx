@@ -25,7 +25,7 @@ function Copyright(props) {
 }
 
 
-export default function Forgot() {
+export default function ForgotPassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

@@ -13,6 +13,7 @@ import Appwrapper from './Appwrapper';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Landing from './pages/landingpage/Landing';
+import ForgotPassword from './pages/forgotpassword/Forgotpassword';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/home' element={<Landing />} />
+      <Route path='/forgotpassword' element={<ForgotPassword />} />
     </Routes>
     </>
   );
