@@ -12,7 +12,7 @@ import { Routes, Route } from 'react-router-dom';
 import Appwrapper from './Appwrapper';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
-import Landing from './pages/landingpage/screens/Landing';
+import Landing from './pages/landingpage/Landing';
 
 function App() {
   return (
