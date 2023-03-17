@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, useTheme, Typography } from '@mui/material';
+import { Box, useTheme, Typography } from '@mui/material';
 import { tokens } from './../themes';
 
 function Header({title, subtitle}) {

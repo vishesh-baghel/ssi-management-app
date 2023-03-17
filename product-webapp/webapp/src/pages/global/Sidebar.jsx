@@ -114,7 +114,7 @@ const Sidebar = () => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -129,14 +129,14 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Add SSI"
-              to="/addssi"
+              to="/dashboard/addssi"
               icon={<PostAddIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Manage SSI"
-              to="/managessi"
+              to="/dashboard/managessi"
               icon={<TuneIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -151,14 +151,14 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Add User"
-              to="/adduser"
+              to="/dashboard/adduser"
               icon={<PersonAddAltOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Manage Users"
-              to="/manageusers"
+              to="/dashboard/manageusers"
               icon={<ManageAccountsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

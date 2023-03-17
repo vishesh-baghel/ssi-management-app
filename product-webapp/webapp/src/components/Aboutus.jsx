@@ -10,7 +10,7 @@ const AboutUs = () => {
     <Box className={classes.aboutUsContainer}>
       <Grid container spacing={6} className={classes.gridContainer}>
         <Grid item xs={12} md={5}>
-          <img src="" alt="My Team" className={classes.largeImage} />
+          <img src="../../assets/3d-plastic-people-office-composition-with-plant.png" alt="My Team" className={classes.largeImage} />
         </Grid>
 
         <Grid item xs={12} md={6}>

@@ -11,6 +11,10 @@ export const addSsi=(data)=>{
     return axios.post(url,data)
 }
 
+export const editSsi=(id,data)=>{
+    return axios.put(url+"/"+id,data)
+}
+
 export const deleteSSI = (ssiId) => {
     return axios.delete(url + "/" + ssiId);
 }
@@ -40,4 +44,8 @@ export const removeUser = (id)=>{
 
 export const updateUserAdminStatus=(id,isAdmin)=>{
     return axios.patch(`${userUrl}/${id}`,{userRole:!isAdmin})
+}
+export const getUserbyId=(id)=>{
+    // return axios.get(`${userUrl}/${id}`)
+    return axios.get(userUrl+"/"+id)
 }

@@ -1,7 +1,3 @@
-import { ColorModeContext, useMode } from './themes';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import Topbar from './pages/global/Topbar';
-import Sidebar from './pages/global/Sidebar';
 import Manageusers from './pages/manageusers/Manageusers';
 import Managessi from './pages/managessi/Managessi';
 import Addssi from './pages/addssi/Addssi';
@@ -14,22 +10,26 @@ import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Landing from './pages/landingpage/Landing';
 import ForgotPassword from './pages/forgotpassword/Forgotpassword';
+import Editssi from './pages/editssi/Editssi'
+import Viewprofile from './pages/viewprofile/Viewprofile';
 
 function App() {
   return (
     <>
     <Routes>
-      <Route path='/' element={<Appwrapper />}>
+      <Route path='/dashboard' element={<Appwrapper />}>
               <Route index element={<Dashboard />} />
               <Route path="/manageusers" element={<Manageusers />} />
               <Route path="/managessi" element={<Managessi />} />
               <Route path="/addssi" element={<Addssi />} />
               <Route path="/adduser" element={<Adduser />} />
               <Route path="/ssi/:id" element={<Viewssi/>}/>
+              <Route path="/editssi/:id" element={<Editssi/>}/>
+              <Route path="/profile" element={<Viewprofile/>}/>
       </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/home' element={<Landing />} />
+      <Route path='/' element={<Landing />} />
       <Route path='/forgotpassword' element={<ForgotPassword />} />
     </Routes>
     </>

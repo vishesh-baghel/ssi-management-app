@@ -1,47 +1,39 @@
-import React from "react";
 import Header from "../../components/Header";
 import { Box, Button, TextField, MenuItem } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { addSsi } from "../../services/userservices";
+import { editSsi } from "../../services/userservices";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getSSIbySsiID } from "../../services/userservices";
 
-const Addssi = () => {
+const Editssi = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
-    const handleFormSubmit = (values, actions) => {
-        console.log(values);
-        addSsi(values).then(res => {
-            if (res.status === 201) {
-                alert("User is Added Successfully")
-                actions.resetForm();
+    const [ssiData, setSsiData] = useState([])
+
+    const params = useParams()
+
+    const handleFormSubmit = (values) => {
+        // console.log(values.id);
+        console.log(values.id,values);
+        editSsi(values.id,values).then(res => {
+            if (res.status === 200) {
+                alert("SSI is Edited Successfully")
             }
         })
     };
+    const updateData = () => {
+        // console.log(params.id);
+        getSSIbySsiID(params.id).then(res => {
+            setSsiData(res.data[0])
+        })
+    }
 
-    const initialValues = {
-        accountNumber: "",
-        accountName: "",
-        accountType: "",
-        currency: "",
-        product: "",
-        assetClass: "",
-        expiryDate: "",
-        country: "",
-        routingCode: "",
-        correspondanceAccountNumber: "",
-        correspondanceAccountName: "",
-        correspondanceBankName: "",
-        correspondanceBankBic: "",
-        beneficiaryBankName: "",
-        beneficiaryBankBic: "",
-        intermediary1AccountNumber: "",
-        intermediary1AccountName: "",
-        intermediary1BankBic: "",
-        intermediary2AccountNumber: "",
-        intermediary2AccountName: "",
-        intermediary2BankBic: "",
-    };
+    useEffect(() => {
+        updateData()
+    }, [])
 
     // const accRegExp = /^[a-zA-Z0-9]+$/;
 
@@ -121,6 +113,7 @@ const Addssi = () => {
 
     const yesterday = new Date(Date.now() -86400000);
 
+
     const userSchema = yup.object().shape({
         accountNumber: yup.string().required("required"),
         accountName: yup.string(),
@@ -130,7 +123,7 @@ const Addssi = () => {
         assetClass: yup.string().required("required"),
         expiryDate: yup.date().required("required").min(yesterday, 'Cannot add past date'),
         country: yup.string().required("required"),
-        routingCode: yup.number(),
+        routingCode: yup.string(),
         correspondanceAccountNumber: yup.string(),
         correspondanceAccountName: yup.string(),
         correspondanceBankName: yup.string(),
@@ -145,21 +138,13 @@ const Addssi = () => {
         intermediary2BankBic: yup.string().matches(bicRegExp, "BIC is not valid"),
     });
 
-    // disableDates = () => {
-    //     var today, dd, mm, yyyy;
-    //     today = new Date();
-    //     dd = today.getDate() + 1;
-    //     mm = today.getMonth() + 1;
-    //     yyyy = today.getFullYear();
-    //     return yyyy + "-" + mm + "-" + dd
-    // }
-
     return (
         <>
             <Box m="20px">
                 <Formik
                     onSubmit={handleFormSubmit}
-                    initialValues={initialValues}
+                    initialValues={ssiData}
+                    enableReinitialize
                     validationSchema={userSchema}
                 >
                     {({
@@ -184,6 +169,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.accountNumber}
                                     name="accountNumber"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.accountNumber && !!errors.accountNumber}
                                     helperText={touched.accountNumber && errors.accountNumber}
                                     sx={{ gridColumn: "span 2" }}
@@ -198,6 +184,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.accountName}
                                     name="accountName"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.accountName && !!errors.accountName}
                                     helperText={touched.accountName && errors.accountName}
                                     sx={{ gridColumn: "span 2" }}
@@ -207,12 +194,11 @@ const Addssi = () => {
                                     variant="filled"
                                     type="text"
                                     label="Account Type"
-                                    // select
-                                    // label="Account Type"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.accountType}
                                     name="accountType"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.accountType && !!errors.accountType}
                                     helperText={touched.accountType && errors.accountType}
                                     sx={{ gridColumn: "span 2" }}
@@ -224,8 +210,9 @@ const Addssi = () => {
                                     label="Currency *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.currency}
+                                    value={!!values.currency ? values.currency : ""}
                                     name="currency"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.currency && !!errors.currency}
                                     helperText={touched.currency && errors.currency}
                                     sx={{ gridColumn: "span 2" }}
@@ -243,8 +230,9 @@ const Addssi = () => {
                                     label="Product *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.product}
+                                    value={!!values.product ? values.product : ""}
                                     name="product"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.product && !!errors.product}
                                     helperText={touched.product && errors.product}
                                     sx={{ gridColumn: "span 2" }}
@@ -262,8 +250,9 @@ const Addssi = () => {
                                     label="Asset Class *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.assetClass}
+                                    value={!!values.assetClass ? values.assetClass : ""}
                                     name="assetClass"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.assetClass && !!errors.assetClass}
                                     helperText={touched.assetClass && errors.assetClass}
                                     sx={{ gridColumn: "span 2" }}
@@ -297,8 +286,9 @@ const Addssi = () => {
                                     label="Country *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.country}
+                                    value={!!values.country ? values.country : ""}
                                     name="country"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.country && !!errors.country}
                                     helperText={touched.country && errors.country}
                                     sx={{ gridColumn: "span 2" }}
@@ -314,16 +304,16 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="number"
-                                    label="Routing Code"
+                                    label="Routing Code *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.routingCode}
                                     name="routingCode"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.routingCode && !!errors.routingCode}
                                     helperText={touched.routingCode && errors.routingCode}
-                                    sx={{
-                                        gridColumn: "span 2"
-                                    }}
+                                    sx={{ gridColumn: "span 2" }}
+
                                 />
                             </Box>
                             <Header title="Correspondent and Beneficiary" />
@@ -337,6 +327,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.correspondanceAccountNumber}
                                     name="correspondanceAccountNumber"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.correspondanceAccountNumber && !!errors.correspondanceAccountNumber}
                                     helperText={touched.correspondanceAccountNumber && errors.correspondanceAccountNumber}
                                     sx={{ gridColumn: "span 2" }}
@@ -351,6 +342,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.correspondanceAccountName}
                                     name="correspondanceAccountName"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.correspondanceAccountName && !!errors.correspondanceAccountName}
                                     helperText={touched.correspondanceAccountName && errors.correspondanceAccountName}
                                     sx={{ gridColumn: "span 2" }}
@@ -364,6 +356,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.correspondanceBankName}
                                     name="correspondanceBankName"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.correspondanceBankName && !!errors.correspondanceBankName}
                                     helperText={touched.correspondanceBankName && errors.correspondanceBankName}
                                     sx={{ gridColumn: "span 2" }}
@@ -377,6 +370,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.correspondanceBankBic}
                                     name="correspondanceBankBic"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.correspondanceBankBic && !!errors.correspondanceBankBic}
                                     helperText={touched.correspondanceBankBic && errors.correspondanceBankBic}
                                     sx={{ gridColumn: "span 2" }}
@@ -390,6 +384,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.beneficiaryBankName}
                                     name="beneficiaryBankName"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.beneficiaryBankName && !!errors.beneficiaryBankName}
                                     helperText={touched.beneficiaryBankName && errors.beneficiaryBankName}
                                     sx={{ gridColumn: "span 2" }}
@@ -403,6 +398,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.beneficiaryBankBic}
                                     name="beneficiaryBankBic"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.beneficiaryBankBic && !!errors.beneficiaryBankBic}
                                     helperText={touched.beneficiaryBankBic && errors.beneficiaryBankBic}
                                     sx={{ gridColumn: "span 2" }}
@@ -419,6 +415,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.intermediary1AccountNumber}
                                     name="intermediary1AccountNumber"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.intermediary1AccountNumber && !!errors.intermediary1AccountNumber}
                                     helperText={touched.intermediary1AccountNumber && errors.intermediary1AccountNumber}
                                     sx={{ gridColumn: "span 2" }}
@@ -433,6 +430,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.intermediary1AccountName}
                                     name="intermediary1AccountName"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.intermediary1AccountName && !!errors.intermediary1AccountName}
                                     helperText={touched.intermediary1AccountName && errors.intermediary1AccountName}
                                     sx={{ gridColumn: "span 2" }}
@@ -446,6 +444,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.intermediary1BankBic}
                                     name="intermediary1BankBic"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.intermediary1BankBic && !!errors.intermediary1BankBic}
                                     helperText={touched.intermediary1BankBic && errors.intermediary1BankBic}
                                     sx={{ gridColumn: "span 2" }}
@@ -459,6 +458,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.intermediary2AccountNumber}
                                     name="intermediary2AccountNumber"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.intermediary2AccountNumber && !!errors.intermediary2AccountNumber}
                                     helperText={touched.intermediary2AccountNumber && errors.intermediary2AccountNumber}
                                     sx={{ gridColumn: "span 2" }}
@@ -472,6 +472,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.intermediary2AccountName}
                                     name="intermediary2AccountName"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.intermediary2AccountName && !!errors.intermediary2AccountName}
                                     helperText={touched.intermediary2AccountName && errors.intermediary2AccountName}
                                     sx={{ gridColumn: "span 2" }}
@@ -485,6 +486,7 @@ const Addssi = () => {
                                     onChange={handleChange}
                                     value={values.intermediary2BankBic}
                                     name="intermediary2BankBic"
+                                    InputLabelProps={{ shrink: true, }}
                                     error={!!touched.intermediary2BankBic && !!errors.intermediary2BankBic}
                                     helperText={touched.intermediary2BankBic && errors.intermediary2BankBic}
                                     sx={{ gridColumn: "span 2" }}
@@ -493,7 +495,7 @@ const Addssi = () => {
                             </Box>
                             <Box display="flex" justifyContent="center">
                                 <Button type="submit" color="secondary" variant="contained">
-                                    Add SSI
+                                    Update SSI
                                 </Button>
                             </Box>
                         </form>
@@ -505,4 +507,4 @@ const Addssi = () => {
     );
 };
 
-export default Addssi;
+export default Editssi;
