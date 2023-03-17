@@ -8,16 +8,19 @@ import { getSsi } from '../../services/userservices';
 import { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { getUsers } from '../../services/userservices';
+import Export from '../../components/Export/Export';
 
 const Dashboard = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [ssi, setssidata] = useState([]);
+    const [rows, setRows] = useState([]);
+    const [modifiedRows, setModifiedRows] = useState(rows);
 
     useEffect(()=>{
         getSsi().then(data => {
             if (data.status===200){
-                setssidata(data.data);
+                setRows(data.data);
+                setModifiedRows(data.data);
             }
             else{
                 alert("Some err....")
@@ -25,22 +28,11 @@ const Dashboard = () => {
         })
     },[]);
 
-    const [rows, setRows] = useState([]);
-    const [modifiedRows, setModifiedRows] = useState(rows);
 
     const clearTextField = (e) => {
         e.target.value = "";
     }
-
-    const updateRows = () => {
-        getUsers().then(res => {
-            if (res.status === 200) {
-                setRows(res.data)
-                setModifiedRows(res.data)
-            }
-        })
-    }
-
+    
       const columns = [
       { field: "ssiRefId", headerName: "ID" },
       {   field: 'view',
@@ -125,6 +117,7 @@ const Dashboard = () => {
                         color: `${colors.grey[100]} !important`
                     },
 
+
                 }}
             >
                 <Box pb="10px" display="flex" justifyContent="space-between" alignItems="center">
@@ -146,12 +139,12 @@ const Dashboard = () => {
                             <TextField
                                 // style={{ width: 245 }}
                                 InputLabelProps={{ shrink: true }}
-                                id="search-name" type="text"
+                                id="search-currency" type="text"
                                 onBlur={clearTextField}
                                 onChange={(e) => {
                                     setModifiedRows(rows.filter((n) => String(n.userName).toLowerCase().includes(e.target.value.toLowerCase())));
                                 }}
-                                label="Search Name"
+                                label="Search Currency"
                                 variant="standard"
                                 sx={{
                                     paddingRight: "10px"
@@ -161,12 +154,12 @@ const Dashboard = () => {
                                 // style={{ width: 245 }}
                                 InputLabelProps={{ shrink: true }}
 
-                                id="search-email" type="text"
+                                id="search-product" type="text"
                                 onBlur={clearTextField}
                                 onChange={(e) => {
                                     setModifiedRows(rows.filter((n) => String(n.userEmail).toLowerCase().includes(e.target.value.toLowerCase())));
                                 }}
-                                label="Search Email"
+                                label="Search Product"
                                 variant="standard"
                                 sx={{
                                     paddingRight: "10px"
@@ -185,11 +178,14 @@ const Dashboard = () => {
                                 variant="standard"
                             />
                         </Box>
-                        {/* <Export data={modifiedRows} type='user'/> */}
+                        <Export data={modifiedRows} type='ssi'/>
                     </Box>
                 <DataGrid 
-                    rows={ssi}
+                    rows={modifiedRows}
+                    rowHeight={40}
                     columns={columns}
+                    disableColumnFilter
+                    disableColumnSelector
                 />
             </Box>
         </Box>

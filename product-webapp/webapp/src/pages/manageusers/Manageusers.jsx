@@ -59,16 +59,12 @@ const Manageusers = () => {
     }
 
     const toggleAdmin = (id, isAdmin) => {
-        if (isAgreed === true) {
             handleClickOpen();
             updateUserAdminStatus(id, isAdmin).then(res => {
                 if (res.status === 200) {
                     updateRows()
                 }
-            })
-        }
-
-    
+            }) 
     }
 
     const handleClickOpen = () => {
@@ -220,9 +216,8 @@ const Manageusers = () => {
                                 label="Search Company"
                                 variant="standard"
                             />
-
                         </Box>
-                        <Export data={modifiedRows} type='user'/>
+                        <Export modifiedRows/>
                     </Box>
                     <DataGrid
                         rows={modifiedRows}
