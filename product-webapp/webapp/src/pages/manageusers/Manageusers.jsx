@@ -193,7 +193,7 @@ const Manageusers = () => {
                                 variant="standard"
                             />
                         </Box>
-                        <Export modifiedRows/>
+                        <Export data={modifiedRows} type='user'/>
                     </Box>
                     <DataGrid
                         rows={modifiedRows}
