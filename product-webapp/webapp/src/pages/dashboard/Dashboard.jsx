@@ -32,7 +32,7 @@ const Dashboard = () => {
               return (
                   <Typography>
                   <Link 
-                      to={`/ssi/${params.row.ssiRefId}`}
+                      to={`/dashboard/ssi/${params.row.ssiRefId}`}
                       style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
                   >View
                   </Link>
