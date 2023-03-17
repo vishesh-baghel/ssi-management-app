@@ -151,6 +151,9 @@ const Manageusers = () => {
                     borderTop: "none",
                     backgroundColor: colors.blueAccent[700],
                 },
+                "& .MuiFormLabel-root":{
+                    color: `${colors.grey[100]} !important`
+                },
                 "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
                     color: `${colors.grey[100]} !important`
                 },
