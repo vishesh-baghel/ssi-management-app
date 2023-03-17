@@ -20,6 +20,7 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="manageusers" element={<Manageusers />} />
               <Route path="managessi" element={<Managessi />} />
+              <Route path="editssi/:id" element={<Editssi />} />
               <Route path="addssi" element={<Addssi />} />
               <Route path="adduser" element={<Adduser />} />
               <Route path="ssi/:id" element={<Viewssi/>}/>
