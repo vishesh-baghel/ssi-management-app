@@ -1,24 +1,14 @@
 import {
     AppBar,
     Typography,
-    Link,
     Box,
     Toolbar,
-    List,
-    ListItem,
-    ListItemText,
     Button,
-    IconButton,
-    Drawer,
   } from '@mui/material';
   import React from 'react';
   import useScrollTrigger from '@mui/material/useScrollTrigger';
   import PropTypes from 'prop-types';
-  import MenuIcon from '@mui/icons-material/Menu';
   import useStyles from '../styles/styles';
-  import { useTheme } from '@mui/material/styles';
-  import useMediaQuery from '@mui/material/useMediaQuery';
-  import { updateUserAdminStatus } from '../services/userservices';
 
   function ElevationScroll(props) {
     const { children, window } = props;
@@ -40,8 +30,6 @@ import {
   
   const Homepageheader = (props) => {
     const classes = useStyles();
-    const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
   
     return (
       <Box sx={{ marginBottom: '70px' }}>
@@ -67,6 +55,7 @@ import {
                             ml: 2,
                             fontWeight: 'bold',
                             fontSize: '1.5rem',
+                            color: 'primary.main',
                         }}
                     >
                       Baton Systems

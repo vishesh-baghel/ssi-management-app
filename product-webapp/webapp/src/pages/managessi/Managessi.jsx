@@ -68,7 +68,7 @@ const Managessi = () => {
           return (
             <Typography>
             <Link 
-                to={`/editssi/${params.row.ssiRefId}`}
+                to={`/dashboard/editssi/${params.row.ssiRefId}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
             >Edit SSI
             </Link>
@@ -84,7 +84,7 @@ const Managessi = () => {
           return (
             <Typography>
             <Link 
-                to={`/ssi/${params.row.ssiRefId}`}
+                to={`/dashboard/ssi/${params.row.ssiRefId}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
             >View
             </Link>
