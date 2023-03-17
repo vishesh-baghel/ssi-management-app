@@ -220,6 +220,7 @@ const Manageusers = () => {
                                 label="Search Company"
                                 variant="standard"
                             />
+
                         </Box>
                         <Export data={modifiedRows} type='user'/>
                     </Box>
