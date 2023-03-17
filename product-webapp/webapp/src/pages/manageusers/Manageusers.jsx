@@ -13,12 +13,17 @@ import SecurityIcon from '@mui/icons-material/Security';
 // import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
 
-
 import Header from '../../components/Header';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 const Manageusers = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+
+    const [open, setOpen] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
+    const dialogTitle = 'Do you want to make this user admin?';
+    const dialogDescription = 'This user will have admin privileges.';
 
     const navigate = useNavigate();
     const viewUser = (url) => {
@@ -48,12 +53,28 @@ const Manageusers = () => {
     }
 
     const toggleAdmin = (id,isAdmin) => {
-        updateUserAdminStatus(id,isAdmin).then(res=>{
-            if(res.status===200){
-                updateRows()
-            }
-        })
+        if (isAgreed === true) {
+            handleClickOpen();
+            updateUserAdminStatus(id,isAdmin).then(res=>{
+                if(res.status===200){
+                    updateRows()
+                }
+            })
+        }
     }
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+
+    const handleClose = () => {
+        setOpen(false);
+      };
+    
+    const handleAgreement = () => {
+        setIsAgreed(true);
+        setOpen(false);
+    };
 
     const columns = [
         { field: "id", headerName: "ID" },
@@ -94,6 +115,7 @@ const Manageusers = () => {
     }, []);
 
     return (
+        <>
         <Box m='20px'>
             <Header title='Manage Users' subtitle='Manage Users Efficiently' />
             <Box m="40px 0 0 0" height="75vh" width='83vw' sx={{
@@ -128,12 +150,57 @@ const Manageusers = () => {
                     componentsProps={{
                         toolbar: {
                             showQuickFilter: true,
-                               quickFilterProps: { debounceMs: 500 },
-                         },
-                      }}
-                />
+                            quickFilterProps: { debounceMs: 500 },
+                        },
+                    }}
+                    />
             </Box>
         </Box>
+        <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{
+            "& .MuiDialog-paper": {
+                backgroundColor: colors.blueAccent[700],
+                color: colors.grey[100],
+            },
+            "& .MuiDialog-paper .MuiDialogTitle-root": {
+                fontSize: "1.5rem",
+            },
+            "& .MuiDialog-paper .MuiDialogContent-root": {
+                fontSize: "1.5rem",
+            },
+            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text": {
+                color: colors.grey[100],
+                fontSize: "1.2rem",
+            },
+            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text.Mui-disabled": {
+                color: colors.grey[100],
+            },
+            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text:hover": {
+                color: colors.grey[100],
+            },
+
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {dialogTitle}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {dialogDescription}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleAgreement} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+        </>
     );
 }
 

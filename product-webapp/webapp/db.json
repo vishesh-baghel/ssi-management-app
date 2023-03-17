@@ -950,14 +950,14 @@
       "userName": "User3",
       "userEmail": "user3@domain.com",
       "userCompany": "Company1",
-      "userRole": true
+      "userRole": false
     },
     {
       "id": 4,
       "userName": "User4",
       "userEmail": "user4@domain.comm",
       "userCompany": "Company1",
-      "userRole": true
+      "userRole": false
     },
     {
       "id": 5,
