@@ -17,7 +17,7 @@ function App() {
   return (
     <>
     <Routes>
-      <Route path='/' element={<Appwrapper />}>
+      <Route path='/dashboard' element={<Appwrapper />}>
               <Route index element={<Dashboard />} />
               <Route path="/manageusers" element={<Manageusers />} />
               <Route path="/managessi" element={<Managessi />} />
@@ -29,7 +29,7 @@ function App() {
       </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/home' element={<Landing />} />
+      <Route path='/' element={<Landing />} />
       <Route path='/forgotpassword' element={<ForgotPassword />} />
     </Routes>
     </>

@@ -2,20 +2,25 @@ import React from 'react';
 import Header from '../../components/Header';
 import { Box, Typography, useTheme } from '@mui/material';
 import { tokens } from "../../themes";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { getSsi } from '../../services/userservices';
 import { useEffect, useState } from 'react';
+import TextField from '@mui/material/TextField';
+import { getUsers } from '../../services/userservices';
+import Export from '../../components/Export/Export';
 
 const Dashboard = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [ssi, setssidata] = useState([]);
+    const [rows, setRows] = useState([]);
+    const [modifiedRows, setModifiedRows] = useState(rows);
 
     useEffect(()=>{
         getSsi().then(data => {
             if (data.status===200){
-                setssidata(data.data);
+                setRows(data.data);
+                setModifiedRows(data.data);
             }
             else{
                 alert("Some err....")
@@ -23,6 +28,11 @@ const Dashboard = () => {
         })
     },[]);
 
+
+    const clearTextField = (e) => {
+        e.target.value = "";
+    }
+    
       const columns = [
       { field: "ssiRefId", headerName: "ID" },
       {   field: 'view',
@@ -32,7 +42,7 @@ const Dashboard = () => {
               return (
                   <Typography>
                   <Link 
-                      to={`/ssi/${params.row.ssiRefId}`}
+                      to={`/dashboard/ssi/${params.row.ssiRefId}`}
                       style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
                   >View
                   </Link>
@@ -89,6 +99,9 @@ const Dashboard = () => {
                     '& .name-column--cell': {
                         color: colors.greenAccent[300]
                     },
+                    '& .MuiFormLabel-root': {
+                        color: colors.grey[100],
+                    },
                     '& .MuiDataGrid-columnHeaders': {
                         backgroundColor: colors.blueAccent[700],
                         borderBottom: 'none',
@@ -104,18 +117,75 @@ const Dashboard = () => {
                         color: `${colors.grey[100]} !important`
                     },
 
+
                 }}
             >
+                <Box pb="10px" display="flex" justifyContent="space-between" alignItems="center">
+                        <Box>
+                            <TextField
+                                // style={{ width: 110 }}
+                                InputLabelProps={{ shrink: true }}
+                                id="search-id" type="number"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.id).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Id"
+                                variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
+                            />
+                            <TextField
+                                // style={{ width: 245 }}
+                                InputLabelProps={{ shrink: true }}
+                                id="search-currency" type="text"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.userName).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Currency"
+                                variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
+                            />
+                            <TextField
+                                // style={{ width: 245 }}
+                                InputLabelProps={{ shrink: true }}
+
+                                id="search-product" type="text"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.userEmail).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Product"
+                                variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
+                            />
+                            <TextField
+                                // style={{ width: 245 }}
+                                InputLabelProps={{ shrink: true }}
+
+                                id="search-company" type="text"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.userCompany).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Company"
+                                variant="standard"
+                            />
+                        </Box>
+                        <Export data={modifiedRows} type='ssi'/>
+                    </Box>
                 <DataGrid 
-                    rows={ssi}
+                    rows={modifiedRows}
+                    rowHeight={40}
                     columns={columns}
-                    components={{ Toolbar: GridToolbar }}
-                    componentsProps={{
-                        toolbar: {
-                            showQuickFilter: true,
-                               quickFilterProps: { debounceMs: 500 },
-                         },
-                      }}
+                    disableColumnFilter
+                    disableColumnSelector
                 />
             </Box>
         </Box>
