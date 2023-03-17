@@ -7,12 +7,12 @@
       "product": "Collateral",
       "entityRefId": "402154",
       "currency": "USD",
-      "country": null,
+      "country": "Austrailia",
       "assetClass": "CASH",
       "accountNumber": "BBHK_Firm_GBP_001",
-      "accountName": null,
+      "accountName": "ajil",
       "accountType": "NA",
-      "routingCode": null,
+      "routingCode": 2332,
       "correspondentBankName": null,
       "correspondentBankBic": "GBPCORRXXXX",
       "beneficiaryBankName": "Hong Kong Bank",
@@ -29,12 +29,14 @@
       "isPrimary": true,
       "isApproved": true,
       "effectiveDate": "2022-11-15 00:00:00.000000000",
-      "expiryDate": "2023-11-16 00:00:00.000000000",
+      "expiryDate": "2023-03-31",
       "approvedTs": null,
       "approvedBy": null,
       "customField": "",
       "createdBy": "System",
-      "updatedBy": null
+      "updatedBy": null,
+      "correspondanceBankBic": "GBPBBHKXXXX",
+      "beneficiaryBankBic": "GBPBBHKXXXX"
     },
     {
       "id": 4,
@@ -842,7 +844,7 @@
       "userName": "User3",
       "userEmail": "user3@domain.com",
       "userCompany": "Company1",
-      "userRole": false
+      "userRole": true
     },
     {
       "id": 4,
