@@ -142,7 +142,7 @@ const Addssi = () => {
         intermediary2AccountName: yup.string(),
         intermediary2BankBic: yup.string().matches(bicRegExp, "BIC is not valid"),
     });
-
+    
     return (
         <>
             <Box m="20px">

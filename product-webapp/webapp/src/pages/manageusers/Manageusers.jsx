@@ -6,7 +6,6 @@ import { Box, useTheme, TextField} from '@mui/material';
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
 
-
 import { getUsers, updateUserAdminStatus, removeUser } from "../../services/userservices";
 
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -123,9 +122,6 @@ const Manageusers = () => {
         updateRows();
     }, []);
 
-   
-    
-
     return (
         <>
         <Box m='0 20px'>
@@ -170,7 +166,7 @@ const Manageusers = () => {
                 }
             }}>
                 <Box height="60vh">
-                    <Box p="0 0 2px 0" display="flex" justifyContent="space-between" alignItems="center">
+                    <Box pb="10px" display="flex" justifyContent="space-between" alignItems="center">
                         <Box>
                             <TextField
                                 // style={{ width: 110 }}
@@ -182,6 +178,9 @@ const Manageusers = () => {
                                 }}
                                 label="Search Id"
                                 variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
                             />
                             <TextField
                                 // style={{ width: 245 }}
@@ -193,6 +192,9 @@ const Manageusers = () => {
                                 }}
                                 label="Search Name"
                                 variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
                             />
                             <TextField
                                 // style={{ width: 245 }}
@@ -205,6 +207,9 @@ const Manageusers = () => {
                                 }}
                                 label="Search Email"
                                 variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
                             />
                             <TextField
                                 // style={{ width: 245 }}
@@ -218,6 +223,7 @@ const Manageusers = () => {
                                 label="Search Company"
                                 variant="standard"
                             />
+
                         </Box>
                         <Export data={modifiedRows} type='user'/>
                     </Box>
