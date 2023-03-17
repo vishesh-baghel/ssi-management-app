@@ -1,57 +1,86 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import { useMediaQuery } from '@mui/material';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { fontSize } from '@mui/system';
-import {Formik} from "formik";
+import { Formik } from "formik";
+import * as React from 'react';
 import * as yup from "yup";
+import { useEffect, useState } from 'react';
+import { ErrorSharp } from '@mui/icons-material';
 
 
 export default function Login() {
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     const data = new FormData(event.currentTarget);
-//     console.log({
-//       email: data.get('email'),
-//       password: data.get('password'),
-//     });
-//   };
+  //   const handleSubmit = (event) => {
+  //     event.preventDefault();
+  //     const data = new FormData(event.currentTarget);
+  //     console.log({
+  //       email: data.get('email'),
+  //       password: data.get('password'),
+  //     });
+  //   };
+
+  const Adduser = () => {
+    const isNonMobile = useMediaQuery("(min-width:600px)");
+  }
+  const handleFormSubmit = (values, actions) => {
+    console.log("values");
+    alert("Function is clicked")
+    // addUser(values).then(res=>
+    //   {
+    //     if(res.status===201)
+    //     {
+    //       alert("User Added..")
+    //       actions.restForm();
+    //     }
+    //   })
+  };
 
 
-const handleFormSubmit=(values,actions)=>{
-  console.log(values)
-}
+  const initialValues = {
+    validateOnMount: true,
+    userEmail: "",
+    userPassword: ""
+  };
 
-const initialValues={
-  userEmail:"",
-  userPassword:""
-};
-
-const userSchema=yup.object().shape({
-  userEmail:yup.string().email().required("required"),
-  userPassword:yup.string().required("required")
-})
-
+  const userSchema = yup.object({
+    userEmail: yup.string().email().required("required"),
+    userPassword: yup.string().required("required")
+  })
   return (
+
+
     <Box>
-      <Grid container component="main" spacing={'4vw'} sx={{ margin: '10vh', width: '80vw', height: '80vh' }}>
+
+      <Box p="2rem 0 0 2rem">
+        <img src="https://alsop-louie.com/wp-content/uploads/2017/03/baton-logo-crop.png" height={'40vh'} width={'180vw'} />
+      </Box>
+
+      <Grid container className="loginBody" component="main" spacing={'4vw'} sx={{ margin: '0vh', width: '100vw', height: '100vh' }}>
         <CssBaseline />
 
         <Grid
+
+
+          // component="img"
+          // sx={{
+          //   height: 50,
+          //   width: 10,
+          //   maxHeight: { xs: 233, md: 50 },
+          //   maxWidth: { xs: 350, md: 250 },
+          //   marginLeft:'10vw'
+          // }}
+          // alt="Baton systems"
+          // src="https://media.glassdoor.com/sqll/2880408/baton-systems-squarelogo-1669288735833.png"
+
+
           item
           xs={false}
           sm={4}
-          md={7}
+          md={6}
           sx={{
             borderRadius: '3vh',
             backgroundImage: 'url(https://img.freepik.com/premium-vector/online-registration-sign-up-with-man-sitting-near-smartphone_268404-95.jpg?w=1380)',
@@ -60,22 +89,29 @@ const userSchema=yup.object().shape({
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            // border:'2px solid black',
+            height: '75vh',
+            width: '40vw',
+            marginTop: '3vh'
           }}
         />
 
-        <Grid item xs={12} sm={80} md={5} elevation={6}>
+        <Grid item xs={12} sm={80} md={6} elevation={5}>
           <Box
             sx={{
               borderRadius: '2px',
               width: '40vw',
-              display: 'flex',
+              // display: 'flex',
               flexDirection: 'column',
-              // border:'2px solid black'
+              // border:'2px solid black',
+              marginTop: '10px',
+              height: '60vh',
+              marginTop: '50px'
             }}
           >
             <Typography component="h1" variant="h6">
               <h1 align='center'>WELCOME</h1>
-              <h3 align='center'>Sign in</h3>
+              <h3 align='center'>SIGN IN</h3>
             </Typography>
 
             <Formik
@@ -83,32 +119,37 @@ const userSchema=yup.object().shape({
               initialValues={initialValues}
               validationSchema={userSchema}>
 
-              {({
-                values,
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-              }) => (
+              { 
+              // ({
+              //   values,
+              //   errors,
+              //   touched,
+              //   handleBlur,
+              //   handleChange,
+              //   handleSubmit
+      
+              // })
+              
+            formik  => { console.log(formik);
+                 return ( 
 
-                <form onSubmit={handleSubmit}>
-                  <Box component="form" noValidate onSubmit={handleSubmit} sx={{}}>
+                <form onSubmit={formik.handleSubmit}>
+                  <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{}}>
                     <TextField
                       margin="normal"
                       type="email"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.userEmail}
-                      error={!!touched.userEmail&&!!errors.userEmail}
-                      helperText={touched.userEmail && errors.userEmail}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.userEmail}
+                      error={!!formik.touched.userEmail && !!formik .errors.userEmail}
+                      helperText={formik.touched.userEmail && formik.errors.userEmail}
                       required
                       fullWidth
                       id="userEmail"
                       label="Email Address"
                       name="userEmail"
-                      // autoComplete="email"
-                      // autoFocus
+                    // autoComplete="email"
+                    // autoFocus
                     />
                     <br></br>
                     <TextField
@@ -118,19 +159,21 @@ const userSchema=yup.object().shape({
                       name="userPassword"
                       label="Password"
                       type="password"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.userPassword}
-                      error={!!touched.userPassword&&!!errors.userPassword}
-                      helperText={touched.userPassword && errors.userPassword}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.userPassword}
+                      error={!!formik.touched.userPassword && !!formik.errors.userPassword}
+                      helperText={formik.touched.userPassword && formik.errors.userPassword}
                       id="userPassword"
-                      // autoComplete="current-password"
+                    // autoComplete="current-password"
                     />
+          
 
                     <Button
                       type="submit"
                       fullWidth
                       variant="contained"
+                      disabled= {!(formik.isValid && formik.dirty)} 
                       sx={{ marginLeft: '10vw', marginTop: '5vh', background: 'black', height: '47px', width: '400px', borderRadius: '10px' }}
                     >
                       Sign In
@@ -147,8 +190,9 @@ const userSchema=yup.object().shape({
                       </Grid>
 
                       <Grid item>
+                        {/* <p>Don't have an account? </p> */}
                         <Link href="/signin" variant="body2">
-                          {"Don't have an account? Sign Up"}
+                          {"Sign Up"}
                         </Link>
                       </Grid>
                     </Grid>
@@ -157,7 +201,7 @@ const userSchema=yup.object().shape({
                   </Box>
                 </form>
 
-              )}
+              ) }}
             </Formik>
           </Box>
         </Grid>

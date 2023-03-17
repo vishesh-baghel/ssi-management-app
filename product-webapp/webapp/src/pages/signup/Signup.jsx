@@ -14,7 +14,9 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
-export default function Register() {
+
+
+export default function SignInSide() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -41,7 +43,9 @@ export default function Register() {
           >
             
           <Grid item>
-            <h1>Get Started</h1> <br></br>
+            <Typography variant ='h2' sx={{fontWeight:'bolder'}} >Get Started</Typography>
+            {/* <h1 style={fontSize='20px'}>Get Started</h1> */}
+             <br></br> <br></br>
               Already have an account? 
                 <Link  href='/' variant="body2">
                   {<b>Sign in</b>}

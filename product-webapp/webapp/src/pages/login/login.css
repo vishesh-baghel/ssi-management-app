@@ -2,3 +2,19 @@
     margin:0;
     box-sizing: border-box;
 }
+
+@media (max-width:1200px)
+{
+    .loginBody{
+        flex-direction:  column;
+        justify-content: center;
+    }
+    .sendform{
+        width:100%;
+    }
+    .sendimage{
+        margin-left: auto;
+        margin-right: auto;
+        /* display: none; */
+    }
+}
