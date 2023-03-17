@@ -119,6 +119,8 @@ const Addssi = () => {
         },
     ];
 
+    const yesterday = new Date(Date.now() -86400000);
+
     const userSchema = yup.object().shape({
         accountNumber: yup.string().required("required"),
         accountName: yup.string(),
@@ -126,9 +128,9 @@ const Addssi = () => {
         currency: yup.string().required("required"),
         product: yup.string().required("required"),
         assetClass: yup.string().required("required"),
-        expiryDate: yup.string().required("required"),
+        expiryDate: yup.date().required("required").min(yesterday, 'Cannot add past date'),
         country: yup.string().required("required"),
-        routingCode: yup.string(),
+        routingCode: yup.number(),
         correspondanceAccountNumber: yup.string(),
         correspondanceAccountName: yup.string(),
         correspondanceBankName: yup.string(),
@@ -142,7 +144,16 @@ const Addssi = () => {
         intermediary2AccountName: yup.string(),
         intermediary2BankBic: yup.string().matches(bicRegExp, "BIC is not valid"),
     });
-    
+
+    // disableDates = () => {
+    //     var today, dd, mm, yyyy;
+    //     today = new Date();
+    //     dd = today.getDate() + 1;
+    //     mm = today.getMonth() + 1;
+    //     yyyy = today.getFullYear();
+    //     return yyyy + "-" + mm + "-" + dd
+    // }
+
     return (
         <>
             <Box m="20px">
@@ -168,7 +179,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Account Number"
+                                    label="Account Number *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.accountNumber}
@@ -210,7 +221,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Currency"
+                                    label="Currency *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.currency}
@@ -229,7 +240,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Product"
+                                    label="Product *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.product}
@@ -248,7 +259,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Asset Class"
+                                    label="Asset Class *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.assetClass}
@@ -270,7 +281,7 @@ const Addssi = () => {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    label="Expiry Date"
+                                    label="Expiry Date *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.expiryDate}
@@ -283,7 +294,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Country"
+                                    label="Country *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.country}
@@ -361,7 +372,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Correspondance Bank BIC"
+                                    label="Correspondance Bank BIC *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.correspondanceBankBic}
@@ -374,7 +385,7 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Beneficiary Bank Name"
+                                    label="Beneficiary Bank Name *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.beneficiaryBankName}
@@ -387,12 +398,12 @@ const Addssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Beneficiary Bank BIC"
+                                    label="Beneficiary Bank BIC *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.beneficiaryBankBic}
                                     name="beneficiaryBankBic"
-                                    error={!!touched.abeneficiaryBankBic && !!errors.beneficiaryBankBic}
+                                    error={!!touched.beneficiaryBankBic && !!errors.beneficiaryBankBic}
                                     helperText={touched.beneficiaryBankBic && errors.beneficiaryBankBic}
                                     sx={{ gridColumn: "span 2" }}
                                 />

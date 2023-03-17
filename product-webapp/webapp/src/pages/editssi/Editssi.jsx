@@ -111,6 +111,8 @@ const Editssi = () => {
         },
     ];
 
+    const yesterday = new Date(Date.now() -86400000);
+
 
     const userSchema = yup.object().shape({
         accountNumber: yup.string().required("required"),
@@ -119,7 +121,7 @@ const Editssi = () => {
         currency: yup.string().required("required"),
         product: yup.string().required("required"),
         assetClass: yup.string().required("required"),
-        expiryDate: yup.string().required("required"),
+        expiryDate: yup.date().required("required").min(yesterday, 'Cannot add past date'),
         country: yup.string().required("required"),
         routingCode: yup.string(),
         correspondanceAccountNumber: yup.string(),
@@ -162,7 +164,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Account Number"
+                                    label="Account Number *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.accountNumber}
@@ -205,7 +207,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Currency"
+                                    label="Currency *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={!!values.currency ? values.currency : ""}
@@ -225,7 +227,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Product"
+                                    label="Product *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={!!values.product ? values.product : ""}
@@ -245,7 +247,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Asset Class"
+                                    label="Asset Class *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={!!values.assetClass ? values.assetClass : ""}
@@ -268,7 +270,7 @@ const Editssi = () => {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    label="Expiry Date"
+                                    label="Expiry Date *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.expiryDate}
@@ -281,7 +283,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     select
-                                    label="Country"
+                                    label="Country *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={!!values.country ? values.country : ""}
@@ -302,7 +304,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="number"
-                                    label="Routing Code"
+                                    label="Routing Code *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.routingCode}
@@ -311,6 +313,7 @@ const Editssi = () => {
                                     error={!!touched.routingCode && !!errors.routingCode}
                                     helperText={touched.routingCode && errors.routingCode}
                                     sx={{ gridColumn: "span 2" }}
+
                                 />
                             </Box>
                             <Header title="Correspondent and Beneficiary" />
@@ -362,7 +365,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Correspondance Bank BIC"
+                                    label="Correspondance Bank BIC *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.correspondanceBankBic}
@@ -376,7 +379,7 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Beneficiary Bank Name"
+                                    label="Beneficiary Bank Name *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.beneficiaryBankName}
@@ -390,13 +393,13 @@ const Editssi = () => {
                                     fullWidth
                                     variant="filled"
                                     type="text"
-                                    label="Beneficiary Bank BIC"
+                                    label="Beneficiary Bank BIC *"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     value={values.beneficiaryBankBic}
                                     name="beneficiaryBankBic"
                                     InputLabelProps={{ shrink: true, }}
-                                    error={!!touched.abeneficiaryBankBic && !!errors.beneficiaryBankBic}
+                                    error={!!touched.beneficiaryBankBic && !!errors.beneficiaryBankBic}
                                     helperText={touched.beneficiaryBankBic && errors.beneficiaryBankBic}
                                     sx={{ gridColumn: "span 2" }}
                                 />
