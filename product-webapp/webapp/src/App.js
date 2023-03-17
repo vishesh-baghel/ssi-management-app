@@ -11,6 +11,7 @@ import Register from './pages/register/Register';
 import Landing from './pages/landingpage/Landing';
 import ForgotPassword from './pages/forgotpassword/Forgotpassword';
 import Editssi from './pages/editssi/Editssi'
+import Viewprofile from './pages/viewprofile/Viewprofile';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/adduser" element={<Adduser />} />
               <Route path="/ssi/:id" element={<Viewssi/>}/>
               <Route path="/editssi/:id" element={<Editssi/>}/>
+              <Route path="/profile" element={<Viewprofile/>}/>
       </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />

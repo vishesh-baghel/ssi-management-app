@@ -45,3 +45,7 @@ export const removeUser = (id)=>{
 export const updateUserAdminStatus=(id,isAdmin)=>{
     return axios.patch(`${userUrl}/${id}`,{userRole:!isAdmin})
 }
+export const getUserbyId=(id)=>{
+    // return axios.get(`${userUrl}/${id}`)
+    return axios.get(userUrl+"/"+id)
+}
