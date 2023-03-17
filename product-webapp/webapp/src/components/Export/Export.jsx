@@ -10,7 +10,10 @@ import DownloadIcon from '@mui/icons-material/Download';
 import "./styles.css";
 
 
-const Export = ({modifiedRows}) => {
+const Export = (props) => {
+
+    const data = props.data
+    const type = props.type
 
     const dummyMenuItems = [
         {
@@ -22,30 +25,37 @@ const Export = ({modifiedRows}) => {
             id:"csv"
         }
     ];
+
     const [anchorEl, setAnchorEl] = useState(null);
+
     const handleClick = e => {
         setAnchorEl(e.currentTarget);
     };
     
 
     const exportCsv = () => {
-        const csvString = [
-            [
-                "id",
-                "userName",
-                "userEmail",
-                "userCompany",
-                "userRole"
-            ],
-            ...modifiedRows.map(item => [
-                item.id,
-                item.userName,
-                item.userEmail,
-                item.userCompany,
-                item.userRole
-            ])
-        ].map(e => e.join(",")).join("\n");
-        const csv_data = `${csvString}`.split("\n").join('\n');
+        let csv_data = '';
+
+        if(type==='user'){
+            const csvString_User = [
+                [
+                    "id",
+                    "userName",
+                    "userEmail",
+                    "userCompany",
+                    "userRole"
+                ],
+                ...data.map(item => [
+                    item.id,
+                    item.userName,
+                    item.userEmail,
+                    item.userCompany,
+                    item.userRole
+                ])
+            ].map(e => e.join(",")).join("\n");
+
+            csv_data = `${csvString_User}`.split("\n").join('\n');
+        }
 
         let CSVFile = new Blob([csv_data], { type: "text/csv" });
         var temp_link = document.createElement('a');
@@ -59,25 +69,28 @@ const Export = ({modifiedRows}) => {
     }
 
     const exportPdf = () => {
-        const csvString = [
-            [
-                "id",
-                "userName",
-                "userEmail",
-                "userCompany",
-                "userRole"
-            ],
-            ...modifiedRows.map(item => [
-                item.id,
-                item.userName,
-                item.userEmail,
-                item.userCompany,
-                item.userRole
-            ])
-        ].map(e => e.join(",")).join("\n");
-        const csv_data = `${csvString}`.split("\n");
-        const head = csv_data.shift().split(",")
-        const body = csv_data.map(n => n.split(','))
+        let pdf_data = '';
+        if(type==='user'){
+            const pdfString = [
+                [
+                    "id",
+                    "userName",
+                    "userEmail",
+                    "userCompany",
+                    "userRole"
+                ],
+                ...data.map(item => [
+                    item.id,
+                    item.userName,
+                    item.userEmail,
+                    item.userCompany,
+                    item.userRole
+                ])
+            ].map(e => e.join(",")).join("\n");
+            pdf_data = `${pdfString}`.split("\n");
+        }
+        const head = pdf_data.shift().split(",")
+        const body = pdf_data.map(n => n.split(','))
         const doc = new jsPDF()
         autoTable(doc, {
             head: [head],
@@ -85,6 +98,7 @@ const Export = ({modifiedRows}) => {
         });
         doc.save(document.title);
     }
+
     const handleClose = (e) => {
         setAnchorEl(null);
         if(e.target.id==='pdf'){
@@ -98,8 +112,8 @@ const Export = ({modifiedRows}) => {
             <IconButton aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
-                aria-label="Open to show more"
-                title="Open to show more"><DownloadIcon /></IconButton>
+                aria-label="Export"
+                title="Export"><DownloadIcon /></IconButton>
             <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
