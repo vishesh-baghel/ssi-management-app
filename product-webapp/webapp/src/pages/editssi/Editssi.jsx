@@ -399,7 +399,7 @@ const Editssi = () => {
                                     value={values.beneficiaryBankBic}
                                     name="beneficiaryBankBic"
                                     InputLabelProps={{ shrink: true, }}
-                                    error={!!touched.abeneficiaryBankBic && !!errors.beneficiaryBankBic}
+                                    error={!!touched.beneficiaryBankBic && !!errors.beneficiaryBankBic}
                                     helperText={touched.beneficiaryBankBic && errors.beneficiaryBankBic}
                                     sx={{ gridColumn: "span 2" }}
                                 />
