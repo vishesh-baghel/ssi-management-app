@@ -179,47 +179,6 @@ const Manageusers = () => {
                                     paddingRight: "10px"
                                 }}
                             />
-                            <TextField
-                                // style={{ width: 245 }}
-                                InputLabelProps={{ shrink: true }}
-                                id="search-name" type="text"
-                                onBlur={clearTextField}
-                                onChange={(e) => {
-                                    setModifiedRows(rows.filter((n) => String(n.userName).toLowerCase().includes(e.target.value.toLowerCase())));
-                                }}
-                                label="Search Name"
-                                variant="standard"
-                                sx={{
-                                    paddingRight: "10px"
-                                }}
-                            />
-                            <TextField
-                                // style={{ width: 245 }}
-                                InputLabelProps={{ shrink: true }}
-
-                                id="search-email" type="text"
-                                onBlur={clearTextField}
-                                onChange={(e) => {
-                                    setModifiedRows(rows.filter((n) => String(n.userEmail).toLowerCase().includes(e.target.value.toLowerCase())));
-                                }}
-                                label="Search Email"
-                                variant="standard"
-                                sx={{
-                                    paddingRight: "10px"
-                                }}
-                            />
-                            <TextField
-                                // style={{ width: 245 }}
-                                InputLabelProps={{ shrink: true }}
-
-                                id="search-company" type="text"
-                                onBlur={clearTextField}
-                                onChange={(e) => {
-                                    setModifiedRows(rows.filter((n) => String(n.userCompany).toLowerCase().includes(e.target.value.toLowerCase())));
-                                }}
-                                label="Search Company"
-                                variant="standard"
-                            />
                         </Box>
                         <Export data={modifiedRows} type='user'/>
                     </Box>

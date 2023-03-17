@@ -7,17 +7,23 @@ import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
 import { deleteSSI, getSsi, getSSIbyID, putSSIbyID } from '../../services/userservices';
 import { useState } from 'react';
+import {TextField} from '@mui/material';
 
 const Managessi = () => {
+  const clearTextField = (e) => {
+    e.target.value = "";
+  }
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [rows, setRows] = useState([]);
+  const [modifiedRows, setModifiedRows] = useState(rows);
     
   const updateRows = ()=>{
       getSsi().then(res=>{
           if(res.status===200){
               setRows(res.data)
+              setModifiedRows(res.data)
           }
       })
   }
@@ -68,7 +74,7 @@ const Managessi = () => {
           return (
             <Typography>
             <Link 
-                to={`/dashboard/editssi/${params.row.ssiRefId}`}
+                to={`/editssi/${params.row.ssiRefId}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
             >Edit SSI
             </Link>
@@ -84,7 +90,7 @@ const Managessi = () => {
           return (
             <Typography>
             <Link 
-                to={`/dashboard/ssi/${params.row.ssiRefId}`}
+                to={`/ssi/${params.row.ssiRefId}`}
                 style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
             >View
             </Link>
@@ -146,10 +152,25 @@ const Managessi = () => {
         '& .MuiDataGrid-toolbarContainer .MuiButton-text': {
             color: `${colors.grey[100]} !important`
         },}}>
+                      <Box>
+                  <TextField
+                                // style={{ width: 110 }}
+                      InputLabelProps={{ shrink: true }}
+                      id="search-id" type="number"
+                      onBlur={clearTextField}
+                      onChange={(e) => {
+                          setModifiedRows(rows.filter((n) => String(n.ssiRefId).toLowerCase().includes(e.target.value.toLowerCase())));
+                      }}
+                      label="Search Id"
+                      variant="standard"
+                      sx={{
+                          paddingRight: "10px"
+                      }}
+                  />
+              </Box>
                 <DataGrid
-                    rows={rows}
+                    rows={modifiedRows}
                     columns={columns}
-                    components={{ Toolbar: GridToolbar }}
                 />
             </Box>
         </Box>
