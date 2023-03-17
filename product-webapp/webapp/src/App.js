@@ -10,6 +10,7 @@ import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Landing from './pages/landingpage/Landing';
 import ForgotPassword from './pages/forgotpassword/Forgotpassword';
+import Editssi from './pages/editssi/Editssi'
 
 function App() {
   return (

@@ -1,19 +1,20 @@
 /* eslint-disable no-restricted-globals */
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, useTheme } from '@mui/material';
-import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
+import { Box, useTheme, TextField} from '@mui/material';
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
 
-import {getUsers, updateUserAdminStatus,removeUser} from "../../services/userservices";
+
+import { getUsers, updateUserAdminStatus, removeUser } from "../../services/userservices";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
-// import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
 
 import Header from '../../components/Header';
+import Export from '../../components/Export/Export'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 const Manageusers = () => {
@@ -29,22 +30,28 @@ const Manageusers = () => {
     const viewUser = (url) => {
         navigate(url)
     }
-    
+
     const [rows, setRows] = useState([]);
-    
-    const updateRows = ()=>{
-        getUsers().then(res=>{
-            if(res.status===200){
+    const [modifiedRows, setModifiedRows] = useState(rows);
+
+    const clearTextField = (e) => {
+        e.target.value = "";
+    }
+
+    const updateRows = () => {
+        getUsers().then(res => {
+            if (res.status === 200) {
                 setRows(res.data)
+                setModifiedRows(res.data)
             }
         })
     }
 
     const deleteUser = (id) => {
-        let flag = confirm("Are you sure to delete")?true:false;
-        if(flag){
-            removeUser(id).then(res=>{
-                if(res.status===200){
+        let flag = confirm("Are you sure to delete") ? true : false;
+        if (flag) {
+            removeUser(id).then(res => {
+                if (res.status === 200) {
                     updateRows()
                     alert("User Deleted.!")
                 }
@@ -52,15 +59,17 @@ const Manageusers = () => {
         }
     }
 
-    const toggleAdmin = (id,isAdmin) => {
+    const toggleAdmin = (id, isAdmin) => {
         if (isAgreed === true) {
             handleClickOpen();
-            updateUserAdminStatus(id,isAdmin).then(res=>{
-                if(res.status===200){
+            updateUserAdminStatus(id, isAdmin).then(res => {
+                if (res.status === 200) {
                     updateRows()
                 }
             })
         }
+
+    
     }
 
     const handleClickOpen = () => {
@@ -86,7 +95,7 @@ const Manageusers = () => {
             field: "actions", type: "actions", align: "center", sortable: false, filterable: false, disableColumnMenu: true,
             getActions: (params) => [
                 <GridActionsCellItem
-                    icon={<PersonIcon/>}
+                    icon={<PersonIcon />}
                     label="View"
                     onClick={() => {
                         viewUser(`/manageusers/${params.row.id}`)
@@ -96,13 +105,13 @@ const Manageusers = () => {
                 <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete user"
-                    onClick={()=>{deleteUser(params.id)}}
+                    onClick={() => { deleteUser(params.id) }}
                     showInMenu
                 />,
                 <GridActionsCellItem
                     icon={<SecurityIcon />}
                     label="Make user admin"
-                    onClick={()=>{toggleAdmin(params.id,params.row.userRole)}}
+                    onClick={() => { toggleAdmin(params.id, params.row.userRole) }}
                     showInMenu
                 />,
             ]
@@ -114,11 +123,14 @@ const Manageusers = () => {
         updateRows();
     }, []);
 
+   
+    
+
     return (
         <>
-        <Box m='20px'>
+        <Box m='0 20px'>
             <Header title='Manage Users' subtitle='Manage Users Efficiently' />
-            <Box m="40px 0 0 0" height="75vh" width='83vw' sx={{
+            <Box m="10px 0 0 0" height="60vh" sx={{
                 "& .MuiDataGrid-root": {
                     border: "none",
                 },
@@ -141,19 +153,86 @@ const Manageusers = () => {
                 },
                 "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
                     color: `${colors.grey[100]} !important`
+                },
+                '& input[type=number]': {
+                    '-moz-appearance': 'textfield'
+                },
+                '& input[type=number]::-webkit-outer-spin-button': {
+                    '-webkit-appearance': 'none',
+                    margin: 0
+                },
+                '& input[type=number]::-webkit-inner-spin-button': {
+                    '-webkit-appearance': 'none',
+                    margin: 0
                 }
             }}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    components={{ Toolbar: GridToolbar }}
-                    componentsProps={{
-                        toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
-                        },
-                    }}
-                    />
+                <Box height="60vh">
+                    <Box p="0 0 2px 0" display="flex" justifyContent="space-between" alignItems="center">
+                        <Box>
+                            <TextField
+                                // style={{ width: 110 }}
+                                InputLabelProps={{ shrink: true }}
+                                id="search-id" type="number"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.id).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Id"
+                                variant="standard"
+                            />
+                            <TextField
+                                // style={{ width: 245 }}
+                                InputLabelProps={{ shrink: true }}
+                                id="search-name" type="text"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.userName).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Name"
+                                variant="standard"
+                            />
+                            <TextField
+                                // style={{ width: 245 }}
+                                InputLabelProps={{ shrink: true }}
+
+                                id="search-email" type="text"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.userEmail).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Email"
+                                variant="standard"
+                            />
+                            <TextField
+                                // style={{ width: 245 }}
+                                InputLabelProps={{ shrink: true }}
+
+                                id="search-company" type="text"
+                                onBlur={clearTextField}
+                                onChange={(e) => {
+                                    setModifiedRows(rows.filter((n) => String(n.userCompany).toLowerCase().includes(e.target.value.toLowerCase())));
+                                }}
+                                label="Search Company"
+                                variant="standard"
+                            />
+                        </Box>
+                        <Export modifiedRows/>
+                    </Box>
+                    <DataGrid
+                        rows={modifiedRows}
+                        rowHeight={40}
+                        columns={columns}
+                        disableColumnFilter
+                        disableColumnSelector
+                    // components={{ Toolbar: GridToolbar }}
+                    // componentsProps={{
+                    //     toolbar: {
+                    //         showQuickFilter: true,
+                 //            quickFilterProps: { debounceMs: 500 },
+                   //      },
+                  //   }}
+                        />
+                </Box>
             </Box>
         </Box>
         <Dialog
