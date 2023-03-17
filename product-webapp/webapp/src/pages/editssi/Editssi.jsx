@@ -20,7 +20,7 @@ const Editssi = () => {
         console.log(values.id,values);
         editSsi(values.id,values).then(res => {
             if (res.status === 200) {
-                alert("User is Edited Successfully")
+                alert("SSI is Edited Successfully")
             }
         })
     };
