@@ -8,8 +8,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
@@ -97,7 +95,7 @@ const Topbar = () => {
                 >
                 <MenuItem onClick={handleClose}>
                     <AccountBoxIcon />
-                    <Link to='/profile' style={{ 
+                    <Link to='/dashboard/profile' style={{ 
                         textDecoration: 'none',
                         color: colors.grey[100],
                         paddingLeft: '10px',
@@ -107,7 +105,7 @@ const Topbar = () => {
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     <LogoutIcon />
-                    <Link to='/home' style={{ 
+                    <Link to='/' style={{ 
                         textDecoration: 'none', 
                         color: colors.grey[100],
                         paddingLeft: '10px',

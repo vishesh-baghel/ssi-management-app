@@ -837,7 +837,7 @@
       "userName": "User2",
       "userEmail": "user2@domain.comm",
       "userCompany": "Company1",
-      "userRole": false
+      "userRole": true
     },
     {
       "id": 3,

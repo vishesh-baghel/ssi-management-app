@@ -1,4 +1,3 @@
-import { useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,34 +8,11 @@ import Typography from '@mui/material/Typography';
 import { Formik } from "formik";
 import * as React from 'react';
 import * as yup from "yup";
-import { useEffect, useState } from 'react';
-import { ErrorSharp } from '@mui/icons-material';
-
 
 export default function Login() {
-  //   const handleSubmit = (event) => {
-  //     event.preventDefault();
-  //     const data = new FormData(event.currentTarget);
-  //     console.log({
-  //       email: data.get('email'),
-  //       password: data.get('password'),
-  //     });
-  //   };
 
-  const Adduser = () => {
-    const isNonMobile = useMediaQuery("(min-width:600px)");
-  }
   const handleFormSubmit = (values, actions) => {
     console.log("values");
-    alert("Function is clicked")
-    // addUser(values).then(res=>
-    //   {
-    //     if(res.status===201)
-    //     {
-    //       alert("User Added..")
-    //       actions.restForm();
-    //     }
-    //   })
   };
 
 
@@ -63,20 +39,6 @@ export default function Login() {
         <CssBaseline />
 
         <Grid
-
-
-          // component="img"
-          // sx={{
-          //   height: 50,
-          //   width: 10,
-          //   maxHeight: { xs: 233, md: 50 },
-          //   maxWidth: { xs: 350, md: 250 },
-          //   marginLeft:'10vw'
-          // }}
-          // alt="Baton systems"
-          // src="https://media.glassdoor.com/sqll/2880408/baton-systems-squarelogo-1669288735833.png"
-
-
           item
           xs={false}
           sm={4}
@@ -89,7 +51,6 @@ export default function Login() {
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            // border:'2px solid black',
             height: '75vh',
             width: '40vw',
             marginTop: '3vh'
@@ -101,9 +62,7 @@ export default function Login() {
             sx={{
               borderRadius: '2px',
               width: '40vw',
-              // display: 'flex',
               flexDirection: 'column',
-              // border:'2px solid black',
               marginTop: '10px',
               height: '60vh',
               marginTop: '50px'
@@ -120,15 +79,6 @@ export default function Login() {
               validationSchema={userSchema}>
 
               { 
-              // ({
-              //   values,
-              //   errors,
-              //   touched,
-              //   handleBlur,
-              //   handleChange,
-              //   handleSubmit
-      
-              // })
               
             formik  => { console.log(formik);
                  return ( 
@@ -148,8 +98,6 @@ export default function Login() {
                       id="userEmail"
                       label="Email Address"
                       name="userEmail"
-                    // autoComplete="email"
-                    // autoFocus
                     />
                     <br></br>
                     <TextField
@@ -165,10 +113,7 @@ export default function Login() {
                       error={!!formik.touched.userPassword && !!formik.errors.userPassword}
                       helperText={formik.touched.userPassword && formik.errors.userPassword}
                       id="userPassword"
-                    // autoComplete="current-password"
                     />
-          
-
                     <Button
                       type="submit"
                       fullWidth
@@ -178,10 +123,7 @@ export default function Login() {
                     >
                       Sign In
                     </Button>
-
                     <br></br>
-
-
                     <Grid container align='left' sx={{ marginTop: '4vh' }}>
                       <Grid item xs>
                         <Link href="/forgotpassword" >
@@ -190,17 +132,13 @@ export default function Login() {
                       </Grid>
 
                       <Grid item>
-                        {/* <p>Don't have an account? </p> */}
                         <Link href="/register" variant="body2">
                           {"Sign Up"}
                         </Link>
                       </Grid>
                     </Grid>
-
-
                   </Box>
                 </form>
-
               ) }}
             </Formik>
           </Box>
