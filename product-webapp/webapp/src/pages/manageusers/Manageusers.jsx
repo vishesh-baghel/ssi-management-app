@@ -2,28 +2,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, useTheme, TextField, IconButton,Menu,MenuItem } from '@mui/material';
-import { DataGrid, GridToolbar, GridActionsCellItem } from "@mui/x-data-grid";
+import { Box, useTheme, TextField} from '@mui/material';
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
-import "./styles.css";
-
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
 
 import { getUsers, updateUserAdminStatus, removeUser } from "../../services/userservices";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
-// import EditIcon from '@mui/icons-material/Edit';
-import DownloadIcon from '@mui/icons-material/Download';
 import PersonIcon from '@mui/icons-material/Person';
 
-
 import Header from '../../components/Header';
+import Export from '../../components/Export/Export'
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 const Manageusers = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+
+    const [open, setOpen] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
+    const dialogTitle = 'Do you want to make this user admin?';
+    const dialogDescription = 'This user will have admin privileges.';
 
     const navigate = useNavigate();
     const viewUser = (url) => {
@@ -33,6 +33,9 @@ const Manageusers = () => {
     const [rows, setRows] = useState([]);
     const [modifiedRows, setModifiedRows] = useState(rows);
 
+    const clearTextField = (e) => {
+        e.target.value = "";
+    }
 
     const updateRows = () => {
         getUsers().then(res => {
@@ -56,74 +59,30 @@ const Manageusers = () => {
     }
 
     const toggleAdmin = (id, isAdmin) => {
-        updateUserAdminStatus(id, isAdmin).then(res => {
-            if (res.status === 200) {
-                updateRows()
-            }
-        })
+        if (isAgreed === true) {
+            handleClickOpen();
+            updateUserAdminStatus(id, isAdmin).then(res => {
+                if (res.status === 200) {
+                    updateRows()
+                }
+            })
+        }
+
+    
     }
 
-    const clearTextField = (e) => {
-        e.target.value = "";
-    }
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
 
-    const exportCsv = () => {
-        const csvString = [
-            [
-                "id",
-                "userName",
-                "userEmail",
-                "userCompany",
-                "userRole"
-            ],
-            ...modifiedRows.map(item => [
-                item.id,
-                item.userName,
-                item.userEmail,
-                item.userCompany,
-                item.userRole
-            ])
-        ].map(e => e.join(",")).join("\n");
-        const csv_data = `${csvString}`.split("\n").join('\n');
-
-        let CSVFile = new Blob([csv_data], { type: "text/csv" });
-        var temp_link = document.createElement('a');
-        temp_link.download = document.title;
-        var url = window.URL.createObjectURL(CSVFile);
-        temp_link.href = url;
-        temp_link.style.display = "none";
-        document.body.appendChild(temp_link);
-        temp_link.click();
-        document.body.removeChild(temp_link);
-    }
-
-    const exportPdf = () => {
-        const csvString = [
-            [
-                "id",
-                "userName",
-                "userEmail",
-                "userCompany",
-                "userRole"
-            ],
-            ...modifiedRows.map(item => [
-                item.id,
-                item.userName,
-                item.userEmail,
-                item.userCompany,
-                item.userRole
-            ])
-        ].map(e => e.join(",")).join("\n");
-        const csv_data = `${csvString}`.split("\n");
-        const head = csv_data.shift().split(",")
-        const body = csv_data.map(n => n.split(','))
-        const doc = new jsPDF()
-        autoTable(doc, {
-            head: [head],
-            body: body,
-        });
-        doc.save(document.title);
-    }
+    const handleClose = () => {
+        setOpen(false);
+      };
+    
+    const handleAgreement = () => {
+        setIsAgreed(true);
+        setOpen(false);
+    };
 
     const columns = [
         { field: "id", headerName: "ID" },
@@ -163,43 +122,8 @@ const Manageusers = () => {
         updateRows();
     }, []);
 
-    const dummyMenuItems = [
-        {
-            title: "Export as PDF",
-            id:"pdf"
-        },
-        {
-            title: "Export as CSV",
-            id:"csv"
-        }
-    ];
-
-    const [anchorEl, setAnchorEl] = useState(null);
-    const handleClick = e => {
-        setAnchorEl(e.currentTarget);
-    };
-    const handleClose = (e) => {
-        setAnchorEl(null);
-        if(e.target.id==='pdf'){
-            exportPdf()
-        }else if(e.target.id==='csv'){
-            exportCsv();
-        }
-    };
-    const nativeOnChange = e => {
-        const detail = {
-            selectedIndex: e.target.selectedIndex
-        };
-        e.target.selectedIndex = 0;
-
-        e.target.dispatchEvent(new CustomEvent("itemClick", { detail }));
-    };
-
-    const itemClick = e => {
-        console.log("Item Clicked " + e.detail);
-    };
-
     return (
+        <>
         <Box m='0 20px'>
             <Header title='Manage Users' subtitle='Manage Users Efficiently' />
             <Box m="10px 0 0 0" height="60vh" sx={{
@@ -239,7 +163,7 @@ const Manageusers = () => {
                 }
             }}>
                 <Box height="60vh">
-                    <Box p="0 0 2px 0" display="flex" justifyContent="space-between" alignItems="center">
+                    <Box pb="10px" display="flex" justifyContent="space-between" alignItems="center">
                         <Box>
                             <TextField
                                 // style={{ width: 110 }}
@@ -251,6 +175,9 @@ const Manageusers = () => {
                                 }}
                                 label="Search Id"
                                 variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
                             />
                             <TextField
                                 // style={{ width: 245 }}
@@ -262,6 +189,9 @@ const Manageusers = () => {
                                 }}
                                 label="Search Name"
                                 variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
                             />
                             <TextField
                                 // style={{ width: 245 }}
@@ -274,6 +204,9 @@ const Manageusers = () => {
                                 }}
                                 label="Search Email"
                                 variant="standard"
+                                sx={{
+                                    paddingRight: "10px"
+                                }}
                             />
                             <TextField
                                 // style={{ width: 245 }}
@@ -288,26 +221,7 @@ const Manageusers = () => {
                                 variant="standard"
                             />
                         </Box>
-                        <Box>
-                            <IconButton aria-controls="simple-menu"
-                                aria-haspopup="true"
-                                onClick={handleClick}
-                                aria-label="Open to show more"
-                                title="Open to show more"><DownloadIcon /></IconButton>
-                            <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                {dummyMenuItems.map(item => (
-                                    <MenuItem onClick={handleClose} key={item.title} id={item.id} value={item.title}>
-                                        {item.title}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
+                        <Export data={modifiedRows} type='user'/>
                     </Box>
                     <DataGrid
                         rows={modifiedRows}
@@ -319,13 +233,58 @@ const Manageusers = () => {
                     // componentsProps={{
                     //     toolbar: {
                     //         showQuickFilter: true,
-                    //            quickFilterProps: { debounceMs: 500 },
-                    //      },
-                    //   }}
-                    />
+                 //            quickFilterProps: { debounceMs: 500 },
+                   //      },
+                  //   }}
+                        />
                 </Box>
             </Box>
         </Box>
+        <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{
+            "& .MuiDialog-paper": {
+                backgroundColor: colors.blueAccent[700],
+                color: colors.grey[100],
+            },
+            "& .MuiDialog-paper .MuiDialogTitle-root": {
+                fontSize: "1.5rem",
+            },
+            "& .MuiDialog-paper .MuiDialogContent-root": {
+                fontSize: "1.5rem",
+            },
+            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text": {
+                color: colors.grey[100],
+                fontSize: "1.2rem",
+            },
+            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text.Mui-disabled": {
+                color: colors.grey[100],
+            },
+            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text:hover": {
+                color: colors.grey[100],
+            },
+
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {dialogTitle}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {dialogDescription}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleAgreement} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+        </>
     );
 }
 
