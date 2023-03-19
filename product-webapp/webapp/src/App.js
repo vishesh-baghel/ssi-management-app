@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import Manageusers from './pages/manageusers/Manageusers';
+import Managessi from './pages/managessi/Managessi';
+import Addssi from './pages/addssi/Addssi';
+import Adduser from './pages/adduser/Adduser';
+import Dashboard from './pages/dashboard/Dashboard';
+import Viewssi from './pages/viewssi/Viewssi';
+import { Routes, Route } from 'react-router-dom';
+import Appwrapper from './Appwrapper';
+import Login from './pages/login/Login';
+import Register from './pages/register/Register';
+import Landing from './pages/landingpage/Landing';
+import ForgotPassword from './pages/forgotpassword/Forgotpassword';
+import Editssi from './pages/editssi/Editssi'
+import Viewprofile from './pages/viewprofile/Viewprofile';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Routes>
+      <Route path='/dashboard' element={<Appwrapper />}>
+              <Route index element={<Dashboard />} />
+              <Route path="manageusers" element={<Manageusers />} />
+              <Route path="managessi" element={<Managessi />} />
+              <Route path="addssi" element={<Addssi />} />
+              <Route path="adduser" element={<Adduser />} />
+              <Route path="ssi/:id" element={<Viewssi/>}/>
+              <Route path="editssi/:id" element={<Editssi/>}/>
+              <Route path="profile" element={<Viewprofile/>}/>
+      </Route>
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='/' element={<Landing />} />
+      <Route path='/forgotpassword' element={<ForgotPassword />} />
+    </Routes>
+    </>
   );
 }
 
