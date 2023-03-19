@@ -7,7 +7,7 @@ stages:
   - package
   - test
   - java_quality
-  
+
 maven_build:
   image: maven:3-jdk-11
   stage: package
