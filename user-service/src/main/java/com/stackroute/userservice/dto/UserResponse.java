@@ -16,6 +16,6 @@ public class UserResponse {
     private Long offset;
     private Long count;
     private Long total;
+    private String exportLink;
     private List<User> results;
-
 }
