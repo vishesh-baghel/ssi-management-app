@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -166,13 +170,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse createUserResponseList(List<User> users, int offset, int count) {
+    public UserResponse createUserResponseList(List<User> users, int offset, int count, String exportLink) {
         return UserResponse.builder()
                 .message("users working in the given company")
                 .status(200)
                 .offset((long) offset)
                 .count((long) count)
                 .total((long) users.size())
+                .exportLink(exportLink)
                 .results(users)
                 .build();
     }
@@ -189,5 +194,24 @@ public class UserServiceImpl implements UserService{
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
         return userRepository.findAllByRole(role, pageable);
+    }
+
+    @Override
+    public void updateUser(User user, Boolean isAdmin) {
+        if (Boolean.TRUE.equals(isAdmin)) {
+            user.setRole("admin");
+            user.setAdmin(true);
+        } else {
+            user.setRole("user");
+            user.setAdmin(false);
+        }
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(User user) {
+        tokenRepository.deleteByUserId(user.getId());
+        userRepository.deleteByEmail(user.getEmail());
     }
 }

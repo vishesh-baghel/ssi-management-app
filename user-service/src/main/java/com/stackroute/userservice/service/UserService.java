@@ -6,7 +6,6 @@ import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +37,11 @@ public interface UserService {
 
     List<User> findAllUsersByCompanyName(String companyName, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException;
 
-    UserResponse createUserResponseList(List<User> users, int offset, int count);
+    UserResponse createUserResponseList(List<User> users, int offset, int count, String exportLink);
 
     List<User> findAllUsersByRole(String role, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException;
+
+    void updateUser(User user, Boolean isAdmin);
+
+    void deleteUser(User user);
 }

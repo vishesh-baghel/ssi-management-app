@@ -20,12 +20,11 @@ public class VerificationToken {
     private String token;
     private Date expirationTime;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "user_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_verification_token_user")
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
+    @JoinColumn(name = "user_id")
     private User user;
 
     public VerificationToken(User user, String token) {
