@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
+            "/user",
             "/user/register",
             "/user/resetPassword",
             "/user/verifyRegistration",

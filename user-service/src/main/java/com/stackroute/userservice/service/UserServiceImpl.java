@@ -2,24 +2,32 @@ package com.stackroute.userservice.service;
 
 import com.stackroute.userservice.dto.PasswordRequest;
 import com.stackroute.userservice.dto.UserRequest;
+import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.PasswordResetToken;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
+import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.repository.PasswordResetTokenRepository;
 import com.stackroute.userservice.repository.UserRepository;
 import com.stackroute.userservice.repository.VerificationTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService{
+
+    static final String TOKEN_VALID = "valid";
+    static final String INVALID_TOKEN = "invalid Token";
+    static final String USER_NOT_FOUND = "User not found";
+    static final String TOKEN_EXPIRED = "Token expired";
 
     @Autowired
     private UserRepository userRepository;
@@ -63,19 +71,19 @@ public class UserServiceImpl implements UserService{
     public String validateVerificationToken(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null) {
-            return "invalidToken";
+            return INVALID_TOKEN;
         }
 
         User user = verificationToken.getUser();
         Calendar calendar = Calendar.getInstance();
         if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
             verificationTokenRepository.delete(verificationToken);
-            return "expired";
+            return TOKEN_EXPIRED;
         }
 
         user.setEnabled(true);
         userRepository.save(user);
-        return "valid";
+        return TOKEN_VALID;
     }
 
     @Override
@@ -98,15 +106,15 @@ public class UserServiceImpl implements UserService{
     public String validatePasswordResetToken(String token) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
         if (passwordResetToken == null) {
-            return "invalid Token";
+            return INVALID_TOKEN;
         }
 
         Calendar calendar = Calendar.getInstance();
         if ((passwordResetToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
             passwordResetTokenRepository.delete(passwordResetToken);
-            return "expired";
+            return TOKEN_EXPIRED;
         }
-        return "valid";
+        return TOKEN_VALID;
     }
 
     @Override
@@ -118,5 +126,68 @@ public class UserServiceImpl implements UserService{
     public void changePassword(User user, String newPassword) {
        user.setPassword(passwordEncoder.encode(newPassword));
        userRepository.save(user);
+    }
+
+    @Override
+    public User findUserByUserName(String userName) throws UserNotFoundException {
+        if (userRepository.findByUserName(userName) == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+        return userRepository.findByUserName(userName);
+    }
+
+    @Override
+    public UserResponse createUserResponse(User user, int offset, int count) {
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        return UserResponse.builder()
+                .message("user details")
+                .status(200)
+                .results(users)
+                .build();
+    }
+
+    @Override
+    public List<User> findAllUsersByCompanyName(
+            String companyName, int pageNumber, int pageSize,
+            String sortBy, String orderBy) throws UserNotFoundException {
+        Pageable pageable;
+        if (orderBy.equalsIgnoreCase("asc")) {
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
+        } else {
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
+        }
+
+        if (userRepository.findAllByCompanyName(companyName, pageable).isEmpty()) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+
+        return userRepository.findAllByCompanyName(companyName, pageable);
+    }
+
+    @Override
+    public UserResponse createUserResponseList(List<User> users, int offset, int count) {
+        return UserResponse.builder()
+                .message("users working in the given company")
+                .status(200)
+                .offset((long) offset)
+                .count((long) count)
+                .total((long) users.size())
+                .results(users)
+                .build();
+    }
+
+    @Override
+    public List<User> findAllUsersByRole(String role, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException {
+        Pageable pageable;
+        if (orderBy.equalsIgnoreCase("asc")) {
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
+        } else {
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
+        }
+        if (userRepository.findAllByRole(role, pageable).isEmpty()) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+        return userRepository.findAllByRole(role, pageable);
     }
 }
