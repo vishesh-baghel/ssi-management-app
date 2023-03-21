@@ -15,7 +15,8 @@ public class WebSecurityConfig {
             "/user/register",
             "/user/resetPassword",
             "/user/verifyRegistration",
-            "/user/savePassword"
+            "/user/savePassword",
+            "/user/export-to-excel"
     };
 
     @Bean

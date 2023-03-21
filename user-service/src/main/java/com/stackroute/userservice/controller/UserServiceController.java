@@ -7,6 +7,7 @@ import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidRequestBodyException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
+import com.stackroute.userservice.export.ExcelGenerator;
 import com.stackroute.userservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -32,15 +35,16 @@ public class UserServiceController {
     static final String USER_VERIFIED = "User verified successfully";
     static final String TOKEN_INVALID = "Token is invalid";
     static final String USER_VERIFICATION_FAILED = "User verification failed";
-    static final String USER_PASSWORD_RESET = "User password reset successfully";
     static final String USER_PASSWORD_UPDATED = "User password updated successfully";
     static final String USER_PASSWORD_RESET_TOKEN_INVALID = "User password reset token is invalid";
-    static final String USER_PASSWORD_RESET_TOKEN_EXPIRED = "User password reset token is expired";
     static final String USERNAME_CANNOT_BE_EMPTY = "User name cannot be empty";
     static final String PASSWORD_CANNOT_BE_EMPTY = "Password cannot be empty";
     static final String EMAIL_CANNOT_BE_EMPTY = "Email cannot be empty";
     static final String COMPANY_NAME_CANNOT_BE_EMPTY = "Company name cannot be empty";
     static final String ROLE_CANNOT_BE_EMPTY = "Role cannot be empty";
+    static final String IS_ADMIN_CANNOT_BE_EMPTY = "admin role value cannot be empty";
+
+    List<User> exportList;
 
     @Autowired
     private UserService userService;
@@ -117,7 +121,7 @@ public class UserServiceController {
             userService.changePassword(user.get(), passwordRequest.getNewPassword());
             return USER_PASSWORD_UPDATED;
         } else {
-            return TOKEN_INVALID    ;
+            return TOKEN_INVALID;
         }
     }
 
@@ -132,6 +136,14 @@ public class UserServiceController {
         String orderBy = userRequest.getOrderBy();
         int pageNumber = userRequest.getOffset();
         int pageSize = userRequest.getCount();
+        String exportAs = userRequest.getExportAs();
+
+        if (sortBy == null || sortBy.isEmpty() || orderBy == null || orderBy.isEmpty() || pageNumber < 0 || pageSize < 0) {
+            sortBy = "userName";
+            orderBy = "asc";
+            pageNumber = 0;
+            pageSize = 10;
+        }
 
         if (userName != null) {
             User user = userService.findUserByUserName(userName);
@@ -143,15 +155,67 @@ public class UserServiceController {
         }
         if (companyName != null){
             List<User> users = userService.findAllUsersByCompanyName(companyName, pageNumber, pageSize, sortBy, orderBy);
+            String exportLink = exportUtil(users);
             log.info("Users by company name: {}", users);
-            return userService.createUserResponseList(users, pageNumber, pageSize);
+            return userService.createUserResponseList(users, pageNumber, pageSize, exportLink);
         }
         if (role != null){
             List<User> users = userService.findAllUsersByRole(role, pageNumber, pageSize, sortBy, orderBy);
+            String exportLink = exportUtil(users);
             log.info("Users by role: {}", users);
-            return userService.createUserResponseList(users, pageNumber, pageSize);
+            return userService.createUserResponseList(users, pageNumber, pageSize, exportLink);
         }
         return null;
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    private String updateUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException {
+        String email = userRequest.getEmail();
+        Boolean isAdmin = userRequest.getIsAdmin();
+
+        if (email == null || email.isEmpty()) {
+            throw new InvalidRequestBodyException(EMAIL_CANNOT_BE_EMPTY);
+        }
+        if (isAdmin == null) {
+            throw new InvalidRequestBodyException(IS_ADMIN_CANNOT_BE_EMPTY);
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            throw new InvalidRequestBodyException(USER_NOT_FOUND);
+        }
+        userService.updateUser(user, isAdmin);
+        return USER_UPDATED;
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    private String deleteUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException {
+        String email = userRequest.getEmail();
+
+        if (email == null || email.isEmpty()) {
+            throw new InvalidRequestBodyException(EMAIL_CANNOT_BE_EMPTY);
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            throw new InvalidRequestBodyException(USER_NOT_FOUND);
+        }
+        userService.deleteUser(user);
+        return USER_DELETED;
+    }
+
+    @GetMapping("/export-to-excel")
+    public void exportIntoExcelFile(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=user" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        ExcelGenerator generator = new ExcelGenerator(exportList);
+        generator.generateExcelFile(response);
     }
 
     private String passwordResetTokenMail(User user, String applicationUrl, String token) {
@@ -170,5 +234,10 @@ public class UserServiceController {
     private String applicationUrl(HttpServletRequest request) {
         return "http://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath();
+    }
+
+    private String exportUtil(List<User> user) {
+        exportList = user;
+        return "http://localhost:8080/user/export-to-excel";
     }
 }
