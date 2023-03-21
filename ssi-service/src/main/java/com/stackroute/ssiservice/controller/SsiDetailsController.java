@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stackroute.ssiservice.model.SsiDetails;
+import com.stackroute.ssiservice.dto.SsiRequest;
 import com.stackroute.ssiservice.service.SsiDetailsService;
 
 @RestController
@@ -24,8 +24,8 @@ public class SsiDetailsController {
 //	}
 
 	@PostMapping("/add")
-	public String addNewSsi(@RequestBody SsiDetails ssiRequest, HttpServletRequest request) {
-		// Ssi createdSsi = ssiDetalisService.addSsi(ssiRequest);
+	public String addNewSsi(@RequestBody SsiRequest ssiRequest, HttpServletRequest request) {
+		ssiDetailsService.addSsi(ssiRequest);
 		return "";
 	}
 
