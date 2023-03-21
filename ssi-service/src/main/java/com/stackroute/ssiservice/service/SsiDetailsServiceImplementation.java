@@ -2,12 +2,14 @@ package com.stackroute.ssiservice.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.stackroute.ssiservice.dto.SsiRequest;
+import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.repository.SsiDetailsRepository;
 
@@ -45,11 +47,11 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
 	}
 
 	@Override
-	public SsiDetails deleteSsi(int ssiRefId) {
+	public SsiDetails deleteSsi(int ssiRefId) throws SsiNotFoundException {
 		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(ssiRefId);
 		SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
 		if (ssiDetails == null) {
-			return null;
+			throw new SsiNotFoundException("Ssi Not Found");
 		}
 		ssiDetailRepository.deleteById(ssiRefId);
 		return ssiDetails;
@@ -91,13 +93,56 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
 	}
 
 	@Override
-	public SsiDetails searchById(int ssiRefId) {
+	public SsiDetails searchById(int ssiRefId) throws SsiNotFoundException {
 		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(ssiRefId);
 		SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
 		if (ssiDetails == null) {
-			return null;
+			throw new SsiNotFoundException("Ssi Not found");
 		}
 		return ssiDetails;
 	}
+
+	@Override
+	public List<SsiDetails> searchByAccountName(String accountName) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByAccountName(accountName);
+		return ssiList;
+	}
+
+	@Override
+	public List<SsiDetails> searchByAccountNumber(String accountNumber) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByAccountNumber(accountNumber);
+		return ssiList;
+	}
+
+	@Override
+	public List<SsiDetails> searchByCurrency(String currency) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByCurrency(currency);
+		return ssiList;
+	}
+
+	@Override
+	public List<SsiDetails> searchByCountry(String country) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByCountry(country);
+		return ssiList;
+	}
+
+	@Override
+	public List<SsiDetails> searchByAssetClass(String assetClass) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByAssetClass(assetClass);
+		return ssiList;
+	}
+
+	@Override
+	public List<SsiDetails> searchByProduct(String product) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByProduct(product);
+		return ssiList;
+	}
+
+	@Override
+	public List<SsiDetails> searchByRoutingCode(String routingCode) {
+		List<SsiDetails> ssiList = ssiDetailRepository.findByRoutingCode(routingCode);
+		return ssiList;
+	}
+	
 
 }
