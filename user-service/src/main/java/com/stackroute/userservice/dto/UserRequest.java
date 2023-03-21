@@ -16,4 +16,8 @@ public class UserRequest {
     private String email;
     private String companyName;
     private String role;
+    private int offset;
+    private int count;
+    private String sortBy;
+    private String orderBy;
 }
