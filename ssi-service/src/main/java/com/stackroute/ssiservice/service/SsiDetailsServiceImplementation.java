@@ -2,10 +2,15 @@ package com.stackroute.ssiservice.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.repository.SsiDetailsRepository;
 
-public class SsiDetailsServiceImplementation implements SsiDetailsService{
+@Service
+public class SsiDetailsServiceImplementation implements SsiDetailsService {
+	@Autowired
 	private SsiDetailsRepository ssiDetailRepository;
 
 	@Override
@@ -16,8 +21,8 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService{
 	@Override
 	public SsiDetails deleteSsi(int ssiRefId) {
 		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(ssiRefId);
-		SsiDetails ssiDetails = optionalSsi.isEmpty()?null:optionalSsi.get();
-		if (ssiDetails==null) {
+		SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
+		if (ssiDetails == null) {
 			return null;
 		}
 		ssiDetailRepository.deleteById(ssiRefId);
@@ -27,8 +32,8 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService{
 	@Override
 	public SsiDetails updateSsi(SsiDetails newSsiDetails) {
 		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(newSsiDetails.getSsiRefId());
-		SsiDetails ssiDetails = optionalSsi.isEmpty()?null:optionalSsi.get();
-		if (ssiDetails==null) {
+		SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
+		if (ssiDetails == null) {
 			return null;
 		}
 		ssiDetails = newSsiDetails;
@@ -38,11 +43,11 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService{
 	@Override
 	public SsiDetails searchById(int ssiRefId) {
 		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(ssiRefId);
-		SsiDetails ssiDetails = optionalSsi.isEmpty()?null:optionalSsi.get();
-		if (ssiDetails==null) {
+		SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
+		if (ssiDetails == null) {
 			return null;
 		}
 		return ssiDetails;
 	}
-	
+
 }

@@ -18,6 +18,11 @@ public class SsiDetailsController {
 	@Autowired
 	private SsiDetailsService ssiDetailsService;
 
+//	@GetMapping("/a")
+//	public String home() {
+//		return "ssi management";
+//	}
+
 	@PostMapping("/add")
 	public String addNewSsi(@RequestBody SsiDetails ssiRequest, HttpServletRequest request) {
 		// Ssi createdSsi = ssiDetalisService.addSsi(ssiRequest);
