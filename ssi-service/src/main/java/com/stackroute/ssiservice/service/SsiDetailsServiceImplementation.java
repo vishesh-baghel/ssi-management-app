@@ -56,13 +56,37 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
 	}
 
 	@Override
-	public SsiDetails updateSsi(SsiDetails newSsiDetails) {
-		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(newSsiDetails.getSsiRefId());
+	public SsiDetails updateSsi(SsiRequest newSsiDetails, int id) {
+		Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(id);
 		SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
 		if (ssiDetails == null) {
 			return null;
 		}
-		ssiDetails = newSsiDetails;
+		String str = newSsiDetails.getExpiryDate() + " 00:00";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+		ssiDetails.setAccountName(newSsiDetails.getAccountName());
+		ssiDetails.setAccountNumber(newSsiDetails.getAccountNumber());
+		ssiDetails.setAccountType(newSsiDetails.getAcccountType());
+		ssiDetails.setCurrency(newSsiDetails.getCurrency());
+		ssiDetails.setProduct(newSsiDetails.getProduct());
+		ssiDetails.setAssetClass(newSsiDetails.getAssetClass());
+		ssiDetails.setCountry(newSsiDetails.getCountry());
+		ssiDetails.setRoutingCode(newSsiDetails.getRoutingCode());
+		ssiDetails.setCorrespondanceAccountName(newSsiDetails.getCorrespondanceAccountName());
+		ssiDetails.setCorrespondanceAccountNumber(newSsiDetails.getCorrespondanceAccountNumber());
+		ssiDetails.setCorrespondanceBankBic(newSsiDetails.getCorrespondanceBankBic());
+		ssiDetails.setCorrespondanceBankName(newSsiDetails.getCorrespondanceBankName());
+		ssiDetails.setBeneficiaryBankBic(newSsiDetails.getBeneficiaryBankBic());
+		ssiDetails.setBeneficiaryBankName(newSsiDetails.getBeneficiaryBankName());
+		ssiDetails.setIntermediary1AccountName(newSsiDetails.getIntermediary1AccountName());
+		ssiDetails.setIntermediary1AccountNumber(newSsiDetails.getIntermediary1AccountNumber());
+		ssiDetails.setIntermediary1BankBic(newSsiDetails.getIntermediary1BankBic());
+		ssiDetails.setIntermediary2AccountName(newSsiDetails.getIntermediary2AccountName());
+		ssiDetails.setIntermediary2AccountNumber(newSsiDetails.getIntermediary2AccountNumber());
+		ssiDetails.setIntermediary2BankBic(newSsiDetails.getIntermediary2BankBic());
+		ssiDetails.setExpiryDate(dateTime);
+		ssiDetailRepository.save(ssiDetails);
 		return ssiDetails;
 	}
 

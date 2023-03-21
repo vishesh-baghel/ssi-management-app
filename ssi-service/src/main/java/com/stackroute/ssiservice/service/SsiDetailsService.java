@@ -8,7 +8,7 @@ public interface SsiDetailsService {
 
 	public SsiDetails deleteSsi(int ssiRefId);
 
-	public SsiDetails updateSsi(SsiDetails newSsiDetails);
+	public SsiDetails updateSsi(SsiRequest ssiRequest, int id);
 
 	public SsiDetails searchById(int ssiRefId);
 
