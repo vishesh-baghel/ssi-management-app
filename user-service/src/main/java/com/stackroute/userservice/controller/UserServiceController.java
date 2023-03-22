@@ -6,6 +6,7 @@ import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidRequestBodyException;
+import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.export.ExcelGenerator;
 import com.stackroute.userservice.service.UserService;
@@ -54,7 +55,7 @@ public class UserServiceController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser( @RequestBody UserRequest userRequest, HttpServletRequest request) throws InvalidRequestBodyException {
+    public String registerUser( @RequestBody UserRequest userRequest, HttpServletRequest request) throws InvalidRequestBodyException, UserNotFoundException, InvalidTokenException {
         if (userRequest.getUserName() == null || userRequest.getUserName().isEmpty()) {
             throw new InvalidRequestBodyException(USERNAME_CANNOT_BE_EMPTY);
         }
@@ -98,7 +99,7 @@ public class UserServiceController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) {
+    public String resetPassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) throws UserNotFoundException, InvalidTokenException {
         User user = userService.findUserByEmail(passwordRequest.getEmail());
         String url = "";
         if (user != null) {
@@ -110,7 +111,7 @@ public class UserServiceController {
     }
 
     @PostMapping("/savePassword")
-    public String savePassword(@RequestParam("token") String token, @RequestBody PasswordRequest passwordRequest) {
+    public String savePassword(@RequestParam("token") String token, @RequestBody PasswordRequest passwordRequest) throws InvalidTokenException, UserNotFoundException {
         String result = userService.validatePasswordResetToken(token);
 
         if (!result.equalsIgnoreCase("valid")) {
@@ -136,7 +137,6 @@ public class UserServiceController {
         String orderBy = userRequest.getOrderBy();
         int pageNumber = userRequest.getOffset();
         int pageSize = userRequest.getCount();
-        String exportAs = userRequest.getExportAs();
 
         if (sortBy == null || sortBy.isEmpty() || orderBy == null || orderBy.isEmpty() || pageNumber < 0 || pageSize < 0) {
             sortBy = "userName";
@@ -170,7 +170,7 @@ public class UserServiceController {
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
-    private String updateUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException {
+    private String updateUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, UserNotFoundException {
         String email = userRequest.getEmail();
         Boolean isAdmin = userRequest.getIsAdmin();
 
@@ -190,7 +190,7 @@ public class UserServiceController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    private String deleteUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException {
+    private String deleteUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, UserNotFoundException {
         String email = userRequest.getEmail();
 
         if (email == null || email.isEmpty()) {
