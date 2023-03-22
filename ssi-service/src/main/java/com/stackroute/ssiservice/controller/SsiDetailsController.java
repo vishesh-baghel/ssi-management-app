@@ -5,15 +5,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.stackroute.ssiservice.dto.SsiRequest;
+import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.service.SsiDetailsService;
@@ -31,20 +25,25 @@ public class SsiDetailsController {
 //	}
 
 	@PostMapping("/add")
-	public String addNewSsi(@RequestBody SsiRequest ssiRequest, HttpServletRequest request) {
-		ssiDetailsService.addSsi(ssiRequest);
-		return "";
+	public String addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) {
+		SsiDetails data = ssiDetailsService.addSsi(ssiDataRequest);
+		return "user added";
 	}
-	@DeleteMapping("/delete/{ssiRefId}")
+	@DeleteMapping("/{ssiRefId}")
 	public void deleteSsi(@PathVariable("ssiRefId") int id) throws SsiNotFoundException {
 		ssiDetailsService.deleteSsi(id);
 	}
-	@PostMapping("/update/{id}")
-	public void updateSsi(@PathVariable("id") int id, @RequestBody SsiRequest ssiRequest) {
-		ssiDetailsService.updateSsi(ssiRequest, id);
+	@PatchMapping("/{id}")
+	public void updateSsi(@PathVariable("id") int id, @RequestBody SsiDataRequest ssiDataRequest) {
+		ssiDetailsService.updateSsi(ssiDataRequest, id);
 	}
 	@GetMapping("/accountnumber/{accountNumber}")
 	public List<SsiDetails> getSsiByAccountNumber(@PathVariable("accountNumber") String accountNumber){
 		return ssiDetailsService.searchByAccountNumber(accountNumber);
+	}
+
+	@PostMapping
+	public void search(@RequestBody SsiDataRequest ssiDataRequest){
+
 	}
 }

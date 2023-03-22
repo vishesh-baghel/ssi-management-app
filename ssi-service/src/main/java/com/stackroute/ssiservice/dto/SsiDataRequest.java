@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SsiRequest {
+public class SsiDataRequest {
 	private String accountNumber;
 	private String accountName;
 	private String acccountType;

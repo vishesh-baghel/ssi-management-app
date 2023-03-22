@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.stackroute.ssiservice.dto.SsiRequest;
+import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.model.SsiDetails;
 
 public interface SsiDetailsRepository extends JpaRepository<SsiDetails, Integer> {
 
-	void save(SsiRequest ssiDetails);
+	void save(SsiDataRequest ssiDetails);
 	
 	List<SsiDetails> findByAccountNumber(String accountNumber);
 	
