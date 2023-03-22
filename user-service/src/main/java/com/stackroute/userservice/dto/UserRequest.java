@@ -21,5 +21,4 @@ public class UserRequest {
     private String sortBy;
     private String orderBy;
     private Boolean isAdmin;
-    private String exportAs;
 }

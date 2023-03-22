@@ -29,4 +29,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(message, "400");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorMessage> invalidTokenException(InvalidTokenException exception) {
+        String message = exception.getMessage();
+        ErrorMessage errorMessage = new ErrorMessage(message, "400");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
 }
