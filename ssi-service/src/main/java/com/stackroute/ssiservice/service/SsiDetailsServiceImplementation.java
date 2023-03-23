@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.dto.SsiSearchResponse;
+import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.repository.SsiDetailsRepository;
@@ -26,10 +27,57 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
     private SsiDetailsRepository ssiDetailRepository;
 
     @Override
-    public SsiDetails addSsi(SsiDataRequest ssiDataRequest) {
+    public SsiDetails addSsi(SsiDataRequest ssiDataRequest) throws InvalidSsiEntry {
         String str = ssiDataRequest.getExpiryDate() + " 00:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+        
+        String accountNumber = ssiDataRequest.getAccountNumber();
+        String accountName = ssiDataRequest.getAccountName();
+        String accountType = ssiDataRequest.getAcccountType();
+        String currency = ssiDataRequest.getCurrency();
+        String product = ssiDataRequest.getProduct();
+        String assetClass = ssiDataRequest.getAssetClass();
+        String expiryDate = ssiDataRequest.getExpiryDate();
+        String country = ssiDataRequest.getCountry();
+        String routingCode = ssiDataRequest.getRoutingCode();
+        String correspondanceAccountNumber = ssiDataRequest.getCorrespondanceAccountNumber();
+        String correspondanceAccountName = ssiDataRequest.getCorrespondanceAccountName();
+        String correspondanceBankName = ssiDataRequest.getCorrespondanceBankName();
+        String correspondanceBankBic = ssiDataRequest.getCorrespondanceBankBic();
+        String beneficiaryBankName = ssiDataRequest.getBeneficiaryBankName();
+        String beneficiaryBankBic = ssiDataRequest.getBeneficiaryBankBic();
+        String intermediary1AccountNumber = ssiDataRequest.getIntermediary1AccountNumber();
+        String intermediary1AccountName = ssiDataRequest.getIntermediary1AccountName();
+        String intermediary1BankBic = ssiDataRequest.getIntermediary1BankBic();
+        String intermediary2AccountNumber = ssiDataRequest.getIntermediary2AccountNumber();
+        String intermediary2AccountName = ssiDataRequest.getIntermediary2AccountName();
+        String intermediary2BankBic = ssiDataRequest.getIntermediary2BankBic();
+        
+        if (accountNumber==null || accountNumber.length()>30 || accountNumber.length()<10) {
+        	throw new InvalidSsiEntry("Invalid accountNumber entry");
+        }
+        if (currency.isBlank()) {
+        	throw new InvalidSsiEntry("Currency field should not be empty");
+        }
+        if (product.isBlank()) {
+        	throw new InvalidSsiEntry("Product should not be empty");
+        }
+        if (assetClass.isBlank()) {
+        	throw new InvalidSsiEntry("The AssetClass should not be empty");
+        }
+        if (expiryDate.isBlank()) {
+        	throw new InvalidSsiEntry("Expiry date is mandatory");
+        }
+        if (beneficiaryBankName.isBlank()) {
+        	throw new InvalidSsiEntry("The beneficiary bank name should not be empty");
+        }
+        if (correspondanceBankName.isBlank()) {
+        	throw new InvalidSsiEntry("The correspondance bank name should not be empty");
+        }
+        if (beneficiaryBankBic.isBlank()) {
+        	throw new InvalidSsiEntry("The Beneficiary bank bic should not be empty");
+        }
 
         SsiDetails ssiDetails = SsiDetails.builder().accountName(ssiDataRequest.getAccountName())
                 .accountNumber(ssiDataRequest.getAccountNumber()).accountType(ssiDataRequest.getAcccountType())
@@ -65,7 +113,55 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
     }
 
     @Override
-    public SsiDetails updateSsi(SsiDataRequest newSsiDetails, int id) {
+    public SsiDetails updateSsi(SsiDataRequest newSsiDetails, int id) throws InvalidSsiEntry {
+    	
+        String accountNumber = newSsiDetails.getAccountNumber();
+        String accountName = newSsiDetails.getAccountName();
+        String accountType = newSsiDetails.getAcccountType();
+        String currency = newSsiDetails.getCurrency();
+        String product = newSsiDetails.getProduct();
+        String assetClass = newSsiDetails.getAssetClass();
+        String expiryDate = newSsiDetails.getExpiryDate();
+        String country = newSsiDetails.getCountry();
+        String routingCode = newSsiDetails.getRoutingCode();
+        String correspondanceAccountNumber = newSsiDetails.getCorrespondanceAccountNumber();
+        String correspondanceAccountName = newSsiDetails.getCorrespondanceAccountName();
+        String correspondanceBankName = newSsiDetails.getCorrespondanceBankName();
+        String correspondanceBankBic = newSsiDetails.getCorrespondanceBankBic();
+        String beneficiaryBankName = newSsiDetails.getBeneficiaryBankName();
+        String beneficiaryBankBic = newSsiDetails.getBeneficiaryBankBic();
+        String intermediary1AccountNumber = newSsiDetails.getIntermediary1AccountNumber();
+        String intermediary1AccountName = newSsiDetails.getIntermediary1AccountName();
+        String intermediary1BankBic = newSsiDetails.getIntermediary1BankBic();
+        String intermediary2AccountNumber = newSsiDetails.getIntermediary2AccountNumber();
+        String intermediary2AccountName = newSsiDetails.getIntermediary2AccountName();
+        String intermediary2BankBic = newSsiDetails.getIntermediary2BankBic();
+        
+        if (accountNumber==null || accountNumber.length()>30 || accountNumber.length()<10) {
+        	throw new InvalidSsiEntry("Invalid accountNumber entry");
+        }
+        if (currency.isBlank()) {
+        	throw new InvalidSsiEntry("Currency field should not be empty");
+        }
+        if (product.isBlank()) {
+        	throw new InvalidSsiEntry("Product should not be empty");
+        }
+        if (assetClass.isBlank()) {
+        	throw new InvalidSsiEntry("The AssetClass should not be empty");
+        }
+        if (expiryDate.isBlank()) {
+        	throw new InvalidSsiEntry("Expiry date is mandatory");
+        }
+        if (beneficiaryBankName.isBlank()) {
+        	throw new InvalidSsiEntry("The beneficiary bank name should not be empty");
+        }
+        if (correspondanceBankName.isBlank()) {
+        	throw new InvalidSsiEntry("The correspondance bank name should not be empty");
+        }
+        if (beneficiaryBankBic.isBlank()) {
+        	throw new InvalidSsiEntry("The Beneficiary bank bic should not be empty");
+        }
+        
         Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(id);
         SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
         if (ssiDetails == null) {
