@@ -8,9 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
+import com.stackroute.ssiservice.dto.SsiSearchRequest;
+import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
+import com.stackroute.ssiservice.repository.SsiDetailsRepository;
 import com.stackroute.ssiservice.service.SsiDetailsService;
+
+import netscape.javascript.JSObject;
 
 @RestController
 @RequestMapping("/ssi")
@@ -37,13 +42,19 @@ public class SsiDetailsController {
 	public void updateSsi(@PathVariable("id") int id, @RequestBody SsiDataRequest ssiDataRequest) {
 		ssiDetailsService.updateSsi(ssiDataRequest, id);
 	}
-	@GetMapping("/accountnumber/{accountNumber}")
-	public List<SsiDetails> getSsiByAccountNumber(@PathVariable("accountNumber") String accountNumber){
-		return ssiDetailsService.searchByAccountNumber(accountNumber);
-	}
-
+//	@GetMapping("/accountnumber/{accountNumber}")
+//	public List<SsiDetails> getSsiByAccountNumber(@PathVariable("accountNumber") String accountNumber){
+//		return ssiDetailsService.searchByAccountNumber(accountNumber);
+//	}
+	
+	
+	//Example of using search in Account Number
 	@PostMapping
-	public void search(@RequestBody SsiDataRequest ssiDataRequest){
-
+	public SsiSearchResponse search(@RequestBody SsiSearchRequest ssiSearchRequest) {
+		List<SsiDetails> ssiDetails;
+		JSObject jso = ssiSearchRequest.getFilter();
+		ssiDetails = ssiDetailsService.searchByAccountNumber(jso.toString());
+		SsiSearchResponse ssiSearchResponse = ssiDetailsService.createSearchResponse(ssiDetails, (long)ssiSearchRequest.getOffset(), (long)ssiSearchRequest.getCount());
+		return ssiSearchResponse;
 	}
 }

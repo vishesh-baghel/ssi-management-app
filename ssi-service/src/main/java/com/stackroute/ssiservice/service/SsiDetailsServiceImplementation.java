@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
+import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.repository.SsiDetailsRepository;
@@ -142,6 +143,11 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
 	public List<SsiDetails> searchByRoutingCode(String routingCode) {
 		List<SsiDetails> ssiList = ssiDetailRepository.findByRoutingCode(routingCode);
 		return ssiList;
+	}
+
+	@Override
+	public SsiSearchResponse createSearchResponse(List<SsiDetails> ssiDetails, Long offset, Long count) {
+		return new SsiSearchResponse().builder().status(200).message("Ssi Response").results(ssiDetails).offset(offset).count(count).total((long)ssiDetails.size()).build();
 	}
 	
 

@@ -3,6 +3,7 @@ package com.stackroute.ssiservice.service;
 import java.util.List;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
+import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 
@@ -28,5 +29,7 @@ public interface SsiDetailsService {
 	public List<SsiDetails> searchByProduct(String product);
 	
 	public List<SsiDetails> searchByRoutingCode(String routingCode);
+	
+	public SsiSearchResponse createSearchResponse(List<SsiDetails> ssiDetails, Long offset, Long count);
 
 }
