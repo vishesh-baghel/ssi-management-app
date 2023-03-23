@@ -5,15 +5,16 @@ import java.util.List;
 import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.dto.SsiSearchRequest;
 import com.stackroute.ssiservice.dto.SsiSearchResponse;
+import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 
 public interface SsiDetailsService {
-	public SsiDetails addSsi(SsiDataRequest ssiDetails);
+	public SsiDetails addSsi(SsiDataRequest ssiDetails) throws InvalidSsiEntry;
 
 	public SsiDetails deleteSsi(int ssiRefId) throws SsiNotFoundException;
 
-	public SsiDetails updateSsi(SsiDataRequest ssiDataRequest, int id);
+	public SsiDetails updateSsi(SsiDataRequest ssiDataRequest, int id) throws InvalidSsiEntry;
 
 	public SsiDetails searchById(int ssiRefId) throws SsiNotFoundException;
 	
