@@ -4,12 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.stackroute.ssiservice.dto.Filter;
 import com.stackroute.ssiservice.dto.SsiSearchRequest;
+import com.stackroute.ssiservice.repository.SsiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ import org.springframework.util.ReflectionUtils;
 public class SsiDetailsServiceImplementation implements SsiDetailsService {
     @Autowired
     private SsiDetailsRepository ssiDetailRepository;
+
+    @Autowired
+    private SsiRepository ssiRepository;
 
     @Override
     public SsiDetails addSsi(SsiDataRequest ssiDataRequest) {
@@ -158,26 +163,7 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
 
     @Override
     public List<SsiDetails> search(SsiSearchRequest ssiSearchRequest) {
-        List<SsiDetails> ssiList=null;
-        for (Filter filter : ssiSearchRequest.getFilter()) {
-            if(filter.getValue()!="" && ReflectionUtils.findMethod(SsiDetailsRepository.class,"findBy"+filter.getColumn())!=null){
-                try {
-                    Method query = SsiDetailsRepository.class.getMethod("findBy"+filter.getColumn());
-                    if(ssiList!=null){
-                        List<SsiDetails> list = (List<SsiDetails>) query.invoke(filter.getValue());
-                        ssiList = list.stream().filter(ssiList::contains).collect(Collectors.toList());
-                    }else{
-                        ssiList = (List<SsiDetails>) query.invoke(filter.getValue());
-                    }
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+        List<SsiDetails> ssiList = ssiRepository.findBySearchParams(ssiSearchRequest);
         return ssiList;
     }
 

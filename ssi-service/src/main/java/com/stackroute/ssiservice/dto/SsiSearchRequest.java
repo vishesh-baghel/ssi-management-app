@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import netscape.javascript.JSObject;
 import org.springframework.data.util.Pair;
 
+import java.util.HashMap;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +17,5 @@ public class SsiSearchRequest {
     private Filter[] filter;
     private int offset;
     private int count;
-    private Pair<String,String> sortBy;
+    private HashMap<String,String> sort;
 }
