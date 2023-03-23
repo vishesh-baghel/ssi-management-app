@@ -12,7 +12,7 @@ import org.springframework.data.util.Pair;
 @NoArgsConstructor
 @Builder
 public class SsiSearchRequest {
-    private JSObject filter;
+    private Filter[] filter;
     private int offset;
     private int count;
     private Pair<String,String> sortBy;

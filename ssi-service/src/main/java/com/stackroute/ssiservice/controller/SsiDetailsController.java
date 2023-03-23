@@ -49,11 +49,30 @@ public class SsiDetailsController {
 	
 	
 	//Example of using search in Account Number
+
+	// we get ssiSearchRequest in form :
+	//	obj = {
+	//			filter:[
+	//				{
+	//					column:columName,
+	//					operator:eq,
+	//					value:columValue
+	//				},
+	//				{
+	//					column:columName,
+	//					operator:btw,
+	//					values:[date1,date2]
+	//				},
+	//			]
+	//		  }
+	//
+	//
+	//
+	//
+	//
 	@PostMapping
 	public SsiSearchResponse search(@RequestBody SsiSearchRequest ssiSearchRequest) {
-		List<SsiDetails> ssiDetails;
-		JSObject jso = ssiSearchRequest.getFilter();
-		ssiDetails = ssiDetailsService.searchByAccountNumber(jso.toString());
+		List<SsiDetails> ssiDetails = ssiDetailsService.search(ssiSearchRequest);
 		SsiSearchResponse ssiSearchResponse = ssiDetailsService.createSearchResponse(ssiDetails, (long)ssiSearchRequest.getOffset(), (long)ssiSearchRequest.getCount());
 		return ssiSearchResponse;
 	}
