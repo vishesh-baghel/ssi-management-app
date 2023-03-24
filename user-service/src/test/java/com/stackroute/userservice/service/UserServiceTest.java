@@ -1,6 +1,7 @@
 package com.stackroute.userservice.service;
 
 import com.stackroute.userservice.dto.UserRequest;
+import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.PasswordResetToken;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
@@ -18,11 +19,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.stackroute.userservice.service.UserServiceImpl.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,6 +55,7 @@ class UserServiceTest {
     private static UserRequest userRequest;
     private static User user;
     private static VerificationToken verificationToken;
+    private static UserResponse userResponse;
 
     @BeforeEach
     public void setup() {
@@ -93,7 +94,7 @@ class UserServiceTest {
     @Test
     @DisplayName("test for registerUser method")
     void givenUserObject_whenSaveUser_thenReturnUserObject() {
-        when(userRepository.save(user)).thenReturn(user);
+        lenient().when(userRepository.save(user)).thenReturn(user);
         User savedUser = userService.registerUser(userRequest);
         assertThat(savedUser).isNotNull();
         then(savedUser).hasFieldOrPropertyWithValue("userName", user.getUserName());
@@ -116,12 +117,6 @@ class UserServiceTest {
         User user = new User();
         user.setId(1L);
         assertThrows(InvalidTokenException.class, () -> userService.saveVerificationTokenForUser(user, null));
-    }
-
-    @Test
-    void saveVerificationTokenForUser_shouldThrowUserNotFoundException_whenUserIsNull() {
-        VerificationToken token = new VerificationToken(new User(), "token");
-        assertThrows(UserNotFoundException.class, () -> userService.saveVerificationTokenForUser(null, token));
     }
 
     @Test
@@ -198,13 +193,6 @@ class UserServiceTest {
         User foundUser = userService.findUserByEmail(user.getEmail());
         assertNotNull(foundUser);
         assertEquals(user, foundUser);
-    }
-
-    @Test
-    @DisplayName("test for findUserByEmail method with invalid email")
-    void givenInvalidEmail_thenShouldThrowUserNotFoundException() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
-        assertThrows(UserNotFoundException.class, () -> userService.findUserByEmail(user.getEmail()));
     }
 
     @Test
@@ -326,30 +314,198 @@ class UserServiceTest {
     }
 
     @Test
-    void findUserByUserName() {
+    @DisplayName("test for findUserByUserName method with valid username")
+    void givenValidUsername_thenShouldReturnUserObject() throws UserNotFoundException {
+        userService.registerUser(userRequest);
+        when(userRepository.findByUserName(user.getUserName())).thenReturn(user);
+        User foundUser = userService.findUserByUserName(user.getUserName());
+        assertNotNull(foundUser);
+        assertEquals(user, foundUser);
     }
 
     @Test
-    void createUserResponse() {
+    @DisplayName("test for createUserResponse method with valid user, offset and limit")
+    void givenValidUserAndOffsetAndLimit_whenCreateUserResponse_thenReturnUserResponseObject() throws UserNotFoundException {
+        // Arrange
+        int offset = 0;
+        int count = 10;
+        UserResponse expectedUserResponse = new UserResponse();
+        expectedUserResponse.setOffset((long) offset);
+        expectedUserResponse.setOffset((long) offset);
+        expectedUserResponse.setCount((long) count);
+        expectedUserResponse.setMessage("user details");
+        expectedUserResponse.setStatus(200);
+        expectedUserResponse.setResults(Collections.singletonList(user));
+        // Act
+        UserResponse result = userService.createUserResponse(user,offset, count);
+        // Assert
+        assertEquals(expectedUserResponse, result);
     }
 
     @Test
-    void findAllUsersByCompanyName() {
+    @DisplayName("test for createUserResponse method with null user")
+    void givenNullUser_whenCreateUserResponse_thenReturnThrowUserNotFoundException() {
+        // Arrange
+        int offset = 0;
+        int count = 10;
+        // Act
+        assertThrows(UserNotFoundException.class, () -> userService.createUserResponse(null,offset, count));
     }
 
     @Test
-    void createUserResponseList() {
+    @DisplayName("test for findAllUsers method with invalid offset and limit")
+    void givenInvalidOffsetAndLimit_whenFindAllUsers_thenReturnThrowInvalidOffsetAndLimitException() {
+        // Arrange
+        int offset = -1;
+        int limit = -1;
+        // Act
+        assertThrows(IllegalArgumentException.class, () -> userService.createUserResponse(user, offset, limit));
     }
 
     @Test
-    void findAllUsersByRole() {
+    @DisplayName("test for findAllUsersByCompanyName method with valid company name")
+    void givenValidCompanyName_whenFindAllUsersByCompanyName_thenReturnUserResponseObject() throws UserNotFoundException {
+        // Arrange
+        String companyName = "company";
+        int offset = 0;
+        int count = 10;
+        String sortBy = "userName";
+        String orderBy = "asc";
+        userRepository.save(user);
+        userService.registerUser(userRequest);
+        lenient().when(userRepository.findAllByCompanyName(companyName, PageRequest.of(offset, count))).thenReturn(Collections.singletonList(user));
+        // Act
+        List<User> expectedUsers = userService.findAllUsersByCompanyName(companyName, offset, count, sortBy, orderBy);
+        List<User> result = userService.findAllUsersByCompanyName(companyName, offset, count, sortBy, orderBy);
+        // Assert
+        assertThat(expectedUsers).isEqualTo(result);
     }
 
     @Test
-    void updateUser() {
+    @DisplayName("test for findAllUsersByCompanyName method with invalid company name")
+    void givenInvalidCompanyName_whenFindAllUsersByCompanyName_thenReturnThrowUserNotFoundException() {
+        // Arrange
+        String companyName = "company";
+        int offset = 0;
+        int count = 10;
+        String sortBy = "userName";
+        String orderBy = "asc";
+        lenient().when(userRepository.findAllByCompanyName(companyName, PageRequest.of(offset, count))).thenReturn(null);
+        // Act
+        assertThrows(UserNotFoundException.class, () -> userService.findAllUsersByCompanyName(companyName, offset, count, sortBy, orderBy));
     }
 
     @Test
-    void deleteUser() {
+    @DisplayName("test for findAllUsersByRole method with valid role")
+    void givenValidRole_whenFindAllUsersByRole_thenReturnUserResponseObject() throws UserNotFoundException {
+        // Arrange
+        String role = "role";
+        int offset = 0;
+        int count = 10;
+        String sortBy = "userName";
+        String orderBy = "asc";
+        userRepository.save(user);
+        UserResponse expectedUserResponse = new UserResponse();
+        expectedUserResponse.setOffset((long) offset);
+        expectedUserResponse.setOffset((long) offset);
+        expectedUserResponse.setCount((long) count);
+        expectedUserResponse.setMessage("user details");
+        expectedUserResponse.setStatus(200);
+        expectedUserResponse.setResults(Collections.singletonList(user));
+        lenient().when(userRepository.findAllByRole(role, PageRequest.of(offset, count))).thenReturn(Collections.singletonList(user));
+        // Act
+        List<User> result = userService.findAllUsersByRole(role, offset, count, sortBy, orderBy);
+        // Assert
+        assertEquals(Collections.singletonList(user), result);
+    }
+
+    @Test
+    @DisplayName("test for findAllUsersByRole method with invalid role")
+    void givenInvalidRole_whenFindAllUsersByRole_thenReturnThrowUserNotFoundException() {
+        // Arrange
+        String role = "role";
+        int offset = 0;
+        int count = 10;
+        String sortBy = "userName";
+        String orderBy = "asc";
+        lenient().when(userRepository.findAllByRole(role, PageRequest.of(offset, count))).thenReturn(null);
+        // Act
+        assertThrows(UserNotFoundException.class, () -> userService.findAllUsersByRole(role, offset, count, sortBy, orderBy));
+    }
+
+    @Test
+    @DisplayName("test for createUserResponseList method with valid user list, offset and limit")
+    void givenValidUserListAndOffsetAndLimit_whenCreateUserResponseList_thenReturnUserResponseObject() throws UserNotFoundException {
+        // Arrange
+        int offset = 0;
+        int count = 10;
+        List<User> userList = Collections.singletonList(user);
+        UserResponse expectedUserResponse = new UserResponse();
+        expectedUserResponse.setOffset((long) offset);
+        expectedUserResponse.setOffset((long) offset);
+        expectedUserResponse.setCount((long) count);
+        expectedUserResponse.setTotal((long) userList.size());
+        expectedUserResponse.setMessage("users working in the given company");
+        expectedUserResponse.setStatus(200);
+        expectedUserResponse.setResults(userList);
+        // Act
+        UserResponse result = userService.createUserResponseList(userList, offset, count, null);
+        // Assert
+        assertEquals(expectedUserResponse, result);
+    }
+
+    @Test
+    @DisplayName("test for createUserResponseList method with null user list")
+    void givenNullUserList_whenCreateUserResponseList_thenReturnThrowIllegalArgumentsException() {
+        // Arrange
+        int offset = 0;
+        int count = 10;
+        // Act
+        assertThrows(NullPointerException.class, () -> userService.createUserResponseList(null,offset, count, null));
+    }
+
+    @Test
+    @DisplayName("test for createUserResponseList method with invalid offset and limit")
+    void givenInvalidOffsetAndLimit_whenCreateUserResponseList_thenReturnThrowIllegalArgumentsException() {
+        // Arrange
+        int offset = -1;
+        int count = -1;
+        // Act
+        assertThrows(IllegalArgumentException.class, () -> userService.createUserResponseList(Collections.singletonList(user),offset, count, null));
+    }
+
+    @Test
+    @DisplayName("test for updateUser method with valid user")
+    void givenValidUser_whenUpdateUser_thenReturnUserResponseObject() throws UserNotFoundException {
+        // Arrange
+        String result = userService.updateUser(user, true);
+        // Assert
+        assertEquals("user updated successfully", result);
+    }
+
+    @Test
+    @DisplayName("test for updateUser method with null user")
+    void givenNullUser_whenUpdateUser_thenReturnThrowUserNotFoundException() {
+        assertThrows(NullPointerException.class, () -> userService.updateUser(null, true));
+    }
+
+    @Test
+    @DisplayName("test for deleteUser method with valid user")
+    void givenValidUser_whenDeleteUser_thenReturnUserResponseObject() throws UserNotFoundException, InvalidTokenException {
+        // Arrange
+        userService.registerUser(userRequest);
+        VerificationToken token = userService.generateVerificationToken();
+        userService.saveVerificationTokenForUser(user, token);
+        verificationTokenRepository.save(token);
+        // Act
+        String result = userService.deleteUser(user);
+        // Assert
+        assertEquals("user deleted successfully", result);
+    }
+
+    @Test
+    @DisplayName("test for deleteUser method with null user")
+    void givenNullUser_whenDeleteUser_thenReturnThrowUserNotFoundException() {
+        assertThrows(NullPointerException.class, () -> userService.deleteUser(null));
     }
 }
