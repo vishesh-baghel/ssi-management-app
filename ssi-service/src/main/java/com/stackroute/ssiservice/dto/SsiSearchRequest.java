@@ -1,9 +1,6 @@
 package com.stackroute.ssiservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import netscape.javascript.JSObject;
 import org.springframework.data.util.Pair;
 

@@ -1,5 +1,6 @@
 package com.stackroute.ssiservice.service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
@@ -8,6 +9,8 @@ import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
+
+import javax.persistence.TypedQuery;
 
 public interface SsiDetailsService {
 	public SsiDetails addSsi(SsiDataRequest ssiDetails) throws InvalidSsiEntry;
@@ -31,8 +34,6 @@ public interface SsiDetailsService {
 	public List<SsiDetails> searchByProduct(String product);
 	
 	public List<SsiDetails> searchByRoutingCode(String routingCode);
-	
-	public SsiSearchResponse createSearchResponse(List<SsiDetails> ssiDetails, Long offset, Long count);
 
-    public List<SsiDetails> search(SsiSearchRequest ssiSearchRequest);
+    public TypedQuery<SsiDetails> fetch(SsiSearchRequest ssiSearchRequest);
 }
