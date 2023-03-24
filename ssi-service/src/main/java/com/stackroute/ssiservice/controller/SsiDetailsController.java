@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.dto.SsiSearchRequest;
 import com.stackroute.ssiservice.dto.SsiSearchResponse;
+import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.repository.SsiDetailsRepository;
@@ -30,17 +31,19 @@ public class SsiDetailsController {
 //	}
 
 	@PostMapping("/add")
-	public String addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) {
+	public String addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) throws InvalidSsiEntry {
 		SsiDetails data = ssiDetailsService.addSsi(ssiDataRequest);
-		return "user added";
+		return "SSI added";
 	}
 	@DeleteMapping("/{ssiRefId}")
-	public void deleteSsi(@PathVariable("ssiRefId") int id) throws SsiNotFoundException {
+	public String deleteSsi(@PathVariable("ssiRefId") int id) throws SsiNotFoundException {
 		ssiDetailsService.deleteSsi(id);
+		return "SSI deleted";
 	}
 	@PatchMapping("/{id}")
-	public void updateSsi(@PathVariable("id") int id, @RequestBody SsiDataRequest ssiDataRequest) {
+	public String updateSsi(@PathVariable("id") int id, @RequestBody SsiDataRequest ssiDataRequest) throws InvalidSsiEntry {
 		ssiDetailsService.updateSsi(ssiDataRequest, id);
+		return "SSI updated";
 	}
 //	@GetMapping("/accountnumber/{accountNumber}")
 //	public List<SsiDetails> getSsiByAccountNumber(@PathVariable("accountNumber") String accountNumber){
