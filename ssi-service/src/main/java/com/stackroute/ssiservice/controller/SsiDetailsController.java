@@ -25,10 +25,10 @@ public class SsiDetailsController {
 	@Autowired
 	private SsiDetailsService ssiDetailsService;
 
-//	@GetMapping("/a")
-//	public String home() {
-//		return "ssi management";
-//	}
+	@GetMapping
+	public String home() {
+		return "ssi management";
+	}
 
 	@PostMapping("/add")
 	public String addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) throws InvalidSsiEntry {
@@ -76,6 +76,8 @@ public class SsiDetailsController {
 	@PostMapping
 	public SsiSearchResponse search(@RequestBody SsiSearchRequest ssiSearchRequest) {
 		List<SsiDetails> ssiDetails = ssiDetailsService.search(ssiSearchRequest);
+		System.out.println(ssiDetails);
+
 		SsiSearchResponse ssiSearchResponse = ssiDetailsService.createSearchResponse(ssiDetails, (long)ssiSearchRequest.getOffset(), (long)ssiSearchRequest.getCount());
 		return ssiSearchResponse;
 	}

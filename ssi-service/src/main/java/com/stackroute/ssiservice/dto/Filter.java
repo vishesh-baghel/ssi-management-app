@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class Filter {
     private String column;
     private String operator;
-    private String value;
     private String [] values;
 }
