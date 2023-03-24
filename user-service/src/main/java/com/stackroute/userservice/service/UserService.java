@@ -5,6 +5,7 @@ import com.stackroute.userservice.dto.UserRequest;
 import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
+import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 
 import java.util.List;
@@ -15,21 +16,19 @@ public interface UserService {
 
     VerificationToken generateVerificationToken();
 
-    void saveVerificationTokenForUser(User registeredUser, VerificationToken generateVerificationToken);
+    VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken generateVerificationToken) throws UserNotFoundException, InvalidTokenException;
 
     String validateVerificationToken(String token);
 
-    String resetPassword(PasswordRequest passwordRequest);
+    User findUserByEmail(String email) throws UserNotFoundException;
 
-    User findUserByEmail(String email);
-
-    void createPasswordResetTokenForUser(User user, String token);
+    void createPasswordResetTokenForUser(User user, String token) throws InvalidTokenException, UserNotFoundException;
 
     String validatePasswordResetToken(String token);
 
-    Optional<User> getUserByPasswordResetToken(String token);
+    Optional<User> getUserByPasswordResetToken(String token) throws InvalidTokenException;
 
-    void changePassword(User user, String newPassword);
+    void changePassword(User user, String newPassword) throws UserNotFoundException;
 
     User findUserByUserName(String userName) throws UserNotFoundException;
 
