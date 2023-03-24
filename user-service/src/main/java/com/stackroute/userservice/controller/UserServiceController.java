@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +53,12 @@ public class UserServiceController {
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+
+//    @GetMapping("/greet")
+////	@RequestMapping(method=RequestMethod.GET,value="/greet")
+//    public ResponseEntity<String> home(){
+//        return new ResponseEntity<String>("greetings from first servcie",HttpStatus.OK);
+//    }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
