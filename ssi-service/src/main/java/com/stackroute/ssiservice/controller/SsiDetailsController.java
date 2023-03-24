@@ -28,15 +28,18 @@ public class SsiDetailsController {
     private SsiDetailsService ssiDetailsService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewSsi(@RequestBody SsiDataRequest ssiDataRequest) {
-        ResponseEntity<?> responseEntity = null;
+    public ResponseEntity<?> addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) {
+        ResponseEntity<?> responseEntity = new  ResponseEntity<>(HttpStatus.OK);
         try {
             SsiDetails data = ssiDetailsService.addSsi(ssiDataRequest);
-            responseEntity.status(HttpStatus.CREATED).body(data);
+            System.out.println("Inside try");
+            responseEntity=new  ResponseEntity<SsiDetails>(data,HttpStatus.CREATED);
+            System.out.println(responseEntity.getStatusCodeValue());
         } catch (InvalidSsiEntry e) {
             System.out.println(e.getMessage());
-            responseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            responseEntity=new  ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+        System.out.println(responseEntity.getStatusCodeValue());
         return responseEntity;
     }
 
@@ -45,10 +48,10 @@ public class SsiDetailsController {
         ResponseEntity<?> responseEntity = null;
         try {
             SsiDetails data = ssiDetailsService.deleteSsi(id);
-            responseEntity.status(HttpStatus.OK).body(data);
+            responseEntity = new ResponseEntity<SsiDetails>(data,HttpStatus.OK);
         } catch (SsiNotFoundException e) {
             System.out.println(e.getMessage());
-            responseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            responseEntity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
         return responseEntity;
     }
@@ -58,10 +61,10 @@ public class SsiDetailsController {
         ResponseEntity<?> responseEntity = null;
         try {
             SsiDetails data = ssiDetailsService.updateSsi(ssiDataRequest, id);
-            responseEntity.status(HttpStatus.OK).body(data);
+            responseEntity=new  ResponseEntity<SsiDetails>(data,HttpStatus.CREATED);
         } catch (InvalidSsiEntry e) {
             System.out.println(e.getMessage());
-            responseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            responseEntity=new  ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
         return responseEntity;
     }
