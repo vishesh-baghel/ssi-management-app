@@ -1,0 +1,14 @@
+http://localhost:8080/sendMail
+{
+    "recipient":"midhunvj24@gmail.com",
+    "msgBody":"HEY!!! sample mail from ssi service",
+    "subject":"Sample SSI Email"
+}
+
+http://localhost:8080/sendMailWithAttachment
+{
+    "recipient":"midhunvj24@gmail.com",
+    "msgBody":"HEY!!! sample mail from ssi service",
+    "subject":"Sample SSI Email"
+    "attachment":"/home/baton/Downloads/SRK.jpg"
+}
