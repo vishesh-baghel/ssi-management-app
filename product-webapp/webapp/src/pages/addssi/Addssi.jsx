@@ -12,10 +12,14 @@ const Addssi = () => {
     const handleFormSubmit = (values, actions) => {
         console.log(values);
         addSsi(values).then(res => {
+            console.log(res)
             if (res.status === 201) {
-                alert("User is Added Successfully")
+                alert("SSI is Added Successfully")
                 actions.resetForm();
             }
+        }).catch(error=>{
+            console.log(error);
+            alert(error.response.data);
         })
     };
 

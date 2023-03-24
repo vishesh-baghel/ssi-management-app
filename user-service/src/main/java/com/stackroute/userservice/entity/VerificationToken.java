@@ -1,5 +1,7 @@
 package com.stackroute.userservice.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class VerificationToken {
 
     private static final int EXPIRATION_TIME = 10;

@@ -6,6 +6,7 @@ import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.PasswordResetToken;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
+import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.repository.PasswordResetTokenRepository;
 import com.stackroute.userservice.repository.UserRepository;
@@ -66,9 +67,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveVerificationTokenForUser(User registeredUser, VerificationToken Token) {
-        VerificationToken verificationToken = new VerificationToken(registeredUser, Token.getToken());
+    public VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken token) throws UserNotFoundException, InvalidTokenException {
+        if (token == null) {
+            throw new InvalidTokenException(INVALID_TOKEN);
+        }
+        if (registeredUser == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+        VerificationToken verificationToken = new VerificationToken(registeredUser, token.getToken());
         verificationTokenRepository.save(verificationToken);
+        return verificationToken;
     }
 
     @Override
@@ -77,31 +85,33 @@ public class UserServiceImpl implements UserService{
         if (verificationToken == null) {
             return INVALID_TOKEN;
         }
-
         User user = verificationToken.getUser();
         Calendar calendar = Calendar.getInstance();
         if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
             verificationTokenRepository.delete(verificationToken);
             return TOKEN_EXPIRED;
         }
-
         user.setEnabled(true);
         userRepository.save(user);
         return TOKEN_VALID;
     }
 
     @Override
-    public String resetPassword(PasswordRequest passwordRequest) {
-        return null;
-    }
-
-    @Override
-    public User findUserByEmail(String email) {
+    public User findUserByEmail(String email) throws UserNotFoundException {
+        if (userRepository.findByEmail(email) == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public void createPasswordResetTokenForUser(User user, String token) {
+    public void createPasswordResetTokenForUser(User user, String token) throws InvalidTokenException, UserNotFoundException {
+        if (token == null) {
+            throw new InvalidTokenException(INVALID_TOKEN);
+        }
+        if (user == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
         PasswordResetToken passwordResetToken = new PasswordResetToken(user, token);
         passwordResetTokenRepository.save(passwordResetToken);
     }
@@ -122,12 +132,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> getUserByPasswordResetToken(String token) {
+    public Optional<User> getUserByPasswordResetToken(String token) throws InvalidTokenException {
+        if (token == null) {
+            throw new InvalidTokenException(INVALID_TOKEN);
+        }
         return Optional.ofNullable(passwordResetTokenRepository.findByToken(token).getUser());
     }
 
     @Override
-    public void changePassword(User user, String newPassword) {
+    public void changePassword(User user, String newPassword) throws UserNotFoundException {
+       if (user == null) {
+           throw new UserNotFoundException(USER_NOT_FOUND);
+       }
        user.setPassword(passwordEncoder.encode(newPassword));
        userRepository.save(user);
     }
