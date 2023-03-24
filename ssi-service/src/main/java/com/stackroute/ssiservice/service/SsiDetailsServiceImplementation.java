@@ -35,6 +35,9 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
 
     @Override
     public SsiDetails addSsi(SsiDataRequest ssiDataRequest) throws InvalidSsiEntry {
+    	if (ssiDataRequest.getExpiryDate().isBlank()) {
+    		throw new InvalidSsiEntry("Invalid Expiry date");
+    	}
         String str = ssiDataRequest.getExpiryDate() + " 00:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
@@ -61,7 +64,7 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
         String intermediary2AccountName = ssiDataRequest.getIntermediary2AccountName();
         String intermediary2BankBic = ssiDataRequest.getIntermediary2BankBic();
         
-        if (accountNumber==null || accountNumber.length()>30 || accountNumber.length()<10) {
+        if (accountNumber.isBlank() || accountNumber.length()>30 || accountNumber.length()<10) {
         	throw new InvalidSsiEntry("Invalid accountNumber entry");
         }
         if (currency.isBlank()) {
@@ -104,7 +107,7 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
                 .intermediary2AccountNumber(ssiDataRequest.getIntermediary2AccountNumber())
                 .intermediary2BankBic(ssiDataRequest.getIntermediary2BankBic()).description(null).entityRefId(0)
                 .isActive(false).isPrimary(false).isApproved(false).approvedTs(null).approvedBy(null).createdBy(null)
-                .updatedBy(null).effectiveDate(LocalDateTime.now()).expiryDate(dateTime).build();
+                .updatedBy(null).effectiveDate(null).expiryDate(dateTime).build();
         return ssiDetailRepository.save(ssiDetails);
     }
 
@@ -172,6 +175,7 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
         Optional<SsiDetails> optionalSsi = ssiDetailRepository.findById(id);
         SsiDetails ssiDetails = optionalSsi.isEmpty() ? null : optionalSsi.get();
         if (ssiDetails == null) {
+        	System.out.println("Is empty");
             return null;
         }
         String str = newSsiDetails.getExpiryDate() + " 00:00";
@@ -199,6 +203,7 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
         ssiDetails.setIntermediary2BankBic(newSsiDetails.getIntermediary2BankBic());
         ssiDetails.setExpiryDate(dateTime);
         ssiDetailRepository.save(ssiDetails);
+        System.out.println(ssiDetails);
         return ssiDetails;
     }
 

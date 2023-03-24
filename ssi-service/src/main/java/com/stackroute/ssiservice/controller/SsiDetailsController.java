@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.dto.SsiSearchRequest;
 import com.stackroute.ssiservice.dto.SsiSearchResponse;
+import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.service.SsiDetailsService;
@@ -37,7 +38,7 @@ public class SsiDetailsController {
         }
         return responseEntity;
     }
-
+    
     @DeleteMapping("/{id}")
     public ResponseEntity deleteSsi(@PathVariable("id") int id) {
         ResponseEntity<?> responseEntity = null;
