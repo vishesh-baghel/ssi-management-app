@@ -17,10 +17,14 @@ const Dashboard = () => {
     const [modifiedRows, setModifiedRows] = useState(rows);
 
     useEffect(()=>{
-        getSsi().then(data => {
-            if (data.status===200){
-                setRows(data.data);
-                setModifiedRows(data.data);
+        getSsi({filter:[]}).then(res => {
+            if (res.status===200){
+                let rows = res.data.results
+                rows.forEach((item, i) => {
+                    item.id = i + 1;
+                });
+                setRows(rows);
+                setModifiedRows(rows);
             }
             else{
                 alert("Some err....")

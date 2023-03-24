@@ -1,34 +1,22 @@
 import axios from 'axios';
 
-let url = "http://localhost:3001/SSI";
+let url = "http://localhost:8081/ssi";
 let userUrl = "http://localhost:3001/users"
 
-export const getSsi = () => {
-    return axios.get(url);
+export const addSsi=(data)=>{
+    return axios.post(url+"/add",data)
 }
 
-export const addSsi=(data)=>{
-    return axios.post(url,data)
+export const deleteSSI = (id) => {
+    return axios.delete(url + "/" + id);
 }
 
 export const editSsi=(id,data)=>{
-    return axios.put(url+"/"+id,data)
+    return axios.patch(url+"/"+id,data)
 }
 
-export const deleteSSI = (ssiId) => {
-    return axios.delete(url + "/" + ssiId);
-}
-
-export const getSSIbyID = (ssiId) =>{
-    return axios.get(url+"/"+ssiId);
-}
-
-export const getSSIbySsiID = (ssiId) =>{
-    return axios.get(url,{params:{ssiRefId:ssiId}});
-}
-
-export const putSSIbyID = (ssiId, obj) =>{
-    return axios.put(url+"/"+ssiId, obj)
+export const getSsi = (data) => {
+    return axios.post(url,data);
 }
 
 export const addUser = (data) =>{

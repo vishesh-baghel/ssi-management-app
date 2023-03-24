@@ -5,7 +5,7 @@ import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
-import { deleteSSI, getSsi, getSSIbyID, putSSIbyID } from '../../services/userservices';
+import { deleteSSI, getSsi, editSsi } from '../../services/userservices';
 import { useState } from 'react';
 import {TextField} from '@mui/material';
 
@@ -20,10 +20,14 @@ const Managessi = () => {
   const [modifiedRows, setModifiedRows] = useState(rows);
     
   const updateRows = ()=>{
-      getSsi().then(res=>{
+      getSsi({}).then(res=>{
           if(res.status===200){
-              setRows(res.data)
-              setModifiedRows(res.data)
+            let rows = res.data.results
+            rows.forEach((item, i) => {
+                item.id = i + 1;
+            });
+            setRows(rows);
+            setModifiedRows(rows);
           }
       })
   }
@@ -44,15 +48,23 @@ const Managessi = () => {
   }
   const makePrimary = (ssiId) =>{
     let tempObj = {}
-    getSSIbyID(ssiId)
+    getSsi({
+      filter:[
+        {
+          "column":"ssiRefId",
+          "operator":"equal",
+          "value":ssiId
+        }
+      ]
+    })
     .then(response=>{
       if (response.status===200){
         tempObj = response.data;
   
         (tempObj.isPrimary)?(tempObj.isPrimary=false):(tempObj.isPrimary=true)
-        putSSIbyID(ssiId, tempObj)
+        editSsi(ssiId, tempObj)
         .then(response=>{
-          if (response.status===200 || response.status===201){
+          if (response.status==="OK"){
             alert("Success");
             updateRows();
           }
