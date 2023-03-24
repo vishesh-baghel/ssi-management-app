@@ -21,6 +21,8 @@ const Editssi = () => {
             if (res.status === 200) {
                 alert("SSI is Edited Successfully")
             }
+        }).catch(err=>{
+            alert(err.response.data)
         })
     };
     const updateData = () => {
