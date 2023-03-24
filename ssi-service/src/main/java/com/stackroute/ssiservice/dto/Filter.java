@@ -1,9 +1,7 @@
 package com.stackroute.ssiservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 @Data
 @AllArgsConstructor
@@ -12,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class Filter {
     private String column;
     private String operator;
-    private String value;
     private String [] values;
+
 }

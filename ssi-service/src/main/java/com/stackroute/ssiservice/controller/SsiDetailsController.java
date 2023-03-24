@@ -2,78 +2,79 @@ package com.stackroute.ssiservice.controller;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 
+import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
 import com.stackroute.ssiservice.dto.SsiSearchRequest;
 import com.stackroute.ssiservice.dto.SsiSearchResponse;
+import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
-import com.stackroute.ssiservice.repository.SsiDetailsRepository;
 import com.stackroute.ssiservice.service.SsiDetailsService;
-
-import netscape.javascript.JSObject;
 
 @RestController
 @RequestMapping("/ssi")
 public class SsiDetailsController {
 
-	@Autowired
-	private SsiDetailsService ssiDetailsService;
+    @Autowired
+    private SsiDetailsService ssiDetailsService;
 
-//	@GetMapping("/a")
-//	public String home() {
-//		return "ssi management";
-//	}
+    @PostMapping("/add")
+    public ResponseEntity<?> addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            SsiDetails data = ssiDetailsService.addSsi(ssiDataRequest);
+            responseEntity.status(HttpStatus.CREATED).body(data);
+        } catch (InvalidSsiEntry e) {
+            System.out.println(e.getMessage());
+            responseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return responseEntity;
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteSsi(@PathVariable("id") int id) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            SsiDetails data = ssiDetailsService.deleteSsi(id);
+            responseEntity.status(HttpStatus.OK).body(data);
+        } catch (SsiNotFoundException e) {
+            System.out.println(e.getMessage());
+            responseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return responseEntity;
+    }
 
-	@PostMapping("/add")
-	public String addNewSsi(@RequestBody SsiDataRequest ssiDataRequest, HttpServletRequest request) {
-		SsiDetails data = ssiDetailsService.addSsi(ssiDataRequest);
-		return "user added";
-	}
-	@DeleteMapping("/{ssiRefId}")
-	public void deleteSsi(@PathVariable("ssiRefId") int id) throws SsiNotFoundException {
-		ssiDetailsService.deleteSsi(id);
-	}
-	@PatchMapping("/{id}")
-	public void updateSsi(@PathVariable("id") int id, @RequestBody SsiDataRequest ssiDataRequest) {
-		ssiDetailsService.updateSsi(ssiDataRequest, id);
-	}
-//	@GetMapping("/accountnumber/{accountNumber}")
-//	public List<SsiDetails> getSsiByAccountNumber(@PathVariable("accountNumber") String accountNumber){
-//		return ssiDetailsService.searchByAccountNumber(accountNumber);
-//	}
-	
-	
-	//Example of using search in Account Number
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateSsi(@PathVariable("id") int id, @RequestBody SsiDataRequest ssiDataRequest) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            SsiDetails data = ssiDetailsService.updateSsi(ssiDataRequest, id);
+            responseEntity.status(HttpStatus.OK).body(data);
+        } catch (InvalidSsiEntry e) {
+            System.out.println(e.getMessage());
+            responseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return responseEntity;
+    }
 
-	// we get ssiSearchRequest in form :
-	//	obj = {
-	//			filter:[
-	//				{
-	//					column:columName,
-	//					operator:eq,
-	//					value:columValue
-	//				},
-	//				{
-	//					column:columName,
-	//					operator:btw,
-	//					values:[date1,date2]
-	//				},
-	//			]
-	//		  }
-	//
-	//
-	//
-	//
-	//
-	@PostMapping
-	public SsiSearchResponse search(@RequestBody SsiSearchRequest ssiSearchRequest) {
-		List<SsiDetails> ssiDetails = ssiDetailsService.search(ssiSearchRequest);
-		SsiSearchResponse ssiSearchResponse = ssiDetailsService.createSearchResponse(ssiDetails, (long)ssiSearchRequest.getOffset(), (long)ssiSearchRequest.getCount());
-		return ssiSearchResponse;
-	}
+    @PostMapping("/")
+    public SsiSearchResponse fetchSsi(@RequestBody SsiSearchRequest ssiSearchRequest) {
+        TypedQuery<SsiDetails> ssiList = ssiDetailsService.fetch(ssiSearchRequest);
+        Long total = (long) ssiList.getResultList().size();
+        List<SsiDetails> results = ssiList.setFirstResult((ssiSearchRequest.getOffset() - 1) * ssiSearchRequest.getCount()).setMaxResults(ssiSearchRequest.getCount())
+                .getResultList();
+        return new SsiSearchResponse().builder()
+                .status(HttpStatus.OK).message("")
+                .count((long) ssiSearchRequest.getCount()).offset((long) ssiSearchRequest.getOffset()).total(total)
+                .results(results)
+                .build();
+    }
 }

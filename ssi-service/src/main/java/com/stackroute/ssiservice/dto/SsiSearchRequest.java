@@ -1,11 +1,10 @@
 package com.stackroute.ssiservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import netscape.javascript.JSObject;
 import org.springframework.data.util.Pair;
+
+import java.util.HashMap;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +14,5 @@ public class SsiSearchRequest {
     private Filter[] filter;
     private int offset;
     private int count;
-    private Pair<String,String> sortBy;
+    private HashMap<String,String> sort;
 }
