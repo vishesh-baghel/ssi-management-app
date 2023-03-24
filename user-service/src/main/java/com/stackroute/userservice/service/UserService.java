@@ -16,11 +16,11 @@ public interface UserService {
 
     VerificationToken generateVerificationToken();
 
-    VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken generateVerificationToken) throws UserNotFoundException, InvalidTokenException;
+    VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken generateVerificationToken) throws InvalidTokenException;
 
     String validateVerificationToken(String token);
 
-    User findUserByEmail(String email) throws UserNotFoundException;
+    User findUserByEmail(String email);
 
     void createPasswordResetTokenForUser(User user, String token) throws InvalidTokenException, UserNotFoundException;
 
@@ -32,7 +32,7 @@ public interface UserService {
 
     User findUserByUserName(String userName) throws UserNotFoundException;
 
-    UserResponse createUserResponse(User user, int offset, int count);
+    UserResponse createUserResponse(User user, int offset, int count) throws UserNotFoundException;
 
     List<User> findAllUsersByCompanyName(String companyName, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException;
 
@@ -40,7 +40,7 @@ public interface UserService {
 
     List<User> findAllUsersByRole(String role, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException;
 
-    void updateUser(User user, Boolean isAdmin);
+    String updateUser(User user, Boolean isAdmin);
 
-    void deleteUser(User user);
+    String deleteUser(User user);
 }

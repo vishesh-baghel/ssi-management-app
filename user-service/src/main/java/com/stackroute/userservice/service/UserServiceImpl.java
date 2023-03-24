@@ -67,12 +67,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken token) throws UserNotFoundException, InvalidTokenException {
+    public VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken token) throws InvalidTokenException {
         if (token == null) {
             throw new InvalidTokenException(INVALID_TOKEN);
-        }
-        if (registeredUser == null) {
-            throw new UserNotFoundException(USER_NOT_FOUND);
         }
         VerificationToken verificationToken = new VerificationToken(registeredUser, token.getToken());
         verificationTokenRepository.save(verificationToken);
@@ -97,10 +94,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserByEmail(String email) throws UserNotFoundException {
-        if (userRepository.findByEmail(email) == null) {
-            throw new UserNotFoundException(USER_NOT_FOUND);
-        }
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -150,20 +144,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByUserName(String userName) throws UserNotFoundException {
-        if (userRepository.findByUserName(userName) == null) {
-            throw new UserNotFoundException(USER_NOT_FOUND);
-        }
         return userRepository.findByUserName(userName);
     }
 
     @Override
-    public UserResponse createUserResponse(User user, int offset, int count) {
+    public UserResponse createUserResponse(User user, int offset, int count) throws UserNotFoundException {
+        if (user == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+        if (offset < 0 || count < 0) {
+            throw new IllegalArgumentException("offset and count should be greater than 0");
+        }
         List<User> users = new ArrayList<>();
         users.add(user);
         return UserResponse.builder()
                 .message("user details")
                 .status(200)
                 .results(users)
+                .offset((long) offset)
+                .count((long) count)
                 .build();
     }
 
@@ -187,6 +186,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse createUserResponseList(List<User> users, int offset, int count, String exportLink) {
+        if (offset < 0 || count < 0) {
+            throw new IllegalArgumentException("offset and count should be greater than 0");
+        }
+        if (users.isEmpty()) {
+            throw new NullPointerException("users list is empty");
+        }
         return UserResponse.builder()
                 .message("users working in the given company")
                 .status(200)
@@ -213,7 +218,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser(User user, Boolean isAdmin) {
+    public String updateUser(User user, Boolean isAdmin) {
+        if (user == null) {
+            throw new NullPointerException("user is null");
+        }
         if (Boolean.TRUE.equals(isAdmin)) {
             user.setRole("admin");
             user.setAdmin(true);
@@ -222,12 +230,17 @@ public class UserServiceImpl implements UserService{
             user.setAdmin(false);
         }
         userRepository.save(user);
+        return "user updated successfully";
     }
 
     @Override
     @Transactional
-    public void deleteUser(User user) {
+    public String deleteUser(User user) {
+        if (user == null) {
+            throw new NullPointerException("user is null");
+        }
         tokenRepository.deleteByUserId(user.getId());
         userRepository.deleteByEmail(user.getEmail());
+        return "user deleted successfully";
     }
 }

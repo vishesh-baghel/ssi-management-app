@@ -55,7 +55,7 @@ public class UserServiceController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser( @RequestBody UserRequest userRequest, HttpServletRequest request) throws InvalidRequestBodyException, UserNotFoundException, InvalidTokenException {
+    public String registerUser( @RequestBody UserRequest userRequest, HttpServletRequest request) throws InvalidRequestBodyException, InvalidTokenException {
         if (userRequest.getUserName() == null || userRequest.getUserName().isEmpty()) {
             throw new InvalidRequestBodyException(USERNAME_CANNOT_BE_EMPTY);
         }
