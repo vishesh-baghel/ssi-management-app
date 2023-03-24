@@ -75,7 +75,7 @@ public class SsiDetailsController {
         TypedQuery<SsiDetails> ssiList = ssiDetailsService.fetch(ssiSearchRequest);
 
         Long total = (long) ssiList.getResultList().size();
-        ssiSearchRequest.setCount(ssiSearchRequest.getCount()==0?2:ssiSearchRequest.getCount());
+        ssiSearchRequest.setCount(ssiSearchRequest.getCount()==0?3:ssiSearchRequest.getCount());
         ssiSearchRequest.setOffset(ssiSearchRequest.getOffset()==0?1:ssiSearchRequest.getOffset());
 
         List<SsiDetails> results = ssiList

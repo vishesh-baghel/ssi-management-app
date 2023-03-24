@@ -11,6 +11,7 @@ const Adduser = () => {
 
     const handleFormSubmit = (values, actions) => {
         addUser(values).then(res => {
+            console.log(res);
             if (res.status === 201) {
                 alert("User Added..")
                 actions.resetForm();
