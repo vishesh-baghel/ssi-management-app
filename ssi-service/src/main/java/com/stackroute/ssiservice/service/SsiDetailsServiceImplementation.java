@@ -23,6 +23,8 @@ import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.repository.SsiDetailsRepository;
 import org.springframework.util.ReflectionUtils;
 
+import javax.persistence.TypedQuery;
+
 @Service
 public class SsiDetailsServiceImplementation implements SsiDetailsService {
     @Autowired
@@ -257,15 +259,10 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
         return ssiList;
     }
 
-    @Override
-    public SsiSearchResponse createSearchResponse(List<SsiDetails> ssiDetails, Long offset, Long count) {
-        return new SsiSearchResponse().builder().status(200).message("Ssi Response").results(ssiDetails).offset(offset).count(count).total((long) ssiDetails.size()).build();
-    }
 
     @Override
-    public List<SsiDetails> search(SsiSearchRequest ssiSearchRequest) {
-        List<SsiDetails> ssiList = ssiRepository.findBySearchParams(ssiSearchRequest);
-        return ssiList;
+    public TypedQuery<SsiDetails> fetch(SsiSearchRequest ssiSearchRequest) {
+       return ssiRepository.findBySearchParams(ssiSearchRequest);
     }
 
 
