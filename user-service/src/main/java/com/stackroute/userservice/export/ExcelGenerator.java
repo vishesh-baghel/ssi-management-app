@@ -63,7 +63,7 @@ public class ExcelGenerator {
             createCell(row, columnCount++, record.getUserName(), style);
             createCell(row, columnCount++, record.getEmail(), style);
             createCell(row, columnCount++, record.getCompanyName(), style);
-            createCell(row, columnCount++, record.getRole(), style);
+            createCell(row, columnCount++, record.getRoles(), style);
             createCell(row, columnCount++, record.isEnabled(), style);
         }
     }

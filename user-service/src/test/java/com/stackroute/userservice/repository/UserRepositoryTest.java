@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 class UserRepositoryTest {
 
@@ -33,7 +34,6 @@ class UserRepositoryTest {
                 .password("test")
                 .email("test@gmail.com")
                 .companyName("test")
-                .role("test")
                 .build();
     }
 
