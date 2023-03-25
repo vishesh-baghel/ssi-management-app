@@ -1,20 +1,19 @@
 package com.stackroute.userservice.controller;
 
-import com.stackroute.userservice.dto.PasswordRequest;
-import com.stackroute.userservice.dto.UserRequest;
-import com.stackroute.userservice.dto.UserResponse;
+import com.stackroute.userservice.dto.*;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidRequestBodyException;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.export.ExcelGenerator;
+import com.stackroute.userservice.service.JwtService;
 import com.stackroute.userservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +26,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@CrossOrigin
 public class UserServiceController {
 
     static final String USER_NOT_FOUND = "User not found";
@@ -45,6 +45,8 @@ public class UserServiceController {
     static final String COMPANY_NAME_CANNOT_BE_EMPTY = "Company name cannot be empty";
     static final String ROLE_CANNOT_BE_EMPTY = "Role cannot be empty";
     static final String IS_ADMIN_CANNOT_BE_EMPTY = "admin role value cannot be empty";
+    static final String ALL_ACCESS = "all access";
+    static final String VIEW_ONLY_ACCESS = "view only access";
 
     List<User> exportList;
 
@@ -52,43 +54,53 @@ public class UserServiceController {
     private UserService userService;
 
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private AuthenticationManager authenticationManager;
 
-//    @GetMapping("/greet")
-////	@RequestMapping(method=RequestMethod.GET,value="/greet")
-//    public ResponseEntity<String> home(){
-//        return new ResponseEntity<String>("greetings from first servcie",HttpStatus.OK);
-//    }
+    @Autowired
+    private JwtService jwtService;
+
+    @GetMapping({"/forAdmin"})
+    @PreAuthorize("hasRole('admin')")
+    public String forAdmin(){
+        return "This URL is only accessible to the admin";
+    }
+
+    @GetMapping({"/forUser"})
+    @PreAuthorize("hasRole('user')")
+    public String forUser(){
+        return "This URL is only accessible to the user";
+    }
+
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser( @RequestBody UserRequest userRequest, HttpServletRequest request) throws InvalidRequestBodyException, InvalidTokenException {
-        if (userRequest.getUserName() == null || userRequest.getUserName().isEmpty()) {
+    public String registerUser(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) throws InvalidRequestBodyException, InvalidTokenException {
+        if (registerRequest.getUserName() == null || registerRequest.getUserName().isEmpty()) {
             throw new InvalidRequestBodyException(USERNAME_CANNOT_BE_EMPTY);
         }
 
-        if (userRequest.getPassword() == null || userRequest.getPassword().isEmpty()) {
+        if (registerRequest.getPassword() == null || registerRequest.getPassword().isEmpty()) {
             throw new InvalidRequestBodyException(PASSWORD_CANNOT_BE_EMPTY);
         }
 
-        if (userRequest.getEmail() == null || userRequest.getEmail().isEmpty()) {
+        if (registerRequest.getEmail() == null || registerRequest.getEmail().isEmpty()) {
             throw new InvalidRequestBodyException(EMAIL_CANNOT_BE_EMPTY);
         }
 
-        if (userRequest.getCompanyName() == null || userRequest.getCompanyName().isEmpty()) {
+        if (registerRequest.getCompanyName() == null || registerRequest.getCompanyName().isEmpty()) {
             throw new InvalidRequestBodyException(COMPANY_NAME_CANNOT_BE_EMPTY);
         }
 
-        if (userRequest.getRole() == null || userRequest.getRole().isEmpty()) {
+        if (registerRequest.getRole() == null || registerRequest.getRole().isEmpty()) {
             throw new InvalidRequestBodyException(ROLE_CANNOT_BE_EMPTY);
         }
 
-        Optional<User> user = Optional.ofNullable(userService.findUserByEmail(userRequest.getEmail()));
+        Optional<User> user = Optional.ofNullable(userService.findUserByEmail(registerRequest.getEmail()));
         if (user.isPresent()) {
             throw new InvalidRequestBodyException(USER_ALREADY_EXISTS);
         }
 
-        User registeredUser = userService.registerUser(userRequest);
+        User registeredUser = userService.registerUser(registerRequest);
         VerificationToken token = userService.generateVerificationToken();
         userService.saveVerificationTokenForUser(registeredUser, token);
         sendVerificationTokenMail(registeredUser, applicationUrl(request), token);
@@ -97,6 +109,7 @@ public class UserServiceController {
 
     @GetMapping("/verifyRegistration")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     public String verifyRegistration(@RequestParam("token") String token) {
         String result = userService.validateVerificationToken(token);
         if (result.equalsIgnoreCase("valid")) {
@@ -106,6 +119,7 @@ public class UserServiceController {
     }
 
     @PostMapping("/resetPassword")
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     public String resetPassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) throws UserNotFoundException, InvalidTokenException {
         User user = userService.findUserByEmail(passwordRequest.getEmail());
         String url = "";
@@ -118,6 +132,7 @@ public class UserServiceController {
     }
 
     @PostMapping("/savePassword")
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     public String savePassword(@RequestParam("token") String token, @RequestBody PasswordRequest passwordRequest) throws InvalidTokenException, UserNotFoundException {
         String result = userService.validatePasswordResetToken(token);
 
@@ -135,7 +150,8 @@ public class UserServiceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserResponse userDetails(@RequestBody UserRequest userRequest) throws UserNotFoundException {
+    @PreAuthorize("hasAnyRole('admin', 'user')")
+    public UserResponse fetchUserDetails(@RequestBody UserRequest userRequest) throws UserNotFoundException {
         String userName = userRequest.getUserName();
         String email = userRequest.getEmail();
         String companyName = userRequest.getCompanyName();
@@ -177,6 +193,7 @@ public class UserServiceController {
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('admin')")
     private String updateUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, UserNotFoundException {
         String email = userRequest.getEmail();
         Boolean isAdmin = userRequest.getIsAdmin();
@@ -197,6 +214,7 @@ public class UserServiceController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('admin')")
     private String deleteUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, UserNotFoundException {
         String email = userRequest.getEmail();
 
@@ -212,6 +230,8 @@ public class UserServiceController {
     }
 
     @GetMapping("/export-to-excel")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     public void exportIntoExcelFile(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");

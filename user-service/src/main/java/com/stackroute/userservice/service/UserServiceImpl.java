@@ -1,14 +1,14 @@
 package com.stackroute.userservice.service;
 
-import com.stackroute.userservice.dto.PasswordRequest;
-import com.stackroute.userservice.dto.UserRequest;
-import com.stackroute.userservice.dto.UserResponse;
+import com.stackroute.userservice.dto.*;
 import com.stackroute.userservice.entity.PasswordResetToken;
+import com.stackroute.userservice.entity.Role;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.repository.PasswordResetTokenRepository;
+import com.stackroute.userservice.repository.RoleRepository;
 import com.stackroute.userservice.repository.UserRepository;
 import com.stackroute.userservice.repository.VerificationTokenRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService{
     static final String INVALID_TOKEN = "invalid Token";
     static final String USER_NOT_FOUND = "User not found";
     static final String TOKEN_EXPIRED = "Token expired";
+    static final String ALL_ACCESS = "All Access";
+    static final String VIEW_ONLY_ACCESS = "View Only Access";
 
     @Autowired
     private UserRepository userRepository;
@@ -44,17 +46,27 @@ public class UserServiceImpl implements UserService{
     private VerificationTokenRepository tokenRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
-    public User registerUser(UserRequest userRequest) {
+    public User registerUser(RegisterRequest registerRequest) {
+        String roleDescription = registerRequest.getRole().equalsIgnoreCase("admin") ? ALL_ACCESS : VIEW_ONLY_ACCESS;
+        Set<Role> roles = new HashSet<>();
+        Role role = Role.builder()
+                .roleName(registerRequest.getRole())
+                .roleDescription(roleDescription)
+                .build();
+        roles.add(role);
+        roleRepository.save(role);
         User user = User.builder()
-                .userName(userRequest.getUserName())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .email(userRequest.getEmail())
-                .companyName(userRequest.getCompanyName())
-                .role(userRequest.getRole())
+                .userName(registerRequest.getUserName())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .email(registerRequest.getEmail())
+                .companyName(registerRequest.getCompanyName())
+                .roles(roles)
                 .build();
         userRepository.save(user);
         return user;
@@ -144,6 +156,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByUserName(String userName) throws UserNotFoundException {
+//        if (userRepository.findByUserName(userName) == null) {
+//            throw new UserNotFoundException(USER_NOT_FOUND);
+//        }
         return userRepository.findByUserName(userName);
     }
 
@@ -205,28 +220,51 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> findAllUsersByRole(String role, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException {
+        List<Role> roles = new ArrayList<>();
+        Role userRole = Role.builder()
+                .roleName("user")
+                .roleDescription(VIEW_ONLY_ACCESS)
+                .build();
+        Role adminRole = Role.builder()
+                .roleName("admin")
+                .roleDescription(ALL_ACCESS)
+                .build();
+        roles.add(userRole);
+        roles.add(adminRole);
         Pageable pageable;
         if (orderBy.equalsIgnoreCase("asc")) {
             pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
         } else {
             pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
         }
-        if (userRepository.findAllByRole(role, pageable).isEmpty()) {
+        if (userRepository.findAllByRoles(role, pageable).isEmpty()) {
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
-        return userRepository.findAllByRole(role, pageable);
+        return userRepository.findAllByRoles(role, pageable);
     }
 
     @Override
     public String updateUser(User user, Boolean isAdmin) {
+        Set<Role> adminRoleList = new HashSet<>();
+        Set<Role> userRoleList = new HashSet<>();
+        Role adminRole = Role.builder()
+                .roleName("admin")
+                .roleDescription(ALL_ACCESS)
+                .build();
+        Role userRole = Role.builder()
+                .roleName("user")
+                .roleDescription(VIEW_ONLY_ACCESS)
+                .build();
+        adminRoleList.add(adminRole);
+        userRoleList.add(userRole);
         if (user == null) {
             throw new NullPointerException("user is null");
         }
         if (Boolean.TRUE.equals(isAdmin)) {
-            user.setRole("admin");
+            user.setRoles(adminRoleList);
             user.setAdmin(true);
         } else {
-            user.setRole("user");
+            user.setRoles(userRoleList);
             user.setAdmin(false);
         }
         userRepository.save(user);
@@ -243,4 +281,15 @@ public class UserServiceImpl implements UserService{
         userRepository.deleteByEmail(user.getEmail());
         return "user deleted successfully";
     }
+
+//    @Override
+//    public void saveRoleForUser(User registeredUser, String role, String roleDescription) {
+//        if (registeredUser == null) {
+//            throw new NullPointerException("user is null");
+//        }
+//        if (role == null) {
+//            throw new NullPointerException("role is null");
+//        }
+//        roleRepository.save(new Role(role, roleDescription, registeredUser));
+//    }
 }

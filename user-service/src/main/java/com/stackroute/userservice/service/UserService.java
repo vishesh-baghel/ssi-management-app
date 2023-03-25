@@ -1,8 +1,6 @@
 package com.stackroute.userservice.service;
 
-import com.stackroute.userservice.dto.PasswordRequest;
-import com.stackroute.userservice.dto.UserRequest;
-import com.stackroute.userservice.dto.UserResponse;
+import com.stackroute.userservice.dto.*;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
@@ -12,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User registerUser(UserRequest userRequest);
+    User registerUser(RegisterRequest userRequest);
 
     VerificationToken generateVerificationToken();
 
@@ -43,4 +41,6 @@ public interface UserService {
     String updateUser(User user, Boolean isAdmin);
 
     String deleteUser(User user);
+
+//    void saveRoleForUser(User registeredUser, String role, String roleDescription);
 }
