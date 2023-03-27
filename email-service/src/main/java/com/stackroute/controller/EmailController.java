@@ -6,12 +6,14 @@ package com.stackroute.controller;
 import com.stackroute.Entity.EmailDetails;
 import com.stackroute.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 // Annotation
 @RestController
+@RefreshScope
 // Class
 public class EmailController {
 

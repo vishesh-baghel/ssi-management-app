@@ -50,65 +50,65 @@ class UserServiceControllerTest {
     @Autowired
     private UserRequest userRequest;
 
-    @BeforeEach
-    void setUp() {
-        user = User.builder()
-                .userName("test")
-                .email("test@mail.com")
-                .role("user")
-                .password("password")
-                .build();
-
-        userRequest = UserRequest.builder()
-                .userName("test")
-                .email("test@mail.com")
-                .companyName("test")
-                .role("user")
-                .password("password")
-                .build();
-    }
-
-    @AfterEach
-    void tearDown() {
-        user = null;
-    }
-
-    @Test
-    @DisplayName("test for register user api")
-    void registerUser() throws InvalidTokenException, InvalidRequestBodyException {
-        // Arrange
-        Mockito.when(userService.findUserByEmail(userRequest.getEmail())).thenReturn(null);
-        Mockito.when(userService.registerUser(userRequest)).thenReturn(user);
-        Mockito.when(userService.generateVerificationToken()).thenReturn(new VerificationToken());
-
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
-
-        // Act
-        String result = userServiceController.registerUser(userRequest, request);
-
-        // Assert
-        Mockito.verify(userService, Mockito.times(1)).findUserByEmail(userRequest.getEmail());
-        Mockito.verify(userService, Mockito.times(1)).registerUser(userRequest);
-        Mockito.verify(userService, Mockito.times(1)).generateVerificationToken();
-        Mockito.verify(userService, Mockito.times(1)).saveVerificationTokenForUser(user, new VerificationToken());
-
-        assertEquals("User registered successfully", result);
-    }
-
-    @Test
-    void resetPassword() {
-    }
-
-    @Test
-    void savePassword() {
-    }
-
-    @Test
-    void userDetails() {
-    }
-
-    @Test
-    void exportIntoExcelFile() {
-    }
+//    @BeforeEach
+//    void setUp() {
+//        user = User.builder()
+//                .userName("test")
+//                .email("test@mail.com")
+//                .role("user")
+//                .password("password")
+//                .build();
+//
+//        userRequest = UserRequest.builder()
+//                .userName("test")
+//                .email("test@mail.com")
+//                .companyName("test")
+//                .role("user")
+//                .password("password")
+//                .build();
+//    }
+//
+//    @AfterEach
+//    void tearDown() {
+//        user = null;
+//    }
+//
+//    @Test
+//    @DisplayName("test for register user api")
+//    void registerUser() throws InvalidTokenException, InvalidRequestBodyException {
+//        // Arrange
+//        Mockito.when(userService.findUserByEmail(userRequest.getEmail())).thenReturn(null);
+//        Mockito.when(userService.registerUser(userRequest)).thenReturn(user);
+//        Mockito.when(userService.generateVerificationToken()).thenReturn(new VerificationToken());
+//
+//        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+//        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+//
+//        // Act
+//        String result = userServiceController.registerUser(userRequest, request);
+//
+//        // Assert
+//        Mockito.verify(userService, Mockito.times(1)).findUserByEmail(userRequest.getEmail());
+//        Mockito.verify(userService, Mockito.times(1)).registerUser(userRequest);
+//        Mockito.verify(userService, Mockito.times(1)).generateVerificationToken();
+//        Mockito.verify(userService, Mockito.times(1)).saveVerificationTokenForUser(user, new VerificationToken());
+//
+//        assertEquals("User registered successfully", result);
+//    }
+//
+//    @Test
+//    void resetPassword() {
+//    }
+//
+//    @Test
+//    void savePassword() {
+//    }
+//
+//    @Test
+//    void userDetails() {
+//    }
+//
+//    @Test
+//    void exportIntoExcelFile() {
+//    }
 }

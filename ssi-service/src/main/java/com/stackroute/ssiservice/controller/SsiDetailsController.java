@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import com.stackroute.ssiservice.model.SsiDetails;
 import com.stackroute.ssiservice.service.SsiDetailsService;
 
 @RestController
+@RefreshScope
 @RequestMapping("/ssi")
 @CrossOrigin
 public class SsiDetailsController {
