@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let url = "http://localhost:8081/ssi";
+let url = "http://localhost:8086/ssi";
 let userUrl = "http://localhost:3001/users"
 
 export const addSsi=(data)=>{

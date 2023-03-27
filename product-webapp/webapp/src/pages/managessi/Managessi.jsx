@@ -20,7 +20,12 @@ const Managessi = () => {
   const [modifiedRows, setModifiedRows] = useState(rows);
     
   const updateRows = ()=>{
-      getSsi({}).then(res=>{
+      getSsi({
+        "sort":{
+          "column":"ssiRefId",
+          "order":"desc"
+        }
+      }).then(res=>{
           if(res.status===200){
             let rows = res.data.results
             rows.forEach((item, i) => {
