@@ -5,10 +5,11 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import AuthContext from '../../context/AuthProvider';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -18,6 +19,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function Register() {
+
+  const { auth } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -66,11 +69,16 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    console.log("global state: ", localStorage.getItem('token'));
     console.log({
       userName: data.get('name'),
       email: data.get('email'),
       password: data.get('password'),
+      companyName: data.get('company')
     });
+
+    localStorage.setItem('userName', data.get('name'));
+    localStorage.setItem('userRole', 'user');
   
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
@@ -80,7 +88,7 @@ export default function Register() {
     }
   
     try {
-      const response = await fetch('http://localhost:8080/user/register', {
+      const response = await fetch('http://localhost:8087/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +121,7 @@ export default function Register() {
       } else {
         console.log('inside else')
         setTimeout(() => {
-          navigate('/dashboard', { replace: true });
+          navigate('/login', { replace: true });
         }, 2000);
       }
     } catch (err) {
@@ -161,7 +169,7 @@ export default function Register() {
           <Grid item>
             <h1>Get Started</h1> <br></br>
               Already have an account? 
-                <Link  href='/login' variant="body2">
+                <Link  href='/login' variant="body2" underline='none'>
                   {<b> Sign in</b>}
                 </Link>
                 <br></br><br></br>
@@ -192,7 +200,7 @@ export default function Register() {
                 fullWidth
                 id="company"
                 label="Company Name"
-                name="email"
+                name="company"
                 />
               <TextField
                 margin="normal"

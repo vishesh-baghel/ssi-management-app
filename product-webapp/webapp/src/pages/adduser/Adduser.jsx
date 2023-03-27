@@ -10,17 +10,30 @@ const Adduser = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
     const handleFormSubmit = (values, actions) => {
-        addUser(values).then(res => {
-            if (res.status === 201) {
-                alert("User Added..")
-                actions.resetForm();
-            }
-        })
+        console.log(values);
+        const response = fetch('http://localhost:8087/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userName: values.userName,
+                    password: values.userPassword,
+                    email: values.userEmail,
+                    companyName: values.userCompany,
+                    role: values.userRole
+                    }),
+                }).then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                });
+        actions.resetForm();
     };
 
     const initialValues = {
         userName: "",
         userEmail: "",
+        userPassword: "",
         userCompany: "",
         userRole: ""
     };
@@ -40,6 +53,7 @@ const Adduser = () => {
         userName: yup
             .string()
             .required("required"),
+        userPassword: yup.string().required("required"),
         userEmail: yup.string().email().required("required"),
         userCompany: yup.string().required("required"),
         userRole: yup.boolean().required("required")
@@ -91,6 +105,19 @@ const Adduser = () => {
                                     name="userEmail"
                                     error={!!touched.userEmail && !!errors.userEmail}
                                     helperText={touched.userEmail && errors.userEmail}
+                                    sx={{ gridColumn: "span 2" }}
+                                />
+                                <TextField
+                                    autoComplete='off'
+                                    variant="filled"
+                                    type="text"
+                                    label="Password"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    value={values.userPassword}
+                                    name="userPassword"
+                                    error={!!touched.userPassword && !!errors.userPassword}
+                                    helperText={touched.userPassword && errors.userPassword}
                                     sx={{ gridColumn: "span 2" }}
                                 />
                                 <TextField

@@ -12,11 +12,29 @@ import Landing from './pages/landingpage/Landing';
 import ForgotPassword from './pages/forgotpassword/Forgotpassword';
 import Editssi from './pages/editssi/Editssi'
 import Viewprofile from './pages/viewprofile/Viewprofile';
+import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 
 function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkUserToken = () => {
+    const token = localStorage.getItem('token');
+    if (!token || token === 'undefined' || token === 'null') {
+      setIsLoggedIn(false);
+    }
+    setIsLoggedIn(true);
+  }
+
+  useEffect(() => {
+    checkUserToken();
+  }, [isLoggedIn]);
+
   return (
     <>
     <Routes>
+    {isLoggedIn ? (
       <Route path='/dashboard' element={<Appwrapper />}>
               <Route index element={<Dashboard />} />
               <Route path="manageusers" element={<Manageusers />} />
@@ -26,7 +44,8 @@ function App() {
               <Route path="ssi/:id" element={<Viewssi/>}/>
               <Route path="editssi/:id" element={<Editssi/>}/>
               <Route path="profile" element={<Viewprofile/>}/>
-      </Route>
+      </Route>) : (<Route path='*' element={<Navigate to='/login' />} />)
+    }
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/' element={<Landing />} />
