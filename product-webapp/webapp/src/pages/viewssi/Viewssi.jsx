@@ -58,73 +58,73 @@ export default function Viewssi() {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell sx={{ width: "14vw" }}>ID :</TableCell><TableCell sx={{ width: "34vw" }} align='left'>{ssidata.id}</TableCell>
-              <TableCell>Correspondent Account Name :</TableCell><TableCell>{ssidata.correspondentAccountName ? ssidata.correspondentAccountName : ""}</TableCell>
+              <TableCell sx={{ width: "14vw" }}>ID :</TableCell><TableCell sx={{ width: "34vw" }} align='left'>{ssidata.id ? ssidata.id : " - - NA - - "}</TableCell>
+              <TableCell>Correspondent Account Name :</TableCell><TableCell>{ssidata.correspondanceAccountName ? ssidata.correspondanceAccountName : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>SSI RefId :</TableCell><TableCell>{ssidata.ssiRefId}</TableCell>
-              <TableCell>Intermediary Account No 1 :</TableCell><TableCell>{ssidata.intermediaryAccountNo1}</TableCell>
+              <TableCell>SSI RefId :</TableCell><TableCell>{ssidata.ssiRefId ? ssidata.ssiRefId : " - - NA - - "}</TableCell>
+              <TableCell>Intermediary Account No 1 :</TableCell><TableCell>{ssidata.intermediary1AccountNumber ? ssidata.intermediary1AccountNumber : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Description :</TableCell><TableCell>{ssidata.description}</TableCell>
-              <TableCell>Intermediary Bank BIC 1 :</TableCell><TableCell>{ssidata.intermediaryBankBic1}</TableCell>
+              <TableCell>Description :</TableCell><TableCell>{ssidata.description ? ssidata.description : " - - NA - - "}</TableCell>
+              <TableCell>Intermediary Bank BIC 1 :</TableCell><TableCell>{ssidata.intermediary1BankBic ? ssidata.intermediary1BankBic : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Product :</TableCell><TableCell>{ssidata.product}</TableCell>
-              <TableCell>Intermediary Account No 2 :</TableCell><TableCell>{ssidata.intermediaryAccountNo2}</TableCell>
+              <TableCell>Product :</TableCell><TableCell>{ssidata.product ? ssidata.product : " - - NA - - "}</TableCell>
+              <TableCell>Intermediary Account No 2 :</TableCell><TableCell>{ssidata.intermediary2AccountNumber ? ssidata.intermediary2AccountNumber : " - - NA - - "}</TableCell>
             </TableRow>
 
             <TableRow>
-              <TableCell>Entity RefId :</TableCell><TableCell>{ssidata.entityRefId}</TableCell>
-              <TableCell>Intermediary Bank BIC 2 :</TableCell><TableCell>{ssidata.intermediaryBankBic2}</TableCell>
+              <TableCell>Entity RefId :</TableCell><TableCell>{ssidata.entityRefId ? ssidata.entityRefId : " - - NA - - "}</TableCell>
+              <TableCell>Intermediary Bank BIC 2 :</TableCell><TableCell>{ssidata.intermediary2BankBic ? ssidata.intermediary2BankBic : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Currency :</TableCell><TableCell>{ssidata.currency}</TableCell>
-              <TableCell>Intermediary Account Name 1 :</TableCell><TableCell>{ssidata.intermediaryAccountName1}</TableCell>
+              <TableCell>Currency :</TableCell><TableCell>{ssidata.currency ? ssidata.currency : " - - NA - - "}</TableCell>
+              <TableCell>Intermediary Account Name 1 :</TableCell><TableCell>{ssidata.intermediary1AccountName ? ssidata.intermediary1AccountName : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Country :</TableCell><TableCell>{ssidata.country}</TableCell>
-              <TableCell>Intermediary Account Name 2 :</TableCell><TableCell>{ssidata.intermediaryAccountName2}</TableCell>
+              <TableCell>Country :</TableCell><TableCell>{ssidata.country ? ssidata.country : " - - NA - - "}</TableCell>
+              <TableCell>Intermediary Account Name 2 :</TableCell><TableCell>{ssidata.intermediary2AccountName ? ssidata.intermediary2AccountName : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Asset Class :</TableCell><TableCell>{ssidata.assetClass}</TableCell>
-              <TableCell>Is Active :</TableCell><TableCell>{ssidata.isActive}</TableCell>
+              <TableCell>Asset Class :</TableCell><TableCell>{ssidata.assetClass ? ssidata.assetClass : " - - NA - - "}</TableCell>
+              <TableCell>Is Active :</TableCell><TableCell>{ssidata.active ? ssidata.active : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Account Number :</TableCell><TableCell>{ssidata.accountNumber}</TableCell>
-              <TableCell>Is Primary :</TableCell><TableCell>{ssidata.isPrimary}</TableCell>
+              <TableCell>Account Number :</TableCell><TableCell>{ssidata.accountNumber ? ssidata.accountNumber : " - - NA - - "}</TableCell>
+              <TableCell>Is Primary :</TableCell><TableCell>{ssidata.primary ? ssidata.primary : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Account Name :</TableCell><TableCell>{ssidata.accountName}</TableCell>
-              <TableCell>Is Approved :</TableCell><TableCell>{ssidata.isApproved}</TableCell>
+              <TableCell>Account Name :</TableCell><TableCell>{ssidata.accountName ? ssidata.accountName : " - - NA - - "}</TableCell>
+              <TableCell>Is Approved :</TableCell><TableCell>{ssidata.approved ? ssidata.approved : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Account Type :</TableCell><TableCell>{ssidata.accountType}</TableCell>
-              <TableCell>Effective Date :</TableCell><TableCell>{ssidata.effectiveDate}</TableCell>
+              <TableCell>Account Type :</TableCell><TableCell>{ssidata.accountType ? ssidata.accountType : " - - NA - - "}</TableCell>
+              <TableCell>Effective Date :</TableCell><TableCell>{ssidata.effectiveDate ? ssidata.effectiveDate : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Routing Code :</TableCell><TableCell>{ssidata.routingCode}</TableCell>
-              <TableCell>Expiry Date :</TableCell><TableCell>{ssidata.expiryDate}</TableCell>
+              <TableCell>Routing Code :</TableCell><TableCell>{ssidata.routingCode ? ssidata.routingCode : " - - NA - - "}</TableCell>
+              <TableCell>Expiry Date :</TableCell><TableCell>{ssidata.expiryDate ? ssidata.expiryDate : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Correspondent Bank Name :</TableCell><TableCell>{ssidata.correspondentBankName}</TableCell>
-              <TableCell>Approved TS :</TableCell><TableCell>{ssidata.approvedTs}</TableCell>
+              <TableCell>Correspondent Bank Name :</TableCell><TableCell>{ssidata.correspondanceBankName ? ssidata.correspondanceBankName : " - - NA - - "}</TableCell>
+              <TableCell>Approved TS :</TableCell><TableCell>{ssidata.approvedTs ? ssidata.approvedTs : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Correspondent Bank BIC :</TableCell><TableCell>{ssidata.correspondentBankBic}</TableCell>
-              <TableCell>Approved By :</TableCell><TableCell>{ssidata.approvedBy}</TableCell>
+              <TableCell>Correspondent Bank BIC :</TableCell><TableCell>{ssidata.correspondanceBankBic ? ssidata.correspondanceBankBic : " - - NA - - "}</TableCell>
+              <TableCell>Approved By :</TableCell><TableCell>{ssidata.approvedBy ? ssidata.approvedBy : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Beneficiary Bank Name :</TableCell><TableCell>{ssidata.beneficiaryBankName}</TableCell>
-              <TableCell>Custom Field :</TableCell><TableCell>{ssidata.customField}</TableCell>
+              <TableCell>Beneficiary Bank Name :</TableCell><TableCell>{ssidata.beneficiaryBankName ? ssidata.beneficiaryBankName : " - - NA - - "}</TableCell>
+              <TableCell>Custom Field :</TableCell><TableCell>{ssidata.customField ? ssidata.customField : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Beneficiary Bank BIC :</TableCell><TableCell>{ssidata.beneficiaryBankBIC}</TableCell>
-              <TableCell>Created By :</TableCell><TableCell>{ssidata.createdBy}</TableCell>
+              <TableCell>Beneficiary Bank BIC :</TableCell><TableCell>{ssidata.beneficiaryBankBIC ? ssidata.beneficiaryBankBIC : " - - NA - - "}</TableCell>
+              <TableCell>Created By :</TableCell><TableCell>{ssidata.createdBy ? ssidata.createdBy : " - - NA - - "}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Correspondent Account Number :</TableCell><TableCell>{ssidata.correspondentAccountNumber}</TableCell>
-              <TableCell>Updated By :</TableCell><TableCell>{ssidata.updatedBy}</TableCell>
+              <TableCell>Correspondent Account Number :</TableCell><TableCell>{ssidata.correspondanceAccountNumber ? ssidata.correspondanceAccountNumber : " - - NA - - "}</TableCell>
+              <TableCell>Updated By :</TableCell><TableCell>{ssidata.updatedBy ? ssidata.updatedBy : " - - NA - - "}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
