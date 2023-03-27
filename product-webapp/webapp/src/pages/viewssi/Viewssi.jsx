@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Box } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { getSSIbySsiID } from '../../services/userservices';
+import { getSsi } from '../../services/userservices';
 import { useTheme } from '@mui/material/styles';
 import { tokens } from '../../themes';
 import Header from '../../components/Header';
@@ -27,12 +27,17 @@ export default function Viewssi() {
   const [ssidata, setSsiData] = useState([])
 
   const params = useParams()
-
   const updateData = () => {
-    // console.log(params.id);
-    getSSIbySsiID(params.id).then(res => {
-      setSsiData(res.data[0])
-      console.log(res.data[0]);
+    getSsi({
+      filter:[
+        {
+          "column":"ssiRefId",
+          "operator":"equal",
+          "values":[params.id]
+        }
+      ]
+    }).then(res => {
+      setSsiData(res.data.results[0])
     })
   }
 
