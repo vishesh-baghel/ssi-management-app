@@ -6,7 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { editSsi } from "../../services/userservices";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSSIbySsiID } from "../../services/userservices";
+import { getSsi } from "../../services/userservices";
 
 const Editssi = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -16,18 +16,24 @@ const Editssi = () => {
     const params = useParams()
 
     const handleFormSubmit = (values) => {
-        // console.log(values.id);
-        console.log(values.id,values);
-        editSsi(values.id,values).then(res => {
+        editSsi(values.ssiRefId,values).then(res => {
+            console.log(res.data);
             if (res.status === 200) {
                 alert("SSI is Edited Successfully")
             }
+        }).catch(err=>{
+            alert(err.response.data)
         })
     };
     const updateData = () => {
         // console.log(params.id);
-        getSSIbySsiID(params.id).then(res => {
-            setSsiData(res.data[0])
+        getSsi({filter:[{
+            "column":"ssiRefId",
+            "operator":"equal",
+            "values":[params.id]
+        }]}).then(res => {
+            console.log(res);
+            setSsiData(res.data.results[0])
         })
     }
 

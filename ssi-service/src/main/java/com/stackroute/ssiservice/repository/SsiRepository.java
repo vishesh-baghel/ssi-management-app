@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Integer.parseInt;
+
 @Repository
 public class SsiRepository {
     @Autowired
@@ -35,23 +37,33 @@ public class SsiRepository {
         CriteriaQuery<SsiDetails> select = criteriaQuery.select(ssiDetailsRoot);
 
         List<Predicate> predicates = new ArrayList<>();
-        for (Filter filter : ssiSearchRequest.getFilter()) {
-            if (col.contains(filter.getColumn())) {
-                switch (filter.getOperator()) {
-                    case "equal": {
-                        if (!filter.getValues()[0].isEmpty()) {
-                            predicates.add(criteriaBuilder.equal(ssiDetailsRoot.get(filter.getColumn()), filter.getValues()[0]));
+        if (ssiSearchRequest.getFilter() != null) {
+            for (Filter filter : ssiSearchRequest.getFilter()) {
+                System.out.println(filter);
+                if (col.contains(filter.getColumn())) {
+                    switch (filter.getOperator()) {
+                        case "equal": {
+                            if (!filter.getValues()[0].isEmpty() ) {
+                                if (filter.getColumn() == "ssiRefId") {
+                                    predicates.add(criteriaBuilder.equal(ssiDetailsRoot.get(filter.getColumn()), filter.getValues()[0]));
+                                } else {
+                                    predicates.add(criteriaBuilder.equal(ssiDetailsRoot.get(filter.getColumn()), filter.getValues()[0]));
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (col.contains(ssiSearchRequest.getSort().get("column"))) {
-            if (ssiSearchRequest.getSort().get("order").equals("desc")) {
-                criteriaQuery.orderBy(criteriaBuilder.desc(ssiDetailsRoot.get(ssiSearchRequest.getSort().get("column"))));
-            } else {
-                criteriaQuery.orderBy(criteriaBuilder.asc(ssiDetailsRoot.get(ssiSearchRequest.getSort().get("column"))));
+        if (ssiSearchRequest.getSort() != null) {
+
+            if (col.contains(ssiSearchRequest.getSort().get("column"))) {
+                if (ssiSearchRequest.getSort().get("order").equals("desc")) {
+                    criteriaQuery.orderBy(criteriaBuilder.desc(ssiDetailsRoot.get(ssiSearchRequest.getSort().get("column"))));
+                } else {
+                    criteriaQuery.orderBy(criteriaBuilder.asc(ssiDetailsRoot.get(ssiSearchRequest.getSort().get("column"))));
+                }
             }
         }
 
