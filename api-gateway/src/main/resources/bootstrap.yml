@@ -11,7 +11,8 @@ server:
 spring:
   application:
     name: "API-GATEWAY"
-  cloud:
-    config:
-      uri:
+  config:
+      import:
+        optional:
+          configserver:http://localhost:8888
 
