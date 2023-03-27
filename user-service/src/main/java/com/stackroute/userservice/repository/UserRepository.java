@@ -1,7 +1,6 @@
 package com.stackroute.userservice.repository;
 
 import com.stackroute.userservice.entity.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByCompanyName(String companyName, Pageable pageable);
 
-    List<User> findAllByRole(String role, Pageable pageable);
+    List<User> findAllByRoles(String role, Pageable pageable);
 
     void deleteByEmail(String email);
 }

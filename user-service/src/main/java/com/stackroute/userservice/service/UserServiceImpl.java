@@ -1,14 +1,14 @@
 package com.stackroute.userservice.service;
 
-import com.stackroute.userservice.dto.PasswordRequest;
-import com.stackroute.userservice.dto.UserRequest;
-import com.stackroute.userservice.dto.UserResponse;
+import com.stackroute.userservice.dto.*;
 import com.stackroute.userservice.entity.PasswordResetToken;
+import com.stackroute.userservice.entity.Role;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.repository.PasswordResetTokenRepository;
+import com.stackroute.userservice.repository.RoleRepository;
 import com.stackroute.userservice.repository.UserRepository;
 import com.stackroute.userservice.repository.VerificationTokenRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService{
     static final String INVALID_TOKEN = "invalid Token";
     static final String USER_NOT_FOUND = "User not found";
     static final String TOKEN_EXPIRED = "Token expired";
+    static final String ALL_ACCESS = "All Access";
+    static final String VIEW_ONLY_ACCESS = "View Only Access";
 
     @Autowired
     private UserRepository userRepository;
@@ -44,17 +46,27 @@ public class UserServiceImpl implements UserService{
     private VerificationTokenRepository tokenRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
-    public User registerUser(UserRequest userRequest) {
+    public User registerUser(RegisterRequest registerRequest) {
+        String roleDescription = registerRequest.getRole().equalsIgnoreCase("admin") ? ALL_ACCESS : VIEW_ONLY_ACCESS;
+        Set<Role> roles = new HashSet<>();
+        Role role = Role.builder()
+                .roleName(registerRequest.getRole())
+                .roleDescription(roleDescription)
+                .build();
+        roles.add(role);
+        roleRepository.save(role);
         User user = User.builder()
-                .userName(userRequest.getUserName())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .email(userRequest.getEmail())
-                .companyName(userRequest.getCompanyName())
-                .role(userRequest.getRole())
+                .userName(registerRequest.getUserName())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .email(registerRequest.getEmail())
+                .companyName(registerRequest.getCompanyName())
+                .roles(roles)
                 .build();
         userRepository.save(user);
         return user;
@@ -67,12 +79,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken token) throws UserNotFoundException, InvalidTokenException {
+    public VerificationToken saveVerificationTokenForUser(User registeredUser, VerificationToken token) throws InvalidTokenException {
         if (token == null) {
             throw new InvalidTokenException(INVALID_TOKEN);
-        }
-        if (registeredUser == null) {
-            throw new UserNotFoundException(USER_NOT_FOUND);
         }
         VerificationToken verificationToken = new VerificationToken(registeredUser, token.getToken());
         verificationTokenRepository.save(verificationToken);
@@ -97,10 +106,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserByEmail(String email) throws UserNotFoundException {
-        if (userRepository.findByEmail(email) == null) {
-            throw new UserNotFoundException(USER_NOT_FOUND);
-        }
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -150,20 +156,28 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByUserName(String userName) throws UserNotFoundException {
-        if (userRepository.findByUserName(userName) == null) {
-            throw new UserNotFoundException(USER_NOT_FOUND);
-        }
+//        if (userRepository.findByUserName(userName) == null) {
+//            throw new UserNotFoundException(USER_NOT_FOUND);
+//        }
         return userRepository.findByUserName(userName);
     }
 
     @Override
-    public UserResponse createUserResponse(User user, int offset, int count) {
+    public UserResponse createUserResponse(User user, int offset, int count) throws UserNotFoundException {
+        if (user == null) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+        if (offset < 0 || count < 0) {
+            throw new IllegalArgumentException("offset and count should be greater than 0");
+        }
         List<User> users = new ArrayList<>();
         users.add(user);
         return UserResponse.builder()
                 .message("user details")
                 .status(200)
                 .results(users)
+                .offset((long) offset)
+                .count((long) count)
                 .build();
     }
 
@@ -187,6 +201,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse createUserResponseList(List<User> users, int offset, int count, String exportLink) {
+        if (offset < 0 || count < 0) {
+            throw new IllegalArgumentException("offset and count should be greater than 0");
+        }
+        if (users.isEmpty()) {
+            throw new NullPointerException("users list is empty");
+        }
         return UserResponse.builder()
                 .message("users working in the given company")
                 .status(200)
@@ -200,34 +220,76 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> findAllUsersByRole(String role, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException {
+        List<Role> roles = new ArrayList<>();
+        Role userRole = Role.builder()
+                .roleName("user")
+                .roleDescription(VIEW_ONLY_ACCESS)
+                .build();
+        Role adminRole = Role.builder()
+                .roleName("admin")
+                .roleDescription(ALL_ACCESS)
+                .build();
+        roles.add(userRole);
+        roles.add(adminRole);
         Pageable pageable;
         if (orderBy.equalsIgnoreCase("asc")) {
             pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
         } else {
             pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
         }
-        if (userRepository.findAllByRole(role, pageable).isEmpty()) {
+        if (userRepository.findAllByRoles(role, pageable).isEmpty()) {
             throw new UserNotFoundException(USER_NOT_FOUND);
         }
-        return userRepository.findAllByRole(role, pageable);
+        return userRepository.findAllByRoles(role, pageable);
     }
 
     @Override
-    public void updateUser(User user, Boolean isAdmin) {
+    public String updateUser(User user, Boolean isAdmin) {
+        Set<Role> adminRoleList = new HashSet<>();
+        Set<Role> userRoleList = new HashSet<>();
+        Role adminRole = Role.builder()
+                .roleName("admin")
+                .roleDescription(ALL_ACCESS)
+                .build();
+        Role userRole = Role.builder()
+                .roleName("user")
+                .roleDescription(VIEW_ONLY_ACCESS)
+                .build();
+        adminRoleList.add(adminRole);
+        userRoleList.add(userRole);
+        if (user == null) {
+            throw new NullPointerException("user is null");
+        }
         if (Boolean.TRUE.equals(isAdmin)) {
-            user.setRole("admin");
+            user.setRoles(adminRoleList);
             user.setAdmin(true);
         } else {
-            user.setRole("user");
+            user.setRoles(userRoleList);
             user.setAdmin(false);
         }
         userRepository.save(user);
+        return "user updated successfully";
     }
 
     @Override
     @Transactional
-    public void deleteUser(User user) {
+    public String deleteUser(User user) {
+        if (user == null) {
+            throw new NullPointerException("user is null");
+        }
         tokenRepository.deleteByUserId(user.getId());
         userRepository.deleteByEmail(user.getEmail());
+        return "user deleted successfully";
     }
+
+//    @Override
+//    public void saveRoleForUser(User registeredUser, String role, String roleDescription) {
+//        if (registeredUser == null) {
+//            throw new NullPointerException("user is null");
+//        }
+//        if (role == null) {
+//            throw new NullPointerException("role is null");
+//        }
+//        roleRepository.save(new Role(role, roleDescription, registeredUser));
+//    }
 }
