@@ -41,67 +41,73 @@ const Dashboard = () => {
     const [rows, setRows] = useState([]);
     const [modifiedRows, setModifiedRows] = useState(rows);
 
-
-    const columns = [
-        {
-            key: "1",
-            title: "ID",
-            dataIndex: "ssiRefId",
-            sorter: (record1, record2) => {
-                return record1.ssiRefId > record2.ssiRefId
+    useEffect(()=>{
+        getSsi({filter:[]}).then(res => {
+            if (res.status===200){
+                let rows = res.data.results
+                rows.forEach((item, i) => {
+                    item.id = i + 1;
+                });
+                setRows(rows);
+                setModifiedRows(rows);
             }
-        },
-        {
-            key: "2",
-            title: "Product",
-            dataIndex: "product",
-            // filters: [
-            //     { text: 'Collateral', value: 'collateral' },
-            //     { text: 'FX', value: 'fx' },
-            //   ],
-            //   width: '10%',
-        },
-        {
-            key: "3",
-            title: "View",
-            dataIndex: "View SSI"
-        },
-        {
-            key: "3",
-            title: "Currency",
-            dataIndex: "currency"
-        },
-        {
-            key: "4",
-            title: "Asset Class",
-            dataIndex: "assetClass"
-        },
-        {
-            key: "5",
-            title: "Correspondent",
-            dataIndex: "correspondentBankBic"
-        },
-        {
-            key: "6",
-            title: "Beneficiary",
-            dataIndex: "beneficiaryBankBic"
-        },
-        {
-            key: "7",
-            title: "Currency",
-            dataIndex: "currency"
-        },
-        {
-            key: "8",
-            title: "Effective Date",
-            dataIndex: "effectiveDate"
-        },
-        {
-            key: "9",
-            title: "Expiry Date",
-            dataIndex: "expiryDate"
-        },
-    ];
+            else{
+                alert("Some err....")
+            }
+        })
+    },[]);
+
+
+    const clearTextField = (e) => {
+        e.target.value = "";
+    }
+    
+      const columns = [
+      { field: "ssiRefId", headerName: "ID" },
+      {   field: 'view',
+          headerName: 'View SSI', 
+          flex: 1, 
+          renderCell: (params) => {
+              return (
+                  <Typography>
+                  <Link 
+                      to={`/dashboard/ssi/${params.row.ssiRefId}`}
+                      style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
+                  >View
+                  </Link>
+                  </Typography>
+              );
+          }},
+      { field: 'product', headerName: 'Product', flex: 1, cellClassName: 'name-column--cell' },
+      { field: 'currency', headerName: 'Currency', flex: 1 },
+      { field: 'assetClass', headerName: 'Asset Class', flex: 1 },
+      { field: 'correspondentBankBic', headerName: 'Correspondent', flex: 1 },
+      { field: 'beneficiaryBankBic', headerName: 'Beneficiary', flex: 1 },
+      { 
+          field: 'effectiveDate', 
+          headerName: 'Effective Date', 
+          flex: 1,
+          renderCell: (params) => {
+              return (
+                  <Typography fontSize='14px'>
+                      {params.row.effectiveDate.slice(0, 10)}
+                  </Typography>
+              );
+          }
+      },
+      { 
+          field: 'expiryDate', 
+          headerName: 'Expiry Date', 
+          flex: 1,
+          renderCell: (params) => {
+              return (
+                  <Typography fontSize='14px'>
+                      {params.row.expiryDate.slice(0, 10)}
+                  </Typography>
+              );
+           },
+      },
+  ];
 
     return (
         <div className="Dashboard">
