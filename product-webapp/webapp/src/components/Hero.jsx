@@ -2,9 +2,11 @@ import React from 'react';
 import { Grid, Typography, Button, Box } from '@mui/material';
 // import myteam from '../images/myteam.jpg';
 import useStyles from '../styles/styles';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   return (
     <Box className={classes.heroBox}>
@@ -20,7 +22,7 @@ const Hero = () => {
             variant="contained"
             color="primary"
             sx={{ width: '200px', height:'50px', fontSize: '16px' }}
-            href="/register"
+            onClick={()=>navigate("/register")}
           >
             Get Started
           </Button>

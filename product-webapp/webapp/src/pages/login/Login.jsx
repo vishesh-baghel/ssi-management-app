@@ -186,7 +186,7 @@ export default function Login() {
           <Grid item>
             <h1>Welcome Back!!</h1> <br></br>
               Don't have an account?
-                <Link  href='/register' variant="body2" underline='none'>
+                <Link  onClick={()=>navigate('/register')} variant="body2" underline='none'>
                   {<b> Sign up</b>}
                 </Link>
                 <br></br><br></br>
@@ -226,7 +226,7 @@ export default function Login() {
               <br></br>
               <Box mt='10px'>
                 <Link 
-                  href="/forgotpassword" 
+                  onClick={()=>navigate("/forgotpassword")} 
                   variant="body2"
                   underline='none'
                 >
