@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 let url = "http://localhost:8086/ssi";
-let userUrl = "http://localhost:3001/users"
+let userUrl = "http://localhost:8087/user"
 
 export const addSsi=(data)=>{
     return axios.post(url+"/add",data)

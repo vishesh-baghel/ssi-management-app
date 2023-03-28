@@ -87,7 +87,7 @@ export default function Login() {
     }
   
     try {
-      const response = await fetch('http://localhost:8087/authenticate', {
+      const response = await fetch('http://localhost:8086/user/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,11 +108,17 @@ export default function Login() {
       const jwtToken = responseData.jwtToken;
       const roles = responseData.user.roles;
       const userName = responseData.user.userName;
+      const userEmail = responseData.user.userEmail;
       const demo = 'demo';
 
       localStorage.setItem('token', jwtToken);
       localStorage.setItem('userRole', roles[0].roleName);
       localStorage.setItem('userName', userName);
+      localStorage.setItem('userEmail', userEmail);
+
+      sessionStorage.setItem('token', jwtToken);
+      sessionStorage.setItem('userRole', roles[0].roleName);
+      sessionStorage.setItem('userName', userName);
 
       setAuth({ demo });
 

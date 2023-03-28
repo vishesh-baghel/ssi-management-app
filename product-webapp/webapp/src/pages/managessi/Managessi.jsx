@@ -38,7 +38,7 @@ const Managessi = () => {
   }
 
   const delSSI = (ssiId) => {
-    //let flag = confirm("Are you Sure want to delete this SSI??")?true:false;
+    let flag = window.confirm("Are you sure you want to delete this SSI?");
     deleteSSI(ssiId).then(response => {
       if (response.status === 200) {
         alert("Success");
@@ -51,6 +51,7 @@ const Managessi = () => {
       console.log(error)
     })
   }
+
   const makePrimary = (ssiId) => {
     let tempObj = {}
     getSsi({
@@ -143,8 +144,8 @@ const Managessi = () => {
         <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
       </Box>
       <Box
-        height='75vh'
-        width='83vw'
+        height='70vh'
+        width='100%'
         sx={{
           '& .MuiDataGrid-root': {
             border: 'none',
@@ -189,6 +190,7 @@ const Managessi = () => {
         <DataGrid
           rows={modifiedRows}
           columns={columns}
+          rowHeight={40}
         />
       </Box>
     </Box>
