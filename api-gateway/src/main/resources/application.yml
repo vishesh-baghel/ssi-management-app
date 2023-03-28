@@ -9,6 +9,7 @@ server:
   port: 8086
 
 
+
 spring:
   cloud:
     gateway:
@@ -28,3 +29,25 @@ spring:
   application:
     name: "API-GATEWAY"
 
+
+#    bootstrap:
+#      enabled: true
+
+
+
+
+#spring:
+#  cloud:
+#    gateway:
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOrigins: "https://docs.spring.io"
+#            allowedMethods:
+#              - GET
+
+#spring:
+#  cloud:
+#    gateway:
+#      globalcors:
+#        add-to-simple-url-handler-mapping: true

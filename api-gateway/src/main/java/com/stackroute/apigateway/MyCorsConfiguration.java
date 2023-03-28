@@ -45,3 +45,16 @@ public class MyCorsConfiguration {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
