@@ -1,25 +1,15 @@
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { Box, useTheme, TextField, Typography} from '@mui/material';
+import { Box, Button, useTheme, TextField, Typography} from '@mui/material';
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { tokens } from "../../themes";
-
-import { getUsers, updateUserAdminStatus, removeUser } from "../../services/userservices";
-
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
-import PersonIcon from '@mui/icons-material/Person';
-
 import Header from '../../components/Header';
-import Export from '../../components/Export/Export'
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import Link from '@mui/material/Link';
 import { GridToolbar } from '@mui/x-data-grid';
 import { Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
 import { Alert } from '@mui/material';
 
 const Manageusers = () => {
@@ -27,18 +17,9 @@ const Manageusers = () => {
     const colors = tokens(theme.palette.mode);
 
     const [open, setOpen] = useState(false);
-    const [isAgreed, setIsAgreed] = useState(false);
-    const dialogTitle = 'Do you want to make this user admin?';
-    const dialogDescription = 'This user will have admin privileges.';
     const [message, setMessage] = useState('');
 
     const navigate = useNavigate();
-    const viewUser = (url) => {
-        navigate(url)
-    }
-
-    const [rows, setRows] = useState([]);
-    const [modifiedRows, setModifiedRows] = useState(rows);
 
     const [pageState, setPageState] = useState({
         isLoading: false,
@@ -66,29 +47,6 @@ const Manageusers = () => {
 
     setOpen(false);
   };
-
-    const updateRows = async () => {
-        const response = await fetch('http://localhost:8086/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          companyName: "baton systems",
-          offset: pageState.page,
-          count: pageState.pageSize,
-          sortBy: "email",
-          orderBy: "asc"
-        }),
-        });
-  
-        const responseData = await response.json();
-        console.log('Success:', responseData);
-        setRows(responseData.results);
-        setModifiedRows(responseData.results);
-    }
-
     
     const deleteUser = async (email) => {
         let flag = confirm("Are you sure to delete") ? true : false;
@@ -117,12 +75,6 @@ const Manageusers = () => {
     }}
 
     const toggleAdmin = async (email, isAdmin) => {
-            // handleClickOpen();
-            // updateUserAdminStatus(id, isAdmin).then(res => {
-            //     if (res.status === 200) {
-            //         updateRows()
-            //     }
-            // }) 
             console.log(isAdmin)
             const response = await fetch('http://localhost:8086/user', {
                method: 'PATCH',
@@ -144,15 +96,8 @@ const Manageusers = () => {
     }).catch(() => {
         setMessage("You are not authorized to perform this action")
         handleAlertOpen();
-    }
-    )
-    // const json = await response.json()
-    // console.log("admin role: ", json)
-    // fetchData();
-    // if (json.status === 200) {
-    //     alert("User updated successfully")
-    // }
-    }
+    })
+}
     
     const columns = [
         { field: "id", headerName: "ID" },
@@ -163,14 +108,6 @@ const Manageusers = () => {
         {
             field: "actions", type: "actions", align: "center", sortable: false, filterable: false, disableColumnMenu: true,
             getActions: (params) => [
-                // <GridActionsCellItem
-                //     icon={<PersonIcon />}
-                //     label="View"
-                //     onClick={() => {
-                //         viewUser(`/profile/${params.row.id}`)
-                //     }}
-                //     showInMenu
-                //     />,
                     <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete user"
@@ -187,10 +124,6 @@ const Manageusers = () => {
         },
         
     ]
-
-    // useEffect(() => {
-    //     updateRows();
-    // }, []);
     const fetchData = async () => {
       setPageState(old => ({ ...old, isLoading: true }))
       const response = await fetch('http://localhost:8086/user', {
@@ -305,22 +238,7 @@ const Manageusers = () => {
                                 Filter
                             </Button>
                             </Box>
-                            {/* <TextField
-                                // style={{ width: 110 }}
-                                InputLabelProps={{ shrink: true }}
-                                id="search-id" type="number"
-                                onBlur={clearTextField}
-                                onChange={(e) => {
-                                    setModifiedRows(rows.filter((n) => String(n.id).toLowerCase().includes(e.target.value.toLowerCase())));
-                                }}
-                                label="Search Id"
-                                variant="standard"
-                                sx={{
-                                    paddingRight: "10px"
-                                }}
-                            /> */}
                             <TextField
-                                // style={{ width: 245 }}
                                 InputLabelProps={{ shrink: true }}
                                 id="search-name" type="text"
                                 onBlur={clearTextField}
@@ -331,36 +249,7 @@ const Manageusers = () => {
                                     paddingRight: "10px"
                                 }}
                             />
-                            {/* <TextField
-                                // style={{ width: 245 }}
-                                InputLabelProps={{ shrink: true }}
-
-                                id="search-email" type="text"
-                                onBlur={clearTextField}
-                                onChange={(e) => {
-                                    setModifiedRows(rows.filter((n) => String(n.userEmail).toLowerCase().includes(e.target.value.toLowerCase())));
-                                }}
-                                label="Search Email"
-                                variant="standard"
-                                sx={{
-                                    paddingRight: "10px"
-                                }}
-                            />
-                            <TextField
-                                // style={{ width: 245 }}
-                                InputLabelProps={{ shrink: true }}
-
-                                id="search-company" type="text"
-                                onBlur={clearTextField}
-                                onChange={(e) => {
-                                    setModifiedRows(rows.filter((n) => String(n.userCompany).toLowerCase().includes(e.target.value.toLowerCase())));
-                                }}
-                                label="Search Company"
-                                variant="standard"
-                            /> */}
                         </Box>
-                        {/* <Export modifiedRows/>
-                         */}
                             <Button 
                             sx = {{
                                 color: `${colors.grey[100]} !important`,
@@ -370,20 +259,6 @@ const Manageusers = () => {
                                 Export to csv: <FileDownloadOutlinedIcon />
                             </Button>
                          </Box>
-                    {/* <DataGrid
-                        rows={modifiedRows}
-                        rowHeight={40}
-                        columns={columns}
-                        disableColumnFilter
-                        disableColumnSelector
-                    // components={{ Toolbar: GridToolbar }}
-                    // componentsProps={{
-                    //     toolbar: {
-                    //         showQuickFilter: true,
-                 //            quickFilterProps: { debounceMs: 500 },
-                   //      },
-                  //   }}
-                        /> */}
                         <DataGrid
                            height={600}
                            rows={pageState.data}
@@ -406,8 +281,6 @@ const Manageusers = () => {
                            disableColumnSelector
                            componentsProps={{
                             toolbar: {
-                                // showQuickFilter: true,
-                                // quickFilterProps: { debounceMs: 500 },
                                 csvOptions: { disableToolbarButton: true },
                                 printOptions: { disableToolbarButton: true },
                              },
@@ -416,50 +289,6 @@ const Manageusers = () => {
                 </Box>
             </Box>
         </Box>
-        {/* <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        sx={{
-            "& .MuiDialog-paper": {
-                backgroundColor: colors.blueAccent[700],
-                color: colors.grey[100],
-            },
-            "& .MuiDialog-paper .MuiDialogTitle-root": {
-                fontSize: "1.5rem",
-            },
-            "& .MuiDialog-paper .MuiDialogContent-root": {
-                fontSize: "1.5rem",
-            },
-            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text": {
-                color: colors.grey[100],
-                fontSize: "1.2rem",
-            },
-            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text.Mui-disabled": {
-                color: colors.grey[100],
-            },
-            "& .MuiDialog-paper .MuiDialogActions-root .MuiButton-text:hover": {
-                color: colors.grey[100],
-            },
-
-        }}
-      >
-        <DialogTitle id="alert-dialog-title">
-          {dialogTitle}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {dialogDescription}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog> */}
         </>
     );
 }
