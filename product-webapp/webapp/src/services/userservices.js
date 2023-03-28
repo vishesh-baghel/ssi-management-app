@@ -3,6 +3,11 @@ import axios from 'axios';
 let url = "http://localhost:8086/ssi";
 let userUrl = "http://localhost:3001/users"
 
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'JWT fefege...'
+  }
+
 export const addSsi=(data)=>{
     return axios.post(url+"/add",data)
 }
