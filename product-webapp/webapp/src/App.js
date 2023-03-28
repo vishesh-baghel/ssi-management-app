@@ -14,6 +14,7 @@ import Editssi from './pages/editssi/Editssi'
 import Viewprofile from './pages/viewprofile/Viewprofile';
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import ChangePassword from './pages/changepassword/ChangePassword';
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
       <Route path='/register' element={<Register />} />
       <Route path='/' element={<Landing />} />
       <Route path='/forgotpassword' element={<ForgotPassword />} />
+      <Route path='/changepassword' element={<ChangePassword/>} />
     </Routes>
     </>
   );
