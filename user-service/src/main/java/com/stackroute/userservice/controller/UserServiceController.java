@@ -11,6 +11,7 @@ import com.stackroute.userservice.service.JwtService;
 import com.stackroute.userservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/user")
+@RefreshScope
 @Slf4j
 @CrossOrigin
 public class UserServiceController {
