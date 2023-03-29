@@ -4,7 +4,7 @@ import Addssi from './pages/addssi/Addssi';
 import Adduser from './pages/adduser/Adduser';
 import Dashboard from './pages/dashboard/Dashboard';
 import Viewssi from './pages/viewssi/Viewssi';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 import Appwrapper from './Appwrapper';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
@@ -15,6 +15,7 @@ import Viewprofile from './pages/viewprofile/Viewprofile';
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import ChangePassword from './pages/changepassword/ChangePassword';
+import EditUser from './pages/edituser/EditUser';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
 
   return (
     <>
+    <HashRouter>
     <Routes>
     {isLoggedIn ? (
       <Route path='/dashboard' element={<Appwrapper />}>
@@ -44,6 +46,7 @@ function App() {
               <Route path="adduser" element={<Adduser />} />
               <Route path="ssi/:id" element={<Viewssi/>}/>
               <Route path="editssi/:id" element={<Editssi/>}/>
+              <Route path="edituser/:id" element={<EditUser/>} />
               <Route path="profile" element={<Viewprofile/>}/>
       </Route>) : (<Route path='*' element={<Navigate to='/login' />} />)
     }
@@ -53,6 +56,7 @@ function App() {
       <Route path='/forgotpassword' element={<ForgotPassword />} />
       <Route path='/changepassword' element={<ChangePassword/>} />
     </Routes>
+    </HashRouter>
     </>
   );
 }

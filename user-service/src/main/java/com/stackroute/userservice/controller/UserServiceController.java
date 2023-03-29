@@ -3,28 +3,37 @@ package com.stackroute.userservice.controller;
 import com.stackroute.userservice.dto.*;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
+import com.stackroute.userservice.exceptions.AccessDeniedException;
 import com.stackroute.userservice.exceptions.InvalidRequestBodyException;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
 import com.stackroute.userservice.export.ExcelGenerator;
-import com.stackroute.userservice.service.JwtService;
+import com.stackroute.userservice.repository.UserRepository;
 import com.stackroute.userservice.service.UserService;
+import com.stackroute.userservice.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
+@RefreshScope
 @Slf4j
 @CrossOrigin
 public class UserServiceController {
@@ -51,30 +60,14 @@ public class UserServiceController {
     List<User> exportList;
 
     @Autowired
-    private UserService userService;
+    public UserService userService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @GetMapping({"/forAdmin"})
-    @PreAuthorize("hasRole('admin')")
-    public String forAdmin(){
-        return "This URL is only accessible to the admin";
-    }
-
-    @GetMapping({"/forUser"})
-    @PreAuthorize("hasRole('user')")
-    public String forUser(){
-        return "This URL is only accessible to the user";
-    }
-
+    public UserRepository userRepository;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) throws InvalidRequestBodyException, InvalidTokenException {
+    public RegisterResponse registerUser(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) throws InvalidRequestBodyException, InvalidTokenException {
         if (registerRequest.getUserName() == null || registerRequest.getUserName().isEmpty()) {
             throw new InvalidRequestBodyException(USERNAME_CANNOT_BE_EMPTY);
         }
@@ -104,12 +97,14 @@ public class UserServiceController {
         VerificationToken token = userService.generateVerificationToken();
         userService.saveVerificationTokenForUser(registeredUser, token);
         sendVerificationTokenMail(registeredUser, applicationUrl(request), token);
-        return USER_REGISTERED;
+        return RegisterResponse.builder()
+                .message(USER_REGISTERED)
+                .status(String.valueOf(HttpStatus.CREATED))
+                .build();
     }
 
     @GetMapping("/verifyRegistration")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('admin', 'user')")
     public String verifyRegistration(@RequestParam("token") String token) {
         String result = userService.validateVerificationToken(token);
         if (result.equalsIgnoreCase("valid")) {
@@ -119,32 +114,46 @@ public class UserServiceController {
     }
 
     @PostMapping("/resetPassword")
-    @PreAuthorize("hasAnyRole('admin', 'user')")
-    public String resetPassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) throws UserNotFoundException, InvalidTokenException {
+    public Response resetPassword(@RequestBody PasswordRequest passwordRequest, HttpServletRequest request) throws UserNotFoundException, InvalidTokenException {
         User user = userService.findUserByEmail(passwordRequest.getEmail());
-        String url = "";
+        String token = "";
         if (user != null) {
-            String token = UUID.randomUUID().toString();
+            token = UUID.randomUUID().toString();
             userService.createPasswordResetTokenForUser(user, token);
-            url = passwordResetTokenMail(user, applicationUrl(request), token);
+            passwordResetTokenMail(user, applicationUrl(request), token);
+            return Response.builder()
+                    .message(token)
+                    .status(200)
+                    .build();
         }
-        return url;
+        return Response.builder()
+                .message(USER_NOT_FOUND)
+                .status(400)
+                .build();
     }
 
     @PostMapping("/savePassword")
-    @PreAuthorize("hasAnyRole('admin', 'user')")
-    public String savePassword(@RequestParam("token") String token, @RequestBody PasswordRequest passwordRequest) throws InvalidTokenException, UserNotFoundException {
-        String result = userService.validatePasswordResetToken(token);
+    public Response savePassword(@RequestBody PasswordRequest passwordRequest) throws InvalidTokenException, UserNotFoundException {
+        String result = userService.validatePasswordResetToken(passwordRequest.getToken());
 
         if (!result.equalsIgnoreCase("valid")) {
-            return USER_PASSWORD_RESET_TOKEN_INVALID;
+            return Response.builder()
+                    .message(USER_PASSWORD_RESET_TOKEN_INVALID)
+                    .status(404)
+                    .build();
         }
-        Optional<User> user = userService.getUserByPasswordResetToken(token);
+        Optional<User> user = userService.getUserByPasswordResetToken(passwordRequest.getToken());
         if (user.isPresent()) {
             userService.changePassword(user.get(), passwordRequest.getNewPassword());
-            return USER_PASSWORD_UPDATED;
+            successFullPasswordChangeMail();
+            return Response.builder()
+                    .message(USER_PASSWORD_UPDATED)
+                    .status(200)
+                    .build();
         } else {
-            return TOKEN_INVALID;
+            return Response.builder()
+                    .message(TOKEN_INVALID)
+                    .build();
         }
     }
 
@@ -188,13 +197,16 @@ public class UserServiceController {
             log.info("Users by role: {}", users);
             return userService.createUserResponseList(users, pageNumber, pageSize, exportLink);
         }
-        return null;
+        List<User> users = userService.findAllUsers(pageNumber, pageSize, sortBy, orderBy);
+        String exportLink = exportUtil(users);
+        log.info("All users: {}", users);
+        return userService.createUserResponseList(users, pageNumber, pageSize, exportLink);
     }
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('admin')")
-    private String updateUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, UserNotFoundException {
+    public Response updateUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, AccessDeniedException {
         String email = userRequest.getEmail();
         Boolean isAdmin = userRequest.getIsAdmin();
 
@@ -205,33 +217,42 @@ public class UserServiceController {
             throw new InvalidRequestBodyException(IS_ADMIN_CANNOT_BE_EMPTY);
         }
         User user = userService.findUserByEmail(email);
+        log.info("User: {}", user);
         if (user == null) {
             throw new InvalidRequestBodyException(USER_NOT_FOUND);
         }
         userService.updateUser(user, isAdmin);
-        return USER_UPDATED;
+        return Response.builder()
+                .message(USER_UPDATED)
+                .status(200)
+                .build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('admin')")
-    private String deleteUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException, UserNotFoundException {
+    public Response deleteUser(@RequestBody UserRequest userRequest) throws InvalidRequestBodyException {
         String email = userRequest.getEmail();
-
         if (email == null || email.isEmpty()) {
             throw new InvalidRequestBodyException(EMAIL_CANNOT_BE_EMPTY);
+        }
+
+        if (userService == null) {
+            throw new NullPointerException("User service is null");
         }
         User user = userService.findUserByEmail(email);
         if (user == null) {
             throw new InvalidRequestBodyException(USER_NOT_FOUND);
         }
         userService.deleteUser(user);
-        return USER_DELETED;
+        return Response.builder()
+                .message(USER_DELETED)
+                .status(200)
+                .build();
     }
 
     @GetMapping("/export-to-excel")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('admin', 'user')")
     public void exportIntoExcelFile(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -245,17 +266,82 @@ public class UserServiceController {
         generator.generateExcelFile(response);
     }
 
-    private String passwordResetTokenMail(User user, String applicationUrl, String token) {
+    private void passwordResetTokenMail(User user, String applicationUrl, String token) {
         log.info("Sending password reset token mail to user: {}", user.getUserName());
         log.info("Password reset token: {}", token);
         log.info("Password reset url: {}", applicationUrl + "/user/resetPassword?token=" + token);
-        return applicationUrl + "/user/resetPassword?token=" + token;
+
+        WebClient client = WebClient.create();
+
+        String url = "http://localhost:8082/email/sendMail";
+        String recipient = "visheshbaghel99@gmail.com";
+        String msgBody = "Reset your account password within 5 minutes otherwise your password reset request will be terminated. " +
+                "You can always change your password if you fail for the first time";
+        String subject = "Reset password for your account";
+
+        String requestBody = "{\"recipient\":\"" + recipient + "\",\"msgBody\":\"" + msgBody + "\",\"subject\":\"" + subject + "\"}";
+
+        client.post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .subscribe(response -> {
+                    log.info("Email sent successfully");
+                }, error -> {
+                    log.info("failed to send the mail");
+                });
     }
 
     private void sendVerificationTokenMail(User registeredUser, String applicationUrl, VerificationToken token) {
         log.info("Sending verification token mail to user: {}", registeredUser.getUserName());
         log.info("Verification token: {}", token.getToken());
-        log.info("Verification url: {}", applicationUrl + "/user/verifyRegistration?token=" + token.getToken());
+        String verificationLink = " " + applicationUrl + "/user/verifyRegistration?token=" + token.getToken();
+
+        WebClient client = WebClient.create();
+
+        String url = "http://localhost:8082/email/sendMail";
+        String recipient = "visheshbaghel99@gmail.com";
+        String msgBody = "Verify your account by clicking on this link" + verificationLink;
+        String subject = "Verify your account !!";
+
+        String requestBody = "{\"recipient\":\"" + recipient + "\",\"msgBody\":\"" + msgBody + "\",\"subject\":\"" + subject + "\"}";
+
+        client.post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .subscribe(response -> {
+                    log.info("Email sent successfully");
+                }, error -> {
+                    log.info("failed to send the mail");
+                });
+    }
+
+    private void successFullPasswordChangeMail() {
+        WebClient client = WebClient.create();
+
+        String url = "http://localhost:8082/email/sendMail";
+        String recipient = "visheshbaghel99@gmail.com";
+        String msgBody = "Your password has been changed successfully";
+        String subject = "The password for your account has been changed";
+
+        String requestBody = "{\"recipient\":\"" + recipient + "\",\"msgBody\":\"" + msgBody + "\",\"subject\":\"" + subject + "\"}";
+
+        client.post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .subscribe(response -> {
+                    log.info("Email sent successfully");
+                }, error -> {
+                    log.info("failed to send the mail");
+                });
     }
 
     private String applicationUrl(HttpServletRequest request) {

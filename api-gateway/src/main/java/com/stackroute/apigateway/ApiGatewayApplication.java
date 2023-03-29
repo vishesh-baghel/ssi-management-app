@@ -7,9 +7,11 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 @EnableEurekaClient
+@CrossOrigin
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {
@@ -22,9 +24,11 @@ public class ApiGatewayApplication {
 		return builder.routes()
 
 				.route(r->r.path("/user/**")
+						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
 						.uri("lb://USER-SERVICE"))
 
 				.route(r->r.path("/ssi/**")
+						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
 						.uri("lb://SSI-SERVICE"))
 
 				.build();

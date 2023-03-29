@@ -97,6 +97,22 @@ class UserServiceControllerTest {
     }
 
     @Test
+    @DisplayName("test for update user api")
+    void updateUser() throws InvalidRequestBodyException {
+        // Arrange
+        Mockito.when(userService.findUserByEmail(userRequest.getEmail())).thenReturn(user);
+
+        // Act
+        String result = userServiceController.updateUser(userRequest);
+
+        // Assert
+        Mockito.verify(userService, Mockito.times(1)).findUserByEmail(userRequest.getEmail());
+        Mockito.verify(userService, Mockito.times(1)).updateUser(user, true);
+
+        assertEquals("User updated successfully", result);
+    }
+
+    @Test
     void resetPassword() {
     }
 

@@ -3,6 +3,7 @@ package com.stackroute.userservice.service;
 import com.stackroute.userservice.dto.UserRequest;
 import com.stackroute.userservice.dto.UserResponse;
 import com.stackroute.userservice.entity.PasswordResetToken;
+import com.stackroute.userservice.entity.Role;
 import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
@@ -59,6 +60,11 @@ class UserServiceTest {
 
     @BeforeEach
     public void setup() {
+        Set<Role> roles = new HashSet<>();
+        Role userRole = Role.builder()
+                .roleName("user")
+                .build();
+        roles.add(userRole);
         userRequest = UserRequest.builder()
                 .userName("user")
                 .password("password")
@@ -74,7 +80,7 @@ class UserServiceTest {
                 .password(userRequest.getPassword())
                 .email(userRequest.getEmail())
                 .companyName(userRequest.getCompanyName())
-                .role(userRequest.getRole())
+                .roles(roles)
                 .isAdmin(userRequest.getIsAdmin())
                 .build();
 

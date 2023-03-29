@@ -35,13 +35,19 @@ public class JwtService implements UserDetailsService {
     public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
         String userName = jwtRequest.getUserName();
         String userPassword = jwtRequest.getUserPassword();
+        String message = "User successfully logged in";
+
+        if (userName == null || userPassword == null) {
+            message = "Username or password cannot be empty";
+            return new JwtResponse(null, null, message);
+        }
         authenticate(userName, userPassword);
 
         UserDetails userDetails = loadUserByUsername(userName);
         String newGeneratedToken = jwtUtil.generateToken(userDetails);
 
         User user = userDao.findByUserName(userName);
-        return new JwtResponse(user, newGeneratedToken);
+        return new JwtResponse(user, newGeneratedToken, message);
     }
 
     @Override

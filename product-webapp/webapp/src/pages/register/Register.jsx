@@ -174,7 +174,7 @@ export default function Register() {
           <Grid item>
             <h1>Get Started</h1> <br></br>
               Already have an account? 
-                <Link  href='/login' variant="body2" underline='none'>
+                <Link  onClick={()=>navigate('/login')} variant="body2" underline='none'>
                   {<b> Sign in</b>}
                 </Link>
                 <br></br><br></br>

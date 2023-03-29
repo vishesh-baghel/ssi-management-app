@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +70,8 @@ public class SsiDetailsController {
         return responseEntity;
     }
 
-    @PostMapping("")
-    public SsiSearchResponse fetchSsi(@RequestBody SsiSearchRequest ssiSearchRequest) {
+    @PostMapping
+    public ResponseEntity<?> fetchSsi(@RequestBody SsiSearchRequest ssiSearchRequest) {
 
         TypedQuery<SsiDetails> ssiList = ssiDetailsService.fetch(ssiSearchRequest);
 
@@ -83,10 +84,15 @@ public class SsiDetailsController {
                 .setMaxResults(ssiSearchRequest.getCount())
                 .getResultList();
 
-        return new SsiSearchResponse().builder()
+        SsiSearchResponse response = new SsiSearchResponse().builder()
                 .status(HttpStatus.OK).message("")
                 .count((long) ssiSearchRequest.getCount()).offset((long) ssiSearchRequest.getOffset()).total(total)
                 .results(results)
                 .build();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,"*");
+        System.out.println(response);
+
+        return new ResponseEntity<SsiSearchResponse>(response,httpHeaders,HttpStatus.OK);
     }
 }

@@ -36,4 +36,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(message, "400");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException exception) {
+        String message = exception.getMessage();
+        ErrorMessage errorMessage = new ErrorMessage(message, "403");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorMessage);
+    }
 }

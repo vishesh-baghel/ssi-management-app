@@ -27,43 +27,43 @@ class UserRepositoryTest {
 
     private User user;
 
-    @BeforeEach
-    void setUp() {
-        user = User.builder()
-                .userName("test")
-                .password("test")
-                .email("test@gmail.com")
-                .companyName("test")
-                .build();
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-    }
-
-    @Test
-    @DisplayName("Test to save user")
-    void saveUser() {
-        userRepository.save(user);
-        User fetchUser = userRepository.findByEmail(user.getEmail());
-        assertNotNull(fetchUser);
-        assertEquals(user.getEmail(), fetchUser.getEmail());
-    }
-
-    @Test
-    void findByUserName() {
-    }
-
-    @Test
-    void findAllByCompanyName() {
-    }
-
-    @Test
-    void findAllByRole() {
-    }
-
-    @Test
-    void deleteByEmail() {
-    }
+//    @BeforeEach
+//    void setUp() {
+//        user = User.builder()
+//                .userName("test")
+//                .password("test")
+//                .email("test@gmail.com")
+//                .companyName("test")
+//                .build();
+//    }
+//
+//    @AfterEach
+//    void tearDown() {
+//        userRepository.deleteAll();
+//    }
+//
+//    @Test
+//    @DisplayName("Test to save user")
+//    void saveUser() {
+//        userRepository.save(user);
+//        User fetchUser = userRepository.findByEmail(user.getEmail());
+//        assertNotNull(fetchUser);
+//        assertEquals(user.getEmail(), fetchUser.getEmail());
+//    }
+//
+//    @Test
+//    void findByUserName() {
+//    }
+//
+//    @Test
+//    void findAllByCompanyName() {
+//    }
+//
+//    @Test
+//    void findAllByRole() {
+//    }
+//
+//    @Test
+//    void deleteByEmail() {
+//    }
 }

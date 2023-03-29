@@ -24,6 +24,7 @@ import java.util.*;
 
 @Service
 @Slf4j
+@Transactional
 public class UserServiceImpl implements UserService{
 
     static final String TOKEN_VALID = "valid";
@@ -107,6 +108,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByEmail(String email) {
+        if (userRepository == null) {
+            throw new NullPointerException("userRepository is null");
+        }
         return userRepository.findByEmail(email);
     }
 
@@ -155,10 +159,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserByUserName(String userName) throws UserNotFoundException {
-//        if (userRepository.findByUserName(userName) == null) {
-//            throw new UserNotFoundException(USER_NOT_FOUND);
-//        }
+    public User findUserByUserName(String userName) {
         return userRepository.findByUserName(userName);
     }
 
@@ -207,12 +208,14 @@ public class UserServiceImpl implements UserService{
         if (users.isEmpty()) {
             throw new NullPointerException("users list is empty");
         }
+
+        long totalUsers = userRepository.count();
         return UserResponse.builder()
                 .message("users working in the given company")
                 .status(200)
                 .offset((long) offset)
                 .count((long) count)
-                .total((long) users.size())
+                .total((long) totalUsers)
                 .exportLink(exportLink)
                 .results(users)
                 .build();
@@ -220,17 +223,24 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> findAllUsersByRole(String role, int pageNumber, int pageSize, String sortBy, String orderBy) throws UserNotFoundException {
-        List<Role> roles = new ArrayList<>();
-        Role userRole = Role.builder()
-                .roleName("user")
-                .roleDescription(VIEW_ONLY_ACCESS)
-                .build();
-        Role adminRole = Role.builder()
-                .roleName("admin")
-                .roleDescription(ALL_ACCESS)
-                .build();
-        roles.add(userRole);
-        roles.add(adminRole);
+//        Set<Role> roles = new HashSet<>();
+//        Role userRole = Role.builder()
+//                .roleName("user")
+//                .roleDescription(VIEW_ONLY_ACCESS)
+//                .build();
+//        Role adminRole = Role.builder()
+//                .roleName("admin")
+//                .roleDescription(ALL_ACCESS)
+//                .build();
+//
+//        if (role.equalsIgnoreCase("user")) {
+//            roles.add(userRole);
+//        } else if (role.equalsIgnoreCase("admin")) {
+//            roles.add(adminRole);
+//        } else {
+//            throw new IllegalArgumentException("role should be either user or admin");
+//        }
+
         Pageable pageable;
         if (orderBy.equalsIgnoreCase("asc")) {
             pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
@@ -272,7 +282,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional
     public String deleteUser(User user) {
         if (user == null) {
             throw new NullPointerException("user is null");
@@ -282,14 +291,8 @@ public class UserServiceImpl implements UserService{
         return "user deleted successfully";
     }
 
-//    @Override
-//    public void saveRoleForUser(User registeredUser, String role, String roleDescription) {
-//        if (registeredUser == null) {
-//            throw new NullPointerException("user is null");
-//        }
-//        if (role == null) {
-//            throw new NullPointerException("role is null");
-//        }
-//        roleRepository.save(new Role(role, roleDescription, registeredUser));
-//    }
+    @Override
+    public List<User> findAllUsers(int pageNumber, int pageSize, String sortBy, String orderBy) {
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending())).getContent();
+    }
 }
