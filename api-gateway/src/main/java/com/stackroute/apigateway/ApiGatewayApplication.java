@@ -32,7 +32,7 @@ public class ApiGatewayApplication {
 						.uri("lb://SSI-SERVICE"))
 				.route(r->r.path("/")
 						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
-						.uri("lb://PRODUCT-WEBAPP"))
+						.uri("lb://product-webapp"))
 
 				.build();
 	}
