@@ -5,9 +5,27 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { addUser } from '../../services/userservices';
+import { Alert } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+
 
 const Adduser = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
+
+    const [open, setOpen] = React.useState(false);
+    const [message, setMessage] = React.useState('');
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
     const handleFormSubmit = (values, actions) => {
         console.log(values);
@@ -26,7 +44,8 @@ const Adduser = () => {
                 }).then(response => response.json())
                 .then(data => {
                     console.log('Success:', data);
-                    alert("User added successfully");
+                    setMessage("User added successfully");
+                    handleClick();
                 });
         actions.resetForm();
     };
@@ -61,6 +80,13 @@ const Adduser = () => {
     });
     return (
         <Box m='20px'>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            {message}
+        </Alert>
+      </Snackbar>
             {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
             <Header title='Add Users' subtitle='Add your team members' />
             <Box m='0 10rem' >

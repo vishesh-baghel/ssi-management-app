@@ -23,7 +23,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
       }}
       onClick={() => setSelected(title)}
       icon={icon}
-    >
+      >
       <Typography>{title}</Typography>
       <Link to={to} />
     </MenuItem>
@@ -35,6 +35,8 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+
+  const role = localStorage.getItem("userRole");
 
   return (
     <Box
@@ -119,7 +121,8 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
+            
+            {role ==='admin' ? (<Box>
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -140,7 +143,7 @@ const Sidebar = () => {
               icon={<TuneIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+              />
 
             <Typography
               variant="h6"
@@ -155,14 +158,19 @@ const Sidebar = () => {
               icon={<PersonAddAltOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+              />
             <Item
               title="Manage Users"
               to="/dashboard/manageusers"
               icon={<ManageAccountsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+              />
+            </Box>
+            ) : (
+              <Box>
+                </Box>
+            )}
           </Box>
         </Menu>
       </ProSidebar>

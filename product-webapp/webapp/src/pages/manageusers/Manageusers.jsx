@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, useTheme, TextField, Typography} from '@mui/material';
@@ -23,7 +22,7 @@ const Manageusers = () => {
 
     const [pageState, setPageState] = useState({
         isLoading: false,
-        data: [],
+        data: [{ id: 'No data', userName: "No Data", email: "No Data", companyName: "No Data", admin: "No Data", actions: "No Data"}],
         total: 0,
         page: 1,
         pageSize: 10
@@ -49,9 +48,6 @@ const Manageusers = () => {
   };
     
     const deleteUser = async (email) => {
-        let flag = confirm("Are you sure to delete") ? true : false;
-        if (flag) {
-            console.log(email)
             const response = await fetch('http://localhost:8086/user/delete', {
                method: 'DELETE',
                headers: {
@@ -66,13 +62,14 @@ const Manageusers = () => {
     }).then(data => {
         if (data.status === 200) {
             fetchData();
-            alert("User deleted successfully")
+            setMessage("User deleted successfully")
+            handleAlertOpen();
         }
     }).catch(() => {
         setMessage("You are not authorized to perform this action")
         handleAlertOpen();
     })
-    }}
+    }
 
     const toggleAdmin = async (email, isAdmin) => {
             console.log(isAdmin)
@@ -91,7 +88,8 @@ const Manageusers = () => {
     }).then(data => {
         if (data.status === 200) {
             fetchData();
-            alert("User role updated successfully")
+            setMessage("User role updated successfully")
+            handleAlertOpen();
         }     
     }).catch(() => {
         setMessage("You are not authorized to perform this action")
@@ -228,8 +226,8 @@ const Manageusers = () => {
                             <Box>
                             <Button 
                             sx = {{
-                                backgroundColor: colors.blueAccent[700],
-                                color: colors.grey[100],
+                                backgroundColor: colors.greenAccent[500],
+                                color: `${colors.grey[100]} !important`,
                                 marginBottom: "10px",
                             }}
                             onClick={() => {

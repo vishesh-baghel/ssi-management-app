@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
 import { Box, Typography } from '@mui/material';
-import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
-import { deleteSSI, getSsi, editSsi } from '../../services/userservices';
+import { deleteSSI, getSsi } from '../../services/userservices';
 import { useState } from 'react';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
@@ -38,51 +38,6 @@ const Dash = () => {
             setModifiedRows(rows);
           }
       })
-  }
-
-  const delSSI = (ssiId) => {
-    let flag = window.confirm("Are you sure you want to delete this SSI?");
-    deleteSSI(ssiId).then(response => {
-      if (response.status === 200) {
-        alert("Success");
-        updateRows();
-      }
-      else {
-        alert("Something Err");
-      }
-    }).catch(error => {
-      console.log(error)
-    })
-  }
-
-  const makePrimary = (ssiId) => {
-    let tempObj = {}
-    getSsi({
-      filter:[
-        {
-          "column":"ssiRefId",
-          "operator":"equal",
-          "value":ssiId
-        }
-      ]
-    })
-    .then(response=>{
-      if (response.status===200){
-        tempObj = response.data;
-  
-        (tempObj.isPrimary)?(tempObj.isPrimary=false):(tempObj.isPrimary=true)
-        editSsi(ssiId, tempObj)
-        .then(response=>{
-          if (response.status==="OK"){
-            alert("Success");
-            updateRows();
-          }
-          else{
-            alert("Something err..")
-          }
-        })
-      }
-    })
   }
 
     const handleSearch = (e) => {
@@ -186,8 +141,8 @@ const Dash = () => {
         }}>
             <Button 
             sx = {{
-                backgroundColor: colors.blueAccent[700],
-                color: colors.grey[100],
+                backgroundColor: colors.greenAccent[500],
+                color: `${colors.grey[100]} !important`,
                 marginBottom: "10px",
             }}
             onClick={() => {

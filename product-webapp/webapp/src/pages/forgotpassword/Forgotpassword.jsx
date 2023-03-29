@@ -12,32 +12,81 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      
-      <Link href="/">
-        Sign in
-      </Link>
-    </Typography>
-  );
-}
-
+import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import { Alert } from '@mui/material';
 
 export default function ForgotPassword() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const navigate = useNavigate();
+
+  const [email, setEmail] = React.useState('');
+
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  const [success, setSuccess] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const handleEmail = async () => {
+    console.log(email);
+    const response = await fetch('http://localhost:8086/user/resetPassword', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    }).then(res => {
+      return res.json();
+    }).then(data => {
+      console.log(data);
+      if (data.message !== 'User not found') {
+        localStorage.setItem('resetToken', data.message);
+        setSuccess(true);
+        setMessage("Email sent for password reset instructions");
+        handleOpen();
+        setTimeout(() => {
+          navigate('/changepassword', { replace: true });
+        }, 2000);
+      } else {
+        console.log("error");
+        setMessage("User not found");
+        handleOpen();
+      }
+    });
+  }
+
   return (
-    <Box>
-      <Grid container component="main" spacing={'2.9vw'} sx={{marginLeft:'32vw', marginTop:'10vh', width:'32vw', height: '80vh', border:'2px solid black',borderRadius:'10px'}}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center'}}>
+        {success ? (<Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          {message}
+        </Alert>) : (
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {message}
+          </Alert>)
+        }
+      </Snackbar>
+      <Grid container spacing={'2.9vw'} sx={{ marginTop:'10vh', width:'32vw', height: '80vh', border:'2px solid black',borderRadius:'10px'}}>
         <CssBaseline />
         <Grid item xs={12} sm={80} md={5}  elevation={4}>
           <Box
@@ -52,9 +101,7 @@ export default function ForgotPassword() {
               <h1>Forgot Password</h1> 
                Enter your email and we'll send a link to reset your password<br></br><br></br><br></br>
             </Typography>
-
-            <Box component="form" noValidate onSubmit={handleSubmit}>
-               
+            <Box>
               <TextField
                 margin="normal"
                 required
@@ -63,6 +110,7 @@ export default function ForgotPassword() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={(e) => setEmail(e.target.value)}
                 autoFocus
               />
             
@@ -71,13 +119,11 @@ export default function ForgotPassword() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, background:'black',height:'50px', width:'450px',borderRadius:'10px'}}
-              >
+                onClick={handleEmail}
+                >
                 Submit
               </Button>
               <br></br>
-              
-              <Copyright sx={{ mt: 27 }} />
             </Box>
           </Box>
         </Grid>

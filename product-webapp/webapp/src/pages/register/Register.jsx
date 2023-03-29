@@ -143,7 +143,9 @@ export default function Register() {
 
   return (
     <>
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
       {message === 'User registered successfully' ? (
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           {message}

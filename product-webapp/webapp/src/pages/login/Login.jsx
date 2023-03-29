@@ -157,7 +157,9 @@ export default function Login() {
 
   return (
     <>
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
       {message === 'User successfully logged in' ? (
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           {message}
