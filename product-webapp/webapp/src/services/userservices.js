@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 let url = "http://localhost:8086/ssi";
-let userUrl = "http://localhost:3001/users"
+let userUrl = "http://localhost:8086/user"
 
 export const addSsi=(data)=>{
     return axios.post(url+"/add",data)
@@ -22,6 +22,11 @@ export const getSsi = (data) => {
 export const addUser = (data) =>{
     return axios.post(userUrl,data) 
 }
+
+export const editUser=(id,data)=>{
+    return axios.patch(userUrl+"/"+id,data)
+}
+
 export const getUsers = () => {
     return axios(userUrl)
 }
@@ -34,6 +39,5 @@ export const updateUserAdminStatus=(id,isAdmin)=>{
     return axios.patch(`${userUrl}/${id}`,{userRole:!isAdmin})
 }
 export const getUserbyId=(id)=>{
-    // return axios.get(`${userUrl}/${id}`)
     return axios.get(userUrl+"/"+id)
 }

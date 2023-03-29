@@ -15,6 +15,7 @@ import Viewprofile from './pages/viewprofile/Viewprofile';
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import ChangePassword from './pages/changepassword/ChangePassword';
+import EditUser from './pages/edituser/EditUser';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
               <Route path="adduser" element={<Adduser />} />
               <Route path="ssi/:id" element={<Viewssi/>}/>
               <Route path="editssi/:id" element={<Editssi/>}/>
+              <Route path="edituser/:id" element={<EditUser/>} />
               <Route path="profile" element={<Viewprofile/>}/>
       </Route>) : (<Route path='*' element={<Navigate to='/login' />} />)
     }
