@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RefreshScope
-@CrossOrigin
+@CrossOrigin()
 public class JwtController {
 
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/authenticate")
+    @PostMapping("/user/authenticate")
     public JwtResponse createJwtToken(@RequestBody JwtRequest jwtRequest) throws Exception {
         return jwtService.createJwtToken(jwtRequest);
     }

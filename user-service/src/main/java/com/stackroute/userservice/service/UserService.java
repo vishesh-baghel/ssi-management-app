@@ -5,10 +5,12 @@ import com.stackroute.userservice.entity.User;
 import com.stackroute.userservice.entity.VerificationToken;
 import com.stackroute.userservice.exceptions.InvalidTokenException;
 import com.stackroute.userservice.exceptions.UserNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public interface UserService {
     User registerUser(RegisterRequest userRequest);
 
@@ -41,6 +43,8 @@ public interface UserService {
     String updateUser(User user, Boolean isAdmin);
 
     String deleteUser(User user);
+
+    List<User> findAllUsers(int pageNumber, int pageSize, String sortBy, String orderBy);
 
 //    void saveRoleForUser(User registeredUser, String role, String roleDescription);
 }

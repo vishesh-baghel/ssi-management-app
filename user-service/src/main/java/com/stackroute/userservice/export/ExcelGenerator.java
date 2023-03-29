@@ -1,8 +1,11 @@
 package com.stackroute.userservice.export;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import com.stackroute.userservice.entity.Role;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -63,8 +66,13 @@ public class ExcelGenerator {
             createCell(row, columnCount++, record.getUserName(), style);
             createCell(row, columnCount++, record.getEmail(), style);
             createCell(row, columnCount++, record.getCompanyName(), style);
-            createCell(row, columnCount++, record.getRoles(), style);
-            createCell(row, columnCount++, record.isEnabled(), style);
+            Optional<String> role = record.getRoles().stream().map(Role::getRoleName).findFirst();
+            if (role.isPresent()) {
+                createCell(row, columnCount++, role.get(), style);
+            } else {
+                createCell(row, columnCount++, "user", style);
+            }
+            createCell(row, columnCount++, record.isEnabled() ? "yes" : "no", style);
         }
     }
     public void generateExcelFile(HttpServletResponse response) throws IOException {

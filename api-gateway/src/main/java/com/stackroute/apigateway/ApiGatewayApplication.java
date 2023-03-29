@@ -23,9 +23,9 @@ public class ApiGatewayApplication {
 	{
 		return builder.routes()
 
-//				.route(r->r.path("/user/**")
-//						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
-//						.uri("lb://USER-SERVICE"))
+				.route(r->r.path("/user/**")
+						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
+						.uri("lb://USER-SERVICE"))
 
 				.route(r->r.path("/ssi/**")
 						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
