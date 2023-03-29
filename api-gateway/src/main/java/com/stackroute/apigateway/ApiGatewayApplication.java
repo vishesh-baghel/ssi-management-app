@@ -30,6 +30,9 @@ public class ApiGatewayApplication {
 				.route(r->r.path("/ssi/**")
 						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
 						.uri("lb://SSI-SERVICE"))
+				.route(r->r.path("/")
+						.filters(f->f.dedupeResponseHeader("Access-Control-Allow-Origin","RETAIN_UNIQUE"))
+						.uri("lb://PRODUCT-WEBAPP"))
 
 				.build();
 	}
