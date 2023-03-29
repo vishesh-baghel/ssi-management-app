@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-let url = "http://localhost:8086/ssi";
-let userUrl = "http://localhost:8086/user"
+let url = "https://ssimanagementsystem.stackroute.io/ssi";
+export let userUrl = "http://localhost:8086/user"
 
 const headers = {
     'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ eureka:
     fetch-registry: true
 
 server:
-  port: 8086
+  port: 8080
 
 
 
@@ -19,7 +19,7 @@ spring:
       global-cors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:/3000"
+            allowedOrigins: "*"
             allowedHeaders:
               - Content-Type
             allowedMethods: "*"

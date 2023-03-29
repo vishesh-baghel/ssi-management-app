@@ -40,7 +40,7 @@ export default function ChangePassword() {
 
 
   const handlePassword = async () => {
-    const response = await fetch('http://localhost:8086/user/savePassword', {
+    const response = await fetch('https://ssimanagementsystem.stackroute.io/user/savePassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

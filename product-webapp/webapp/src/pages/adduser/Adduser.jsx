@@ -29,7 +29,7 @@ const Adduser = () => {
 
     const handleFormSubmit = (values, actions) => {
         console.log(values);
-        const response = fetch('http://localhost:8086/user/register', {
+        const response = fetch('https://ssimanagementsystem.stackroute.io/user/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

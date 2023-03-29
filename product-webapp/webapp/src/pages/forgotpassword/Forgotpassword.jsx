@@ -40,7 +40,7 @@ export default function ForgotPassword() {
 
   const handleEmail = async () => {
     console.log(email);
-    const response = await fetch('http://localhost:8086/user/resetPassword', {
+    const response = await fetch('https://ssimanagementsystem.stackroute.io/user/resetPassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
