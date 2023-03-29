@@ -4,7 +4,7 @@ import Addssi from './pages/addssi/Addssi';
 import Adduser from './pages/adduser/Adduser';
 import Dashboard from './pages/dashboard/Dashboard';
 import Viewssi from './pages/viewssi/Viewssi';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 import Appwrapper from './Appwrapper';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
@@ -22,7 +22,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const checkUserToken = () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token || token === 'undefined' || token === 'null') {
       setIsLoggedIn(false);
     }
@@ -35,6 +35,7 @@ function App() {
 
   return (
     <>
+    <HashRouter>
     <Routes>
     {isLoggedIn ? (
       <Route path='/dashboard' element={<Appwrapper />}>
@@ -55,6 +56,7 @@ function App() {
       <Route path='/forgotpassword' element={<ForgotPassword />} />
       <Route path='/changepassword' element={<ChangePassword/>} />
     </Routes>
+    </HashRouter>
     </>
   );
 }

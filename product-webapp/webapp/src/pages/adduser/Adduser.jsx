@@ -11,7 +11,7 @@ const Adduser = () => {
 
     const handleFormSubmit = (values, actions) => {
         console.log(values);
-        const response = fetch('http://localhost:8087/user/register', {
+        const response = fetch('http://localhost:8086/user/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,6 +26,7 @@ const Adduser = () => {
                 }).then(response => response.json())
                 .then(data => {
                     console.log('Success:', data);
+                    alert("User added successfully");
                 });
         actions.resetForm();
     };

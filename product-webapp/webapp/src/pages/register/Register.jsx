@@ -79,6 +79,9 @@ export default function Register() {
 
     localStorage.setItem('userName', data.get('name'));
     localStorage.setItem('userRole', 'user');
+
+    sessionStorage.setItem('userName', data.get('name'));
+    sessionStorage.setItem('userRole', 'user');
   
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
@@ -88,7 +91,7 @@ export default function Register() {
     }
   
     try {
-      const response = await fetch('http://localhost:8087/user/register', {
+      const response = await fetch('http://localhost:8086/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +172,7 @@ export default function Register() {
           <Grid item>
             <h1>Get Started</h1> <br></br>
               Already have an account? 
-                <Link  href='/login' variant="body2" underline='none'>
+                <Link  onClick={()=>navigate('/login')} variant="body2" underline='none'>
                   {<b> Sign in</b>}
                 </Link>
                 <br></br><br></br>
