@@ -92,7 +92,7 @@ const Sidebar = () => {
                 width: 50,
                 height: 50,
               }}>
-                V
+                {localStorage.getItem("userName").charAt(0).toUpperCase()}
               </Avatar>
               </Box>
               <Box textAlign="center" pb={1} m='20px' display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
@@ -102,10 +102,10 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  vishesh
+                  {localStorage.getItem("userName")}
                 </Typography>
-                <Typography variant="h6" color={colors.greenAccent[500]}>
-                  Baton admin
+                <Typography variant="h4" color={colors.greenAccent[500]}>
+                  {localStorage.getItem("userRole")}
                 </Typography>
               </Box>
             </Box>

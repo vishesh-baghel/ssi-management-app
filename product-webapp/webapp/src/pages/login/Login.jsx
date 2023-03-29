@@ -18,9 +18,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function Register() {
+export default function Login() {
 
-  const { Auth, setAuth } = useContext(AuthContext);
+  const { setAuth } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -82,12 +82,12 @@ export default function Register() {
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
     if (!v1 || !v2) {
-      setErrMsg("Invalid Entry");
+      // setErrMsg("Invalid Entry");
       console.log("Invalid Entry");
     }
   
     try {
-      const response = await fetch('http://localhost:8080/authenticate', {
+      const response = await fetch('http://localhost:8086/user/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,11 +105,22 @@ export default function Register() {
       console.log(responseData.user.roles[0].roleName);
       console.log(responseData.jwtToken);
 
-      const token = responseData.jwtToken;
+      const jwtToken = responseData.jwtToken;
       const roles = responseData.user.roles;
+      const userName = responseData.user.userName;
+      const userEmail = responseData.user.userEmail;
+      const demo = 'demo';
 
-      setAuth({ token, roles, userName, userPassword });
-      console.log("global context: ", Auth);
+      localStorage.setItem('token', jwtToken);
+      localStorage.setItem('userRole', roles[0].roleName);
+      localStorage.setItem('userName', userName);
+      localStorage.setItem('userEmail', userEmail);
+
+      sessionStorage.setItem('token', jwtToken);
+      sessionStorage.setItem('userRole', roles[0].roleName);
+      sessionStorage.setItem('userName', userName);
+
+      setAuth({ demo });
 
       setMessage(responseData.message);
       setStatus(responseData.status);
@@ -175,7 +186,7 @@ export default function Register() {
           <Grid item>
             <h1>Welcome Back!!</h1> <br></br>
               Don't have an account?
-                <Link  href='/register' variant="body2" underline='none'>
+                <Link  onClick={()=>navigate('/register')} variant="body2" underline='none'>
                   {<b> Sign up</b>}
                 </Link>
                 <br></br><br></br>
@@ -210,12 +221,12 @@ export default function Register() {
                 align='center'
                 sx={{ mt: 6, mb: 1,height:'50px', width:'400px',borderRadius:'10px'}}
                 >
-                Sign Up
+                Log in 
               </Button>
               <br></br>
               <Box mt='10px'>
                 <Link 
-                  href="/forgotpassword" 
+                  onClick={()=>navigate("/forgotpassword")} 
                   variant="body2"
                   underline='none'
                 >

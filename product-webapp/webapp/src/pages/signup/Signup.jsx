@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignInSide() {
   const handleSubmit = (event) => {
@@ -16,7 +17,7 @@ export default function SignInSide() {
       password: data.get('password'),
     });
   };
-
+  const navigate = useNavigate();
   return (
     <Box>
       <Grid container component="main" spacing={'2vw'} sx={{margin:'10vh', width:'90vw', height: '80vh'}}>
@@ -38,7 +39,7 @@ export default function SignInSide() {
             {/* <h1 style={fontSize='20px'}>Get Started</h1> */}
              <br></br> <br></br>
               Already have an account? 
-                <Link  href='/' variant="body2">
+                <Link  onClick={()=>navigate('/')} variant="body2">
                   {<b>Sign in</b>}
                 </Link>
                 <br></br><br></br>

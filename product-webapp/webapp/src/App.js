@@ -4,7 +4,7 @@ import Addssi from './pages/addssi/Addssi';
 import Adduser from './pages/adduser/Adduser';
 import Dashboard from './pages/dashboard/Dashboard';
 import Viewssi from './pages/viewssi/Viewssi';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 import Appwrapper from './Appwrapper';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
@@ -12,11 +12,32 @@ import Landing from './pages/landingpage/Landing';
 import ForgotPassword from './pages/forgotpassword/Forgotpassword';
 import Editssi from './pages/editssi/Editssi'
 import Viewprofile from './pages/viewprofile/Viewprofile';
+import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import ChangePassword from './pages/changepassword/ChangePassword';
+import EditUser from './pages/edituser/EditUser';
 
 function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkUserToken = () => {
+    const token = sessionStorage.getItem('token');
+    if (!token || token === 'undefined' || token === 'null') {
+      setIsLoggedIn(false);
+    }
+    setIsLoggedIn(true);
+  }
+
+  useEffect(() => {
+    checkUserToken();
+  }, [isLoggedIn]);
+
   return (
     <>
+    <HashRouter>
     <Routes>
+    {isLoggedIn ? (
       <Route path='/dashboard' element={<Appwrapper />}>
               <Route index element={<Dashboard />} />
               <Route path="manageusers" element={<Manageusers />} />
@@ -25,13 +46,17 @@ function App() {
               <Route path="adduser" element={<Adduser />} />
               <Route path="ssi/:id" element={<Viewssi/>}/>
               <Route path="editssi/:id" element={<Editssi/>}/>
+              <Route path="edituser/:id" element={<EditUser/>} />
               <Route path="profile" element={<Viewprofile/>}/>
-      </Route>
+      </Route>) : (<Route path='*' element={<Navigate to='/login' />} />)
+    }
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/' element={<Landing />} />
       <Route path='/forgotpassword' element={<ForgotPassword />} />
+      <Route path='/changepassword' element={<ChangePassword/>} />
     </Routes>
+    </HashRouter>
     </>
   );
 }

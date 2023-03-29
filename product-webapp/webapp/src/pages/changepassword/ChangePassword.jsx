@@ -1,25 +1,16 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import * as React from 'react';
 
 function Copyright(props) {
-  const navigate = useNavigate();
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      
-      <Link onClick={()=>navigate("/")}>
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>  
+      <Link to="/">
         Sign in
       </Link>
     </Typography>
@@ -27,7 +18,7 @@ function Copyright(props) {
 }
 
 
-export default function ForgotPassword() {
+export default function ChangePassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -51,8 +42,8 @@ export default function ForgotPassword() {
             }}
           >
             <Typography component="h1" variant="h6">
-              <h1>Forgot Password</h1> 
-               Enter your email and we'll send a link to reset your password<br></br><br></br><br></br>
+              <h1>Change Password</h1> 
+               Enter your new password and then sign in with the new password.<br></br><br></br><br></br>
             </Typography>
 
             <Box component="form" noValidate onSubmit={handleSubmit}>
@@ -61,10 +52,10 @@ export default function ForgotPassword() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="password"
+                label="New Password"
+                name="password"
+                autoComplete="password"
                 autoFocus
               />
             

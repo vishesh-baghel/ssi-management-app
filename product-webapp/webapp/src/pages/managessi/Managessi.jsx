@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { Box, Typography} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../themes';
 import { deleteSSI, getSsi, editSsi } from '../../services/userservices';
 import { useState } from 'react';
-import {TextField} from '@mui/material';
+import { TextField } from '@mui/material';
 
 const Managessi = () => {
   const clearTextField = (e) => {
@@ -37,21 +37,22 @@ const Managessi = () => {
       })
   }
 
-  const delSSI = (ssiId) =>{
-    //let flag = confirm("Are you Sure want to delete this SSI??")?true:false;
-      deleteSSI(ssiId).then(response=>{
-        if (response.status===200){
-          alert("Success");
-          updateRows();
-        }
-        else{
-          alert("Something Err");
-        }
-      }).catch(error=>{
-        console.log(error)
-      })
+  const delSSI = (ssiId) => {
+    let flag = window.confirm("Are you sure you want to delete this SSI?");
+    deleteSSI(ssiId).then(response => {
+      if (response.status === 200) {
+        alert("Success");
+        updateRows();
+      }
+      else {
+        alert("Something Err");
+      }
+    }).catch(error => {
+      console.log(error)
+    })
   }
-  const makePrimary = (ssiId) =>{
+
+  const makePrimary = (ssiId) => {
     let tempObj = {}
     getSsi({
       filter:[
@@ -82,117 +83,119 @@ const Managessi = () => {
   }
 
   const columns = [
-    { field: 'ssiRefId', headerName: 'SSI ID', flex: 1},
-      {
-        field: "edit",
-        headerName: "Edit SSI",
-        flex: 1,
-        renderCell: (params) => {
-          return (
-            <Typography>
-            <Link 
-                to={`/dashboard/editssi/${params.row.ssiRefId}`}
-                style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
+    { field: 'ssiRefId', headerName: 'SSI ID', flex: 1 },
+    {
+      field: "edit",
+      headerName: "Edit SSI",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Typography>
+            <Link
+              to={`/dashboard/editssi/${params.row.ssiRefId}`}
+              style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
             >Edit SSI
             </Link>
-            </Typography>
-          );
-        },
+          </Typography>
+        );
       },
-      {
-        field: "view",
-        flex: 1,
-        headerName: "View SSI",
-        renderCell: (params) => {
-          return (
-            <Typography>
-            <Link 
-                to={`/dashboard/ssi/${params.row.ssiRefId}`}
-                style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
+    },
+    {
+      field: "view",
+      flex: 1,
+      headerName: "View SSI",
+      renderCell: (params) => {
+        return (
+          <Typography>
+            <Link
+              to={`/dashboard/ssi/${params.row.ssiRefId}`}
+              style={{ textDecoration: 'none', color: colors.greenAccent[500], fontSize: '14px' }}
             >View
             </Link>
-            </Typography>
-          );
-        },
+          </Typography>
+        );
       },
-      { field: "isPrimary", headerName: "Is Primary", type: "boolean", headerAlign: "left", align: "left" },
-      {
-        field: "actions", type: "actions", align: "center", sortable: false, filterable: false, disableColumnMenu: true,
-        getActions: (params) => [
-            <GridActionsCellItem
-                // icon={<DeleteIcon />}
-                label="Delete SSI"
-                onClick={()=>{delSSI(params.row.id)}}
-                showInMenu
-            />,
-            <GridActionsCellItem
-                // icon={<DeleteIcon />}
-                label="Make SSI Primary"
-                onClick={()=>{makePrimary(params.row.id)}}
-                showInMenu
-            />,
-        ]
+    },
+    { field: "isPrimary", headerName: "Is Primary", type: "boolean", headerAlign: "left", align: "left" },
+    {
+      field: "actions", type: "actions", align: "center", sortable: false, filterable: false, disableColumnMenu: true,
+      getActions: (params) => [
+        <GridActionsCellItem
+          // icon={<DeleteIcon />}
+          label="Delete SSI"
+          onClick={() => { delSSI(params.row.id) }}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          // icon={<DeleteIcon />}
+          label="Make SSI Primary"
+          onClick={() => { makePrimary(params.row.id) }}
+          showInMenu
+        />,
+      ]
     }
   ];
-  useEffect(()=>{
+  useEffect(() => {
     updateRows();
-  },[]);
-    return (
-        <Box m='20px'>
-            <Box display='flex' justifyContent='space-between' alignItems='center'>
-            <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
-            </Box>
-            <Box 
-                height='75vh'
-                width='83vw'
-            sx={{
+  }, []);
+  return (
+    <Box m='20px'>
+      <Box display='flex' justifyContent='space-between' alignItems='center'>
+        <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
+      </Box>
+      <Box
+        height='70vh'
+        width='100%'
+        sx={{
           '& .MuiDataGrid-root': {
             border: 'none',
-        },
-        '& .MuiDataGrid-cell': {
+          },
+          '& .MuiDataGrid-cell': {
             borderBottom: 'none',
-        },
-        '& .name-column--cell': {
+          },
+          '& .name-column--cell': {
             color: colors.greenAccent[300]
-        },
-        '& .MuiDataGrid-columnHeaders': {
+          },
+          '& .MuiDataGrid-columnHeaders': {
             backgroundColor: colors.blueAccent[700],
             borderBottom: 'none',
-        },
-        '& .MuiDataGrid-virtualScrollbar': {
+          },
+          '& .MuiDataGrid-virtualScrollbar': {
             backgroundColor: colors.primary[400]
-        },
-        '& .MuiDataGrid-footerContainer': {
+          },
+          '& .MuiDataGrid-footerContainer': {
             borderTop: 'none',
             backgroundColor: colors.blueAccent[700],
-        },
-        '& .MuiDataGrid-toolbarContainer .MuiButton-text': {
+          },
+          '& .MuiDataGrid-toolbarContainer .MuiButton-text': {
             color: `${colors.grey[100]} !important`
-        },}}>
-                      <Box>
-                  <TextField
-                                // style={{ width: 110 }}
-                      InputLabelProps={{ shrink: true }}
-                      id="search-id" type="number"
-                      onBlur={clearTextField}
-                      onChange={(e) => {
-                          setModifiedRows(rows.filter((n) => String(n.ssiRefId).toLowerCase().includes(e.target.value.toLowerCase())));
-                      }}
-                      label="Search Id"
-                      variant="standard"
-                      sx={{
-                          paddingRight: "10px"
-                      }}
-                  />
-              </Box>
-                <DataGrid
-                    rows={modifiedRows}
-                    columns={columns}
-                />
-            </Box>
+          },
+        }}>
+        <Box>
+          <TextField
+            // style={{ width: 110 }}
+            InputLabelProps={{ shrink: true }}
+            id="search-id" type="number"
+            onBlur={clearTextField}
+            onChange={(e) => {
+              setModifiedRows(rows.filter((n) => String(n.ssiRefId).toLowerCase().includes(e.target.value.toLowerCase())));
+            }}
+            label="Search Id"
+            variant="standard"
+            sx={{
+              paddingRight: "10px"
+            }}
+          />
         </Box>
-        
-    );
+        <DataGrid
+          rows={modifiedRows}
+          columns={columns}
+          rowHeight={40}
+        />
+      </Box>
+    </Box>
+
+  );
 }
 
 export default Managessi;

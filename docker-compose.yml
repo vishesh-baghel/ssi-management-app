@@ -1,32 +1,69 @@
-version: "3"
+version: "2"
 services:
   eureka-server:
-    build: eureka-server/
-    container_name: eureka-server
+    image: eureka-server
+    build: ./eureka-server
+    container_name: eureka-server-container
     restart: always
-    network_mode: "host"
+    network_mode: host
     hostname: localhost
-    ports:
-      - 8076:8076
+
   api-gateway:
-    build: api-gateway/
-    container_name: api-gateway
+    image: api-gateway
+    build: ./api-gateway
+    container_name: api-gateway-container
     depends_on:
       - eureka-server
     restart: always
-    network_mode: "host"
+    network_mode: host
     hostname: localhost
-    ports:
-      - 8086:8086
+
   product-webapp:
-    build: product-webapp/
     image: product-webapp
+    build: ./product-webapp
     depends_on:
       - eureka-server
-      - api-gateway
     restart: always
-    container_name: product-webapp
-    network_mode: "host"
+    container_name: product-webapp-container
+    network_mode: host
     hostname: localhost
-    ports:
-      - "8099:8099"
+
+  user-service:
+    image: user-service
+    build: ./user-service
+    restart: always
+    network_mode: host
+    hostname: localhost
+    container_name: user-service-container
+    depends_on:
+      - eureka-server
+
+  ssi-service:
+    image: ssi-service
+    build: ./ssi-service
+    restart: always
+    network_mode: host
+    hostname: localhost
+    container_name: ssi-service-container
+    depends_on:
+      - eureka-server
+
+  email-service:
+    image: email-service
+    build: ./email-service
+    restart: always
+    network_mode: host
+    hostname: localhost
+    container_name: email-service-container
+    depends_on:
+      - eureka-server
+
+#  config-server:
+#    restart: always
+#    network_mode: "host"
+#    container_name: config-server
+#    ports:
+#      - 8888:8888
+#    depends_on:
+#      - eureka-server
+#      - api-gateway

@@ -9,6 +9,7 @@ import {
   import useScrollTrigger from '@mui/material/useScrollTrigger';
   import PropTypes from 'prop-types';
   import useStyles from '../styles/styles';
+import { useNavigate } from 'react-router-dom';
 
   function ElevationScroll(props) {
     const { children, window } = props;
@@ -30,7 +31,7 @@ import {
   
   const Homepageheader = (props) => {
     const classes = useStyles();
-  
+    const navigate = useNavigate();
     return (
       <Box sx={{ marginBottom: '70px' }}>
         <ElevationScroll {...props}>
@@ -67,11 +68,11 @@ import {
                     color="primary" 
                     className={classes.button}
                     sx={{ marginRight: '10px' }}
-                    href='/login'
+                    onClick={()=>navigate('login')}
                 >
                     Login
                 </Button>
-                <Button href='/register' variant="outlined" color="primary" className={classes.button}>
+                <Button onClick={()=>navigate('/register')} variant="outlined" color="primary" className={classes.button}>
                     Sign up
                 </Button>        
                 </Box>

@@ -1,43 +1,46 @@
-import React from 'react';
-import Header from '../../components/Header';
-import { Box, Button, TextField, MenuItem } from "@mui/material";
-import { Formik } from "formik";
-import * as yup from "yup";
+import { Box, Button, MenuItem, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { addUser } from '../../services/userservices';
+import { Formik } from "formik";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import * as yup from "yup";
+import Header from '../../components/Header';
+import { editUser } from '../../services/userservices';
 
-const Adduser = () => {
+const EditUser = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
-    const handleFormSubmit = (values, actions) => {
-        console.log(values);
-        const response = fetch('http://localhost:8086/user/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userName: values.userName,
-                    password: values.userPassword,
-                    email: values.userEmail,
-                    companyName: values.userCompany,
-                    role: values.userRole
-                    }),
-                }).then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    alert("User added successfully");
-                });
-        actions.resetForm();
+    const [editUserData, setEditUserData] = useState([])
+
+    const params = useParams()
+
+    const handleFormSubmit = (values) => {
+        editUser(values.id, values).then(res => {
+            console.log(res.data);
+            if (res.status === 200) {
+                alert("User is Edited Successfully")
+            }
+        }).catch(err => alert(err.response.data))
     };
 
-    const initialValues = {
-        userName: "",
-        userEmail: "",
-        userPassword: "",
-        userCompany: "",
-        userRole: ""
-    };
+    const updateData = () => {
+        // console.log(params.id);
+        editUser({
+            filter: [{
+                "column": "id",
+                "operator": "equal",
+                "values": [params.id]
+            }]
+        }).then(res => {
+            console.log(res);
+            setEditUserData(res.data.results[0])
+        })
+    }
+
+
+    useEffect(() => {
+        updateData()
+    }, [])
 
     const toggle = [
         {
@@ -61,14 +64,13 @@ const Adduser = () => {
     });
     return (
         <Box m='20px'>
-            {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
-            <Header title='Add Users' subtitle='Add your team members' />
+            <Header title='Edit Users' subtitle='Edit your team members' />
             <Box m='0 10rem' >
-                {/* <Box display='flex' justifyContent='space-between' alignItems='center'> */}
 
                 <Formik
                     onSubmit={handleFormSubmit}
-                    initialValues={initialValues}
+                    initialValues={editUserData}
+                    enableReinitialize
                     validationSchema={userSchema}
                 >
                     {({
@@ -93,6 +95,7 @@ const Adduser = () => {
                                     name="userName"
                                     error={!!touched.userName && !!errors.userName}
                                     helperText={touched.userName && errors.userName}
+                                    InputLabelProps={{ shrink: true, }}
                                     sx={{ gridColumn: "span 2" }}
                                 />
                                 <TextField
@@ -106,6 +109,7 @@ const Adduser = () => {
                                     name="userEmail"
                                     error={!!touched.userEmail && !!errors.userEmail}
                                     helperText={touched.userEmail && errors.userEmail}
+                                    InputLabelProps={{ shrink: true, }}
                                     sx={{ gridColumn: "span 2" }}
                                 />
                                 <TextField
@@ -119,6 +123,7 @@ const Adduser = () => {
                                     name="userPassword"
                                     error={!!touched.userPassword && !!errors.userPassword}
                                     helperText={touched.userPassword && errors.userPassword}
+                                    InputLabelProps={{ shrink: true, }}
                                     sx={{ gridColumn: "span 2" }}
                                 />
                                 <TextField
@@ -132,6 +137,7 @@ const Adduser = () => {
                                     name="userCompany"
                                     error={!!touched.userCompany && !!errors.userCompany}
                                     helperText={touched.userCompany && errors.userCompany}
+                                    InputLabelProps={{ shrink: true, }}
                                     sx={{ gridColumn: "span 2" }}
                                 />
                                 <TextField
@@ -142,10 +148,11 @@ const Adduser = () => {
                                     label="Role"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.userRole}
+                                    value={!!values.userRole ? values.userRole : ""}
                                     name="userRole"
                                     error={!!touched.userRole && !!errors.userRole}
                                     helperText={touched.userRole && errors.userRole}
+                                    InputLabelProps={{ shrink: true, }}
                                     sx={{ gridColumn: "span 2" }}
 
                                 >
@@ -158,7 +165,7 @@ const Adduser = () => {
                             </Box>
                             <Box display="flex" justifyContent="center" mt="30px">
                                 <Button type="submit" color="secondary" variant="contained">
-                                    Add User
+                                    Edit User
                                 </Button>
                             </Box>
                         </form>
@@ -170,4 +177,4 @@ const Adduser = () => {
     );
 }
 
-export default Adduser;
+export default EditUser;
