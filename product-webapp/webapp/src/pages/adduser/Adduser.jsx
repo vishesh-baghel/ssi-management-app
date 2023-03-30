@@ -28,8 +28,7 @@ const Adduser = () => {
   };
 
     const handleFormSubmit = (values, actions) => {
-        console.log(values);
-        const response = fetch('http://localhost:8086/user/register', {
+        const response = fetch('https://ssimanagementsystem.stackroute.io/user/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +42,6 @@ const Adduser = () => {
                     }),
                 }).then(response => response.json())
                 .then(data => {
-                    console.log('Success:', data);
                     setMessage("User added successfully");
                     handleClick();
                 });
@@ -60,12 +58,12 @@ const Adduser = () => {
 
     const toggle = [
         {
-            value: true,
-            label: "Admin"
+            value: "admin",
+            label: "admin"
         },
         {
-            value: false,
-            label: "User"
+            value: "user",
+            label: "user"
         }
     ]
 
@@ -76,7 +74,7 @@ const Adduser = () => {
         userPassword: yup.string().required("required"),
         userEmail: yup.string().email().required("required"),
         userCompany: yup.string().required("required"),
-        userRole: yup.boolean().required("required")
+        userRole: yup.string().required("required")
     });
     return (
         <Box m='20px'>
@@ -183,7 +181,16 @@ const Adduser = () => {
                                 </TextField>
                             </Box>
                             <Box display="flex" justifyContent="center" mt="30px">
-                                <Button type="submit" color="secondary" variant="contained">
+                                <Button type="submit" variant="contained"
+                                    sx={{
+                                        backgroundColor: "#3f51b5",
+                                        color: "#fff",
+                                        "&:hover": {
+                                            backgroundColor: "#3f51b5",
+                                            color: "#fff",
+                                        },
+                                    }}
+                                >
                                     Add User
                                 </Button>
                             </Box>

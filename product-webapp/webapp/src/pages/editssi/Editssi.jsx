@@ -7,22 +7,47 @@ import { editSsi } from "../../services/userservices";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSsi } from "../../services/userservices";
+import { Snackbar } from "@mui/material";
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
 const Editssi = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
     const [ssiData, setSsiData] = useState([])
+    const [message, setMessage] = useState('')
 
     const params = useParams()
 
+    const [open, setOpen] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+
+    const handleOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      setOpen(false);
+    };
+
     const handleFormSubmit = (values) => {
         editSsi(values.ssiRefId,values).then(res => {
-            console.log(res.data);
-            if (res.status === 200) {
-                alert("SSI is Edited Successfully")
+            console.log(res);
+            if (res.status === 201) {
+                setMessage('SSI is Successfully Updated')
+                setSuccess(true)
+                handleOpen()
             }
         }).catch(err=>{
-            alert(err.response.data)
+            setMessage('SSI was not Updated due to some error')
+            handleOpen()
         })
     };
     const updateData = () => {
@@ -146,6 +171,15 @@ const Editssi = () => {
 
     return (
         <>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+            {success ? <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                {message}
+            </Alert> : <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                {message}
+            </Alert>}
+      </Snackbar>
             <Box m="20px">
                 <Formik
                     onSubmit={handleFormSubmit}
@@ -500,7 +534,16 @@ const Editssi = () => {
 
                             </Box>
                             <Box display="flex" justifyContent="center">
-                                <Button type="submit" color="secondary" variant="contained">
+                                <Button type="submit" variant="contained"
+                                    sx={{
+                                        backgroundColor: "#3f51b5",
+                                        color: "#fff",
+                                        "&:hover": {
+                                            backgroundColor: "#3f51b5",
+                                            color: "#fff",
+                                        },
+                                    }}
+                                >
                                     Update SSI
                                 </Button>
                             </Box>

@@ -8,6 +8,12 @@ import { tokens } from '../../themes';
 import { deleteSSI, getSsi, editSsi } from '../../services/userservices';
 import { useState } from 'react';
 import { TextField } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref}  {...props} />;
+});
 
 const Managessi = () => {
   const clearTextField = (e) => {
@@ -18,6 +24,22 @@ const Managessi = () => {
 
   const [rows, setRows] = useState([]);
   const [modifiedRows, setModifiedRows] = useState(rows);
+
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [success, setSuccess] = React.useState(false);
+
+  const handleAlertOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
     
   const updateRows = ()=>{
       getSsi({
@@ -38,14 +60,16 @@ const Managessi = () => {
   }
 
   const delSSI = (ssiId) => {
-    let flag = window.confirm("Are you sure you want to delete this SSI?");
     deleteSSI(ssiId).then(response => {
       if (response.status === 200) {
-        alert("Success");
+        setMessage("SSI Deleted Successfully");
+        setSuccess(true);
+        handleAlertOpen();
         updateRows();
       }
       else {
-        alert("Something Err");
+        setMessage("Something went wrong");
+        handleAlertOpen();
       }
     }).catch(error => {
       console.log(error)
@@ -53,6 +77,7 @@ const Managessi = () => {
   }
 
   const makePrimary = (ssiId) => {
+    console.log(ssiId);
     let tempObj = {}
     getSsi({
       filter:[
@@ -66,8 +91,7 @@ const Managessi = () => {
     .then(response=>{
       if (response.status===200){
         tempObj = response.data;
-  
-        (tempObj.isPrimary)?(tempObj.isPrimary=false):(tempObj.isPrimary=true)
+        tempObj.isPrimary ? tempObj.isPrimary = false : tempObj.isPrimary = true;
         editSsi(ssiId, tempObj)
         .then(response=>{
           if (response.status==="OK"){
@@ -129,7 +153,7 @@ const Managessi = () => {
         <GridActionsCellItem
           // icon={<DeleteIcon />}
           label="Make SSI Primary"
-          onClick={() => { makePrimary(params.row.id) }}
+          onClick={() => { makePrimary(params.row.ssiRefId) }}
           showInMenu
         />,
       ]
@@ -139,6 +163,16 @@ const Managessi = () => {
     updateRows();
   }, []);
   return (
+    <>
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+        {success ? <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          {message}
+        </Alert> : <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {message}
+        </Alert>}
+      </Snackbar>
     <Box m='20px'>
       <Box display='flex' justifyContent='space-between' alignItems='center'>
         <Header title='Manage SSIs' subtitle='Manage your settlement instructions' />
@@ -183,7 +217,8 @@ const Managessi = () => {
             label="Search Id"
             variant="standard"
             sx={{
-              paddingRight: "10px"
+              paddingRight: "10px",
+              paddingBottom: "10px"
             }}
           />
         </Box>
@@ -194,7 +229,7 @@ const Managessi = () => {
         />
       </Box>
     </Box>
-
+  </>
   );
 }
 

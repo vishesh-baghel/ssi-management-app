@@ -5,21 +5,47 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { addSsi } from "../../services/userservices";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} {...props} />;
+  });
+
 
 const Addssi = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
+
+    const [open, setOpen] = React.useState(false);
+    const [message, setMessage] = React.useState("");
+    const [success, setSuccess] = React.useState(false);
+
+  const handleAlertOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
     const handleFormSubmit = (values, actions) => {
         console.log(values);
         addSsi(values).then(res => {
             console.log(res)
             if (res.status === 201) {
-                alert("SSI is Added Successfully")
+                setMessage("SSI is added successfully");
+                setSuccess(true);
+                handleAlertOpen();
                 actions.resetForm();
             }
         }).catch(error=>{
-            console.log(error);
-            alert(error.response.data);
+            console.log(error)
+            setMessage("Something went wrong");
+            handleAlertOpen();
         })
     };
 
@@ -160,6 +186,14 @@ const Addssi = () => {
 
     return (
         <>
+         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        {success ? <Alert onClose={handleClose} severity="success">
+            {message}
+        </Alert> : <Alert onClose={handleClose} severity="error">
+            {message}
+        </Alert>}
+      </Snackbar>
             <Box m="20px">
                 <Formik
                     onSubmit={handleFormSubmit}
@@ -496,7 +530,16 @@ const Addssi = () => {
 
                             </Box>
                             <Box display="flex" justifyContent="center">
-                                <Button type="submit" color="secondary" variant="contained">
+                                <Button type="submit" variant="contained"
+                                    sx={{
+                                        backgroundColor: "#3f51b5",
+                                        color: "#fff",
+                                        "&:hover": {
+                                            backgroundColor: "#3f51b5",
+                                            color: "#fff",
+                                        },
+                                    }}
+                                >
                                     Add SSI
                                 </Button>
                             </Box>
