@@ -131,7 +131,7 @@ const Manageusers = () => {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify({
-          offset: pageState.page,
+          offset: pageState.page - 1,
           count: pageState.pageSize,
           sortBy: "email",
           orderBy: "asc"

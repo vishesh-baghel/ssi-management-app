@@ -351,6 +351,6 @@ public class UserServiceController {
 
     private String exportUtil(List<User> user) {
         exportList = user;
-        return "http://localhost:8080/user/export-to-excel";
+        return "https://ssimanagementsystem.stackroute.io/user/export-to-excel";
     }
 }
