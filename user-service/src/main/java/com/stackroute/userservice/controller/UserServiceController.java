@@ -297,7 +297,7 @@ public class UserServiceController {
     private void sendVerificationTokenMail(User registeredUser, String applicationUrl, VerificationToken token) {
         log.info("Sending verification token mail to user: {}", registeredUser.getUserName());
         log.info("Verification token: {}", token.getToken());
-        String verificationLink = " " + applicationUrl + "/user/verifyRegistration?token=" + token.getToken();
+        String verificationLink = "https://ssimanagementsystem.stackroute.io" + "/user/verifyRegistration?token=" + token.getToken();
 
         WebClient client = WebClient.create();
 

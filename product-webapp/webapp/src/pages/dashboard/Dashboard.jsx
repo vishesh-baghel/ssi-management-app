@@ -38,6 +38,21 @@ const Dash = () => {
             setModifiedRows(rows);
           }
       })
+      fetch('https://ssimanagementsystem.stackroute.io/ssi/fetch', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                sortBy: "ssiRefId",
+                orderBy: "asc",
+                offset: 0,
+                count: 10,
+              }),
+            }).then(response => response.json())
+            .then(data => {
+              setExportLink(data.exportLink);
+            })
   }
 
     const handleSearch = (e) => {
