@@ -24,8 +24,8 @@ const Manageusers = () => {
         isLoading: false,
         data: [{ id: 'No data', userName: "No Data", email: "No Data", companyName: "No Data", admin: "No Data", actions: "No Data"}],
         total: 0,
-        page: 0,
-        pageSize: 1
+        page: 1,
+        pageSize: 10
     })   
     
     const [exportLink, setExportLink] = useState("")
