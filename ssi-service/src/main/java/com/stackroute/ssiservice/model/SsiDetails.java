@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Entity
 @Data
@@ -21,7 +20,7 @@ import lombok.NonNull;
 public class SsiDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int ssiRefId;	
+	private int ssiRefId;
 
 	private String accountNumber;
 	private String accountName;

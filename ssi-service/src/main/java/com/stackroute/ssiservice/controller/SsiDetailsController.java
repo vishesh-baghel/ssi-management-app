@@ -1,20 +1,26 @@
 package com.stackroute.ssiservice.controller;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.stackroute.ssiservice.dto.*;
+import com.stackroute.ssiservice.exceptions.InvalidRequestBodyException;
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
+import com.stackroute.ssiservice.export.ExcelGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.stackroute.ssiservice.dto.SsiDataRequest;
-import com.stackroute.ssiservice.dto.SsiSearchRequest;
-import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
@@ -23,7 +29,10 @@ import com.stackroute.ssiservice.service.SsiDetailsService;
 @RestController
 @RequestMapping("/ssi")
 @CrossOrigin
+@Slf4j
 public class SsiDetailsController {
+
+    List<SsiDetails> exportList;
 
     @Autowired
     private SsiDetailsService ssiDetailsService;
@@ -95,4 +104,85 @@ public class SsiDetailsController {
 
         return new ResponseEntity<SsiSearchResponse>(response,httpHeaders,HttpStatus.OK);
     }
+
+    @GetMapping("/export-to-excel")
+    @ResponseStatus(HttpStatus.OK)
+    public void exportIntoExcelFile(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=user" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        ExcelGenerator generator = new ExcelGenerator(exportList);
+        generator.generateExcelFile(response);
+    }
+
+    private String exportUtil(List<SsiDetails> list) {
+        exportList = list;
+        return "http://localhost:8080/ssi/export-to-excel";
+    }
+
+    @PostMapping("/fetch")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public SsiDataResponse fetchSsiDetails(@RequestBody SsiDataRequest ssiDataRequest) {
+        String ssiRefId = ssiDataRequest.getSsiRefId();
+        String sortBy = ssiDataRequest.getSortBy();
+        String orderBy = ssiDataRequest.getOrderBy();
+        int pageNumber = ssiDataRequest.getOffset();
+        int pageSize = ssiDataRequest.getCount();
+
+        if (sortBy == null || sortBy.isEmpty() || orderBy == null || orderBy.isEmpty() || pageNumber < 0 || pageSize < 0) {
+            sortBy = "ssiRefId";
+            orderBy = "asc";
+            pageNumber = 0;
+            pageSize = 10;
+        }
+
+//        if (userName != null) {
+//            User user = userService.findUserByUserName(userName);
+//            return userService.createUserResponse(user, pageNumber, pageSize);
+//        }
+//        if (email != null){
+//            User user = userService.findUserByEmail(email);
+//            return userService.createUserResponse(user, pageNumber, pageSize);
+//        }
+//        if (ssiRefId != null){
+//            List<> users = userService.findAllUsersByCompanyName(companyName, pageNumber, pageSize, sortBy, orderBy);
+//            String exportLink = exportUtil(users);
+//            log.info("Users by company name: {}", users);
+//            return userService.createUserResponseList(users, pageNumber, pageSize, exportLink);
+//        }
+//        if (role != null){
+//            List<User> users = userService.findAllUsersByRole(role, pageNumber, pageSize, sortBy, orderBy);
+//            String exportLink = exportUtil(users);
+//            log.info("Users by role: {}", users);
+//            return userService.createUserResponseList(users, pageNumber, pageSize, exportLink);
+//        }
+        List<SsiDetails> ssis = ssiDetailsService.findAllSsis(pageNumber, pageSize, sortBy, orderBy);
+        log.info("Ssis: {}", ssis);
+        String exportLink = exportUtil(ssis);
+        return ssiDetailsService.createSsiDataResponseList(ssis, pageNumber, pageSize, exportLink);
+    }
+
+    @PatchMapping("/edit")
+    @ResponseStatus(HttpStatus.OK)
+    public Response updateSsiDetails(@RequestBody SsiDataRequest ssiDataRequest) throws InvalidRequestBodyException {
+        Boolean isPrimary = ssiDataRequest.getIsPrimary();
+
+        if (isPrimary == null) {
+            throw new InvalidRequestBodyException("isPrimary field is required");
+        }
+
+        SsiDetails ssi = ssiDetailsService.findBySsiId(ssiDataRequest.getSsiRefId());
+
+//        ssiDetailsService.updateSsi(ssiDataRequest, ssiDataRequest.getSsiRefId());
+        return Response.builder()
+                .message("Ssi updated successfully")
+                .status(200)
+                .build();
+    }
+
 }

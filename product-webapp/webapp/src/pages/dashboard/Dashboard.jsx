@@ -139,22 +139,13 @@ const Dash = () => {
             color: `${colors.grey[100]} !important`
           },
         }}>
-            <Button 
-            sx = {{
-                backgroundColor: colors.greenAccent[500],
-                color: `${colors.grey[100]} !important`,
-                marginBottom: "10px",
-            }}
-            onClick={() => {
-                handleSearch();
-            }}>
-                Filter
-            </Button>
         <Box sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
         }}>
+          <Box>
+
           <TextField
             // style={{ width: 110 }}
             InputLabelProps={{ shrink: true }}
@@ -170,6 +161,37 @@ const Dash = () => {
                 marginBottom: "10px",
             }}
             />
+          <TextField
+            // style={{ width: 110 }}
+            InputLabelProps={{ shrink: true }}
+            id="search-product" type="text"
+            onBlur={clearTextField}
+            onChange={(e) => {
+                setModifiedRows(rows.filter((n) => String(n.product).toLowerCase().includes(e.target.value.toLowerCase())));
+            }}
+            label="Search Product"
+            variant="standard"
+            sx={{
+              paddingRight: "10px",
+              marginBottom: "10px",
+            }}
+            />
+          <TextField
+            // style={{ width: 110 }}
+            InputLabelProps={{ shrink: true }}
+            id="search-currency" type="text"
+            onBlur={clearTextField}
+            onChange={(e) => {
+                setModifiedRows(rows.filter((n) => String(n.currency).toLowerCase().includes(e.target.value.toLowerCase())));
+            }}
+            label="Search Currency"
+            variant="standard"
+            sx={{
+              paddingRight: "10px",
+              marginBottom: "10px",
+            }}
+            />
+        </Box>
         <Button 
           sx = {{
               color: `${colors.grey[100]} !important`,
@@ -178,7 +200,7 @@ const Dash = () => {
             onClick={() => { window.open(exportLink) }}>
               Export to csv: <FileDownloadOutlinedIcon />
           </Button>
-        </Box>
+          </Box>
         <DataGrid
           rows={modifiedRows}
           columns={columns}

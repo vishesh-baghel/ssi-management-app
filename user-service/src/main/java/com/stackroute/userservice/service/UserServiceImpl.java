@@ -205,10 +205,9 @@ public class UserServiceImpl implements UserService{
         if (offset < 0 || count < 0) {
             throw new IllegalArgumentException("offset and count should be greater than 0");
         }
-        if (users.isEmpty()) {
-            throw new NullPointerException("users list is empty");
-        }
-
+//        if (users.isEmpty()) {
+//            throw new NullPointerException("users list is empty");
+//        }
         long totalUsers = userRepository.count();
         return UserResponse.builder()
                 .message("users working in the given company")

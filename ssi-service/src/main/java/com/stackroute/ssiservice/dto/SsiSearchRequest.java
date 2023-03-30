@@ -12,6 +12,8 @@ import java.util.HashMap;
 @Builder
 public class SsiSearchRequest {
     private Filter[] filter;
+    private String sortBy;
+    private String orderBy;
     private int offset;
     private int count;
     private HashMap<String,String> sort;

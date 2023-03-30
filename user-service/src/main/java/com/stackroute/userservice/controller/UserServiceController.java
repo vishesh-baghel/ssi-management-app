@@ -145,7 +145,7 @@ public class UserServiceController {
         Optional<User> user = userService.getUserByPasswordResetToken(passwordRequest.getToken());
         if (user.isPresent()) {
             userService.changePassword(user.get(), passwordRequest.getNewPassword());
-            successFullPasswordChangeMail();
+            successFullPasswordChangeMail(passwordRequest.getEmail());
             return Response.builder()
                     .message(USER_PASSWORD_UPDATED)
                     .status(200)
@@ -274,7 +274,7 @@ public class UserServiceController {
         WebClient client = WebClient.create();
 
         String url = "http://localhost:8082/email/sendMail";
-        String recipient = "visheshbaghel99@gmail.com";
+        String recipient = user.getEmail();
         String msgBody = "Reset your account password within 5 minutes otherwise your password reset request will be terminated. " +
                 "You can always change your password if you fail for the first time";
         String subject = "Reset password for your account";
@@ -302,7 +302,7 @@ public class UserServiceController {
         WebClient client = WebClient.create();
 
         String url = "http://localhost:8082/email/sendMail";
-        String recipient = "visheshbaghel99@gmail.com";
+        String recipient = registeredUser.getEmail();
         String msgBody = "Verify your account by clicking on this link" + verificationLink;
         String subject = "Verify your account !!";
 
@@ -321,11 +321,11 @@ public class UserServiceController {
                 });
     }
 
-    private void successFullPasswordChangeMail() {
+    private void successFullPasswordChangeMail(String email) {
         WebClient client = WebClient.create();
 
         String url = "http://localhost:8082/email/sendMail";
-        String recipient = "visheshbaghel99@gmail.com";
+        String recipient = email;
         String msgBody = "Your password has been changed successfully";
         String subject = "The password for your account has been changed";
 

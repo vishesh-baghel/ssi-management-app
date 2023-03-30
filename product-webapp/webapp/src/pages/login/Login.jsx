@@ -15,7 +15,7 @@ const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} ref={ref} {...props} />;
 });
 
 export default function Login() {
@@ -74,16 +74,11 @@ export default function Login() {
     const data = new FormData(event.currentTarget);
     setUserName(data.get('name'));
     setUserPassword(data.get('password'));
-    console.log({
-      userName: data.get('name'),
-      password: data.get('password'),
-    });
   
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
     if (!v1 || !v2) {
       // setErrMsg("Invalid Entry");
-      console.log("Invalid Entry");
     }
   
     try {
@@ -99,11 +94,6 @@ export default function Login() {
       });
   
       const responseData = await response.json();
-      console.log('Success:', responseData);
-      console.log(responseData.message);
-      console.log(responseData.user);
-      console.log(responseData.user.roles[0].roleName);
-      console.log(responseData.jwtToken);
 
       const jwtToken = responseData.jwtToken;
       const roles = responseData.user.roles;
@@ -113,12 +103,15 @@ export default function Login() {
 
       localStorage.setItem('token', jwtToken);
       localStorage.setItem('userRole', roles[0].roleName);
+      localStorage.setItem('roleDescription', roles[0].roleDescription);
       localStorage.setItem('userName', userName);
       localStorage.setItem('userEmail', userEmail);
+      localStorage.setItem('userObj', JSON.stringify(responseData.user));
 
       sessionStorage.setItem('token', jwtToken);
       sessionStorage.setItem('userRole', roles[0].roleName);
       sessionStorage.setItem('userName', userName);
+
 
       setAuth({ demo });
 
@@ -131,12 +124,10 @@ export default function Login() {
       setPwd('');
       setMatchPwd('');
       if (responseData.message !== 'User successfully logged in') {
-        console.log('inside if')
         setTimeout(() => {
           navigate('/login', { replace: true });
         }, 2000);
       } else {
-        console.log('inside else')
         setTimeout(() => {
           navigate('/dashboard', { replace: true });
         }, 2000);
@@ -144,13 +135,10 @@ export default function Login() {
     } catch (err) {
       if (err.response?.status === 500) {
         setErrMsg('No Server Response!');
-        console.log(errMsg);
       } else if (!err.response?.status) {
         setErrMsg('Invalid Credentials');
-        console.log(errMsg);
       } else {
         setErrMsg('Login Failed')
-        console.log(errMsg);
       }
     }
   };

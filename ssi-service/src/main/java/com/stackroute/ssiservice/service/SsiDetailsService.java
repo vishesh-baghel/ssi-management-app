@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import com.stackroute.ssiservice.dto.SsiDataRequest;
+import com.stackroute.ssiservice.dto.SsiDataResponse;
 import com.stackroute.ssiservice.dto.SsiSearchRequest;
 import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
@@ -36,4 +37,10 @@ public interface SsiDetailsService {
 	public List<SsiDetails> searchByRoutingCode(String routingCode);
 
     public TypedQuery<SsiDetails> fetch(SsiSearchRequest ssiSearchRequest);
+
+    SsiDetails findBySsiId(String ssiRefId);
+
+	List<SsiDetails> findAllSsis(int pageNumber, int pageSize, String sortBy, String orderBy);
+
+	SsiDataResponse createSsiDataResponseList(List<SsiDetails> ssis, int pageNumber, int pageSize, String exportLink);
 }
