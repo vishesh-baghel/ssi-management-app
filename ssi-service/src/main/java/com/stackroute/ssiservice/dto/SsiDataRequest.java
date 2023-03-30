@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SsiDataRequest {
+	private String ssiRefId;
 	private String accountNumber;
 	private String accountName;
 	private String acccountType;
@@ -31,4 +32,9 @@ public class SsiDataRequest {
 	private String intermediary2AccountNumber;
 	private String intermediary2AccountName;
 	private String intermediary2BankBic;
+	private Boolean isPrimary;
+	private String sortBy;
+	private String orderBy;
+	private int offset;
+	private int count;
 }

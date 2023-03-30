@@ -27,4 +27,6 @@ public interface SsiDetailsRepository extends JpaRepository<SsiDetails, Integer>
 	List<SsiDetails> findByProduct(String product);
 	
 	List<SsiDetails> findByRoutingCode(String routingCode);
+
+    SsiDetails findBySsiRefId(String ssiRefId);
 }

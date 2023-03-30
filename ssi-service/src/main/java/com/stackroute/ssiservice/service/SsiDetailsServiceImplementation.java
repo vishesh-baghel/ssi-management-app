@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.stackroute.ssiservice.dto.Filter;
-import com.stackroute.ssiservice.dto.SsiSearchRequest;
+import com.stackroute.ssiservice.dto.*;
 import com.stackroute.ssiservice.repository.SsiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.stackroute.ssiservice.dto.SsiDataRequest;
-import com.stackroute.ssiservice.dto.SsiSearchResponse;
 import com.stackroute.ssiservice.exceptions.InvalidSsiEntry;
 import com.stackroute.ssiservice.exceptions.SsiNotFoundException;
 import com.stackroute.ssiservice.model.SsiDetails;
@@ -178,9 +178,11 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
         	System.out.println("Is empty");
             return null;
         }
-        String str = newSsiDetails.getExpiryDate() + " 00:00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+
+        String dateTime = newSsiDetails.getExpiryDate().substring(0, 10) + " " + newSsiDetails.getExpiryDate().substring(11, 19);
+        LocalDateTime expiryDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        ssiDetails.setExpiryDate(expiryDateTime);
+
         ssiDetails.setAccountName(newSsiDetails.getAccountName());
         ssiDetails.setAccountNumber(newSsiDetails.getAccountNumber());
         ssiDetails.setAccountType(newSsiDetails.getAcccountType());
@@ -201,7 +203,6 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
         ssiDetails.setIntermediary2AccountName(newSsiDetails.getIntermediary2AccountName());
         ssiDetails.setIntermediary2AccountNumber(newSsiDetails.getIntermediary2AccountNumber());
         ssiDetails.setIntermediary2BankBic(newSsiDetails.getIntermediary2BankBic());
-        ssiDetails.setExpiryDate(dateTime);
         ssiDetailRepository.save(ssiDetails);
         System.out.println(ssiDetails);
         return ssiDetails;
@@ -263,6 +264,26 @@ public class SsiDetailsServiceImplementation implements SsiDetailsService {
     @Override
     public TypedQuery<SsiDetails> fetch(SsiSearchRequest ssiSearchRequest) {
        return ssiRepository.findBySearchParams(ssiSearchRequest);
+    }
+
+    @Override
+    public SsiDetails findBySsiId(String ssiRefId) {
+        return ssiDetailRepository.findBySsiRefId(ssiRefId);
+    }
+
+    @Override
+    public List<SsiDetails> findAllSsis(int pageNumber, int pageSize, String sortBy, String orderBy) {
+        return ssiDetailRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending())).getContent();
+    }
+
+    @Override
+    public SsiDataResponse createSsiDataResponseList(List<SsiDetails> ssis, int pageNumber, int pageSize, String exportLink) {
+        return  SsiDataResponse.builder()
+                .offset((long) pageNumber)
+                .count((long) pageSize)
+                .results(ssis)
+                .exportLink(exportLink)
+                .build();
     }
 
 
