@@ -24,8 +24,8 @@ const Manageusers = () => {
         isLoading: false,
         data: [{ id: 'No data', userName: "No Data", email: "No Data", companyName: "No Data", admin: "No Data", actions: "No Data"}],
         total: 0,
-        page: 1,
-        pageSize: 10
+        page: 0,
+        pageSize: 1
     })   
     
     const [exportLink, setExportLink] = useState("")
@@ -48,7 +48,7 @@ const Manageusers = () => {
   };
     
     const deleteUser = async (email) => {
-            const response = await fetch('http://localhost:8086/user/delete', {
+            const response = await fetch('https://ssimanagementsystem.stackroute.io/user/delete', {
                method: 'DELETE',
                headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Manageusers = () => {
 
     const toggleAdmin = async (email, isAdmin) => {
             console.log(isAdmin)
-            const response = await fetch('http://localhost:8086/user', {
+            const response = await fetch('https://ssimanagementsystem.stackroute.io/user', {
                method: 'PATCH',
                headers: {
                     'Content-Type': 'application/json',
@@ -123,8 +123,8 @@ const Manageusers = () => {
         
     ]
     const fetchData = async () => {
-      setPageState(old => ({ ...old, isLoading: true }))
-      const response = await fetch('http://localhost:8086/user', {
+    //   setPageState(old => ({ ...old, isLoading: true }))
+      const response = await fetch('https://ssimanagementsystem.stackroute.io/user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ const Manageusers = () => {
         }),
     });
       const json = await response.json()
-      console.log(json)
+      console.log('response', json)
       setExportLink(json.exportLink)
       setPageState(old => ({ ...old, isLoading: false, data: json.results, total: json.total }))
     }
@@ -149,7 +149,7 @@ const Manageusers = () => {
     
 
     const handleSearch = async (e) => {
-        const response = await fetch(`http://localhost:8086/user`, {
+        const response = await fetch(`https://ssimanagementsystem.stackroute.io/user`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -225,11 +225,14 @@ const Manageusers = () => {
                         <Box>
                             <Box>
                             <Button 
-                            sx = {{
-                                backgroundColor: colors.greenAccent[500],
-                                color: `${colors.grey[100]} !important`,
-                                marginBottom: "10px",
-                            }}
+                            sx={{
+                                        backgroundColor: "#3f51b5",
+                                        color: "#fff",
+                                        "&:hover": {
+                                            backgroundColor: "#3f51b5",
+                                            color: "#fff",
+                                        },
+                                    }}
                             onClick={() => {
                                 handleSearch();
                             }}>
