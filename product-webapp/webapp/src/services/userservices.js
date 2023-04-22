@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let url = "https://ssimanagementsystem.stackroute.io/ssi";
+let url = "http://localhost:8080/ssi";
 let userUrl = "http://localhost:8086/user"
 
 const headers = {

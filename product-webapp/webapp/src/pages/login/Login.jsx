@@ -82,7 +82,7 @@ export default function Login() {
     }
   
     try {
-      const response = await fetch('https://ssimanagementsystem.stackroute.io/user/authenticate', {
+      const response = await fetch('http://localhost:8080/user/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -38,7 +38,7 @@ const Dash = () => {
             setModifiedRows(rows);
           }
       })
-      fetch('https://ssimanagementsystem.stackroute.io/ssi/fetch', {
+      fetch('http://localhost:8080/ssi/fetch', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

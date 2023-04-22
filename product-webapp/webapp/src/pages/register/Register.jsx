@@ -91,7 +91,7 @@ export default function Register() {
     }
   
     try {
-      const response = await fetch('https://ssimanagementsystem.stackroute.io/user/register', {
+      const response = await fetch('http://localhost:8080/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

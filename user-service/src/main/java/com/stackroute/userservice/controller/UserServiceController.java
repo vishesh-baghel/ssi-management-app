@@ -297,7 +297,7 @@ public class UserServiceController {
     private void sendVerificationTokenMail(User registeredUser, String applicationUrl, VerificationToken token) {
         log.info("Sending verification token mail to user: {}", registeredUser.getUserName());
         log.info("Verification token: {}", token.getToken());
-        String verificationLink = "https://ssimanagementsystem.stackroute.io" + "/user/verifyRegistration?token=" + token.getToken();
+        String verificationLink = "http://localhost:8080" + "/user/verifyRegistration?token=" + token.getToken();
 
         WebClient client = WebClient.create();
 
@@ -351,6 +351,6 @@ public class UserServiceController {
 
     private String exportUtil(List<User> user) {
         exportList = user;
-        return "https://ssimanagementsystem.stackroute.io/user/export-to-excel";
+        return "http://localhost:8080/user/export-to-excel";
     }
 }

@@ -122,7 +122,7 @@ public class SsiDetailsController {
 
     private String exportUtil(List<SsiDetails> list) {
         exportList = list;
-        return "https://ssimanagementsystem.stackroute.io/ssi/export-to-excel";
+        return "http://localhost:8080/ssi/export-to-excel";
     }
 
     @PostMapping("/fetch")
