@@ -78,6 +78,6 @@ services:
      - 3306:3306
    environment:
      MYSQL_ROOT_PASSWORD: password
-     MYSQL_DATABASE: authuser
-     MYSQL_PASSWORD: root
+     MYSQL_DATABASE: ssi-app
+     MYSQL_PASSWORD: password
      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
