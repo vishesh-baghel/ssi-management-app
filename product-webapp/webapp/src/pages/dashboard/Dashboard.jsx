@@ -38,7 +38,7 @@ const Dash = () => {
             setModifiedRows(rows);
           }
       })
-      fetch('http://localhost:8080/ssi/fetch', {
+      fetch('http://3.109.116.207:8080/ssi/fetch', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
