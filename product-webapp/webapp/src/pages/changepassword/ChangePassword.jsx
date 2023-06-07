@@ -40,7 +40,7 @@ export default function ChangePassword() {
 
 
   const handlePassword = async () => {
-    const response = await fetch('http://3.109.116.207:8080/user/savePassword', {
+    const response = await fetch('http://3.108.1.80:8080/user/savePassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

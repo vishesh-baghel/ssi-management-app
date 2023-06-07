@@ -48,7 +48,7 @@ const Manageusers = () => {
   };
     
     const deleteUser = async (email) => {
-            const response = await fetch('http://3.109.116.207:8080/user/delete', {
+            const response = await fetch('http://3.108.1.80:8080/user/delete', {
                method: 'DELETE',
                headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Manageusers = () => {
 
     const toggleAdmin = async (email, isAdmin) => {
             console.log(isAdmin)
-            const response = await fetch('http://3.109.116.207:8080/user', {
+            const response = await fetch('http://3.108.1.80:8080/user', {
                method: 'PATCH',
                headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const Manageusers = () => {
     ]
     const fetchData = async () => {
     //   setPageState(old => ({ ...old, isLoading: true }))
-      const response = await fetch('http://3.109.116.207:8080/user', {
+      const response = await fetch('http://3.108.1.80:8080/user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ const Manageusers = () => {
     
 
     const handleSearch = async (e) => {
-        const response = await fetch(`http://3.109.116.207:8080/user`, {
+        const response = await fetch(`http://3.108.1.80:8080/user`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

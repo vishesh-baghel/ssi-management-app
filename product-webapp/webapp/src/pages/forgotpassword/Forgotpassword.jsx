@@ -40,7 +40,7 @@ export default function ForgotPassword() {
 
   const handleEmail = async () => {
     console.log(email);
-    const response = await fetch('http://3.109.116.207:8080/user/resetPassword', {
+    const response = await fetch('http://3.108.1.80:8080/user/resetPassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

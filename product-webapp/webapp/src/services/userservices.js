@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-let url = "http://3.109.116.207:8080/ssi";
-let userUrl = "http://3.109.116.207:8086/user"
+let url = "http://3.108.1.80:8080/ssi";
+let userUrl = "http://3.108.1.80:8086/user"
 
 const headers = {
     'Content-Type': 'application/json',

@@ -91,7 +91,7 @@ export default function Register() {
     }
   
     try {
-      const response = await fetch('http://3.109.116.207:8080/user/register', {
+      const response = await fetch('http://3.108.1.80:8080/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

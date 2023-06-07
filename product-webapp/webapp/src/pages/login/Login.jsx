@@ -82,7 +82,7 @@ export default function Login() {
     }
   
     try {
-      const response = await fetch('http://3.109.116.207:8080/user/authenticate', {
+      const response = await fetch('http://3.108.1.80:8080/user/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
